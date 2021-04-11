@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.upload;
 
+import de.fh.kiel.advancedjava.pojomodel.JarHandling;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +29,13 @@ public class FileUploadController {
 
 	@PostMapping("/upload")
 	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-
-		System.out.println(file.getOriginalFilename());
+		JarHandling jh = new JarHandling();
+		try {
+			jh.loadClasses(file);
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		//System.out.println(file.getOriginalFilename());
 
 		return "redirect:/upload";
 	}
