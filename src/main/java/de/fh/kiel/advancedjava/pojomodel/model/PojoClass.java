@@ -17,8 +17,8 @@ public class PojoClass {
     @Id
     @GeneratedValue
     private Long id;
-    private String ClassName;
-    private String PackageName;
+    private String className;
+    private String packageName;
 
 
 }

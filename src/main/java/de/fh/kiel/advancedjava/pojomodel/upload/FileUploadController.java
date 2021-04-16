@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * In order to upload class and jar files you may choose to either encode binary data in base64
@@ -42,7 +43,15 @@ public class FileUploadController {
 	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {
 			jarHandling.readFile(file).forEach(classNode -> {
-				PojoClass pojoClass = PojoClass.builder().ClassName(classNode.sourceFile).PackageName(classNode.name).build();
+
+
+				PojoClass pojoClass = pojoClassRepository.getPojoClassByClassNameAndPackageName(classNode.sourceFile, classNode.name);
+				if (pojoClass == null){
+					pojoClass = PojoClass.builder().className(classNode.sourceFile).packageName(classNode.name).build();
+				}else{
+
+					// Add members etc.
+				}
 				pojoClassRepository.save(pojoClass);
 			});
 		}catch (IOException e) {
