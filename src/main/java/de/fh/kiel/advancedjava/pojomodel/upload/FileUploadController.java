@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.upload;
 
-import de.fh.kiel.advancedjava.pojomodel.JarHandling;
+import de.fh.kiel.advancedjava.pojomodel.binaryreading.JarHandling;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class FileUploadController {
 	@PostMapping("/upload")
 	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {
-			jarHandling.loadClasses(file).forEach(classNode -> {
+			jarHandling.readFile(file).forEach(classNode -> {
 				PojoClass pojoClass = PojoClass.builder().ClassName(classNode.sourceFile).PackageName(classNode.name).build();
 				pojoClassRepository.save(pojoClass);
 			});
