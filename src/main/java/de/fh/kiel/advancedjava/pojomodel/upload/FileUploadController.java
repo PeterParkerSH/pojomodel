@@ -1,6 +1,9 @@
 package de.fh.kiel.advancedjava.pojomodel.upload;
 
 import de.fh.kiel.advancedjava.pojomodel.JarHandling;
+import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
+import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +24,14 @@ import java.io.IOException;
 @Controller
 public class FileUploadController {
 
+	private JarHandling jarHandling;
+	private PojoClassRepository pojoClassRepository;
+	@Autowired
+	FileUploadController(final JarHandling jarHandling, final PojoClassRepository pojoClassRepository){
+		this.jarHandling = jarHandling;
+		this.pojoClassRepository = pojoClassRepository;
+	}
+
 	@GetMapping("/upload")
 	public String listUploadedFiles(Model model) throws IOException {
 
@@ -29,9 +40,11 @@ public class FileUploadController {
 
 	@PostMapping("/upload")
 	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-		JarHandling jh = new JarHandling();
 		try {
-			jh.loadClasses(file);
+			jarHandling.loadClasses(file).forEach(classNode -> {
+				PojoClass pojoClass = PojoClass.builder().ClassName(classNode.sourceFile).PackageName(classNode.name).build();
+				pojoClassRepository.save(pojoClass);
+			});
 		}catch (IOException e) {
 			e.printStackTrace();
 		}

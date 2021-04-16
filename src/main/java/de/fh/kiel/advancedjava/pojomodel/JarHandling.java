@@ -3,6 +3,7 @@ package de.fh.kiel.advancedjava.pojomodel;
 import org.apache.commons.io.IOUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+@Service
 public class JarHandling {
     public List<ClassNode> loadClasses(MultipartFile mpFile) throws IOException{
         List<ClassNode> classes = new ArrayList<>();

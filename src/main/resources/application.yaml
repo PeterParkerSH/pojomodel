@@ -1,0 +1,12 @@
+spring:
+  neo4j:
+    authentication:
+      password: test123
+      username: neo4j
+    uri: bolt://localhost:7687
+  data:
+    neo4j:
+      database: neo4j
+  servlet:
+    multipart:
+      max-file-size: 5MB
