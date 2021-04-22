@@ -7,6 +7,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -19,6 +24,9 @@ public class PojoClass {
     private Long id;
     private String className;
     private String packageName;
+
+    @Relationship(type = "EXTENDS", direction = Relationship.Direction.OUTGOING)
+    private Set<ExtendsRs> extendsClasses = new HashSet<>();
 
 
 }

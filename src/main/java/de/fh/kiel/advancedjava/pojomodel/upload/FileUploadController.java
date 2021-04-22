@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.upload;
 
+import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandling;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.JarHandling;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
@@ -26,11 +27,14 @@ import java.util.List;
 public class FileUploadController {
 
 	private JarHandling jarHandling;
-	private PojoClassRepository pojoClassRepository;
+	//private PojoClassRepository pojoClassRepository;
+	private ClassHandling classHandling;
 	@Autowired
-	FileUploadController(final JarHandling jarHandling, final PojoClassRepository pojoClassRepository){
+	FileUploadController(final JarHandling jarHandling, /*final PojoClassRepository pojoClassRepository,*/
+						 final ClassHandling classHandling){
 		this.jarHandling = jarHandling;
-		this.pojoClassRepository = pojoClassRepository;
+		//this.pojoClassRepository = pojoClassRepository;
+		this.classHandling = classHandling;
 	}
 
 	@GetMapping("/upload")
@@ -43,16 +47,15 @@ public class FileUploadController {
 	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {
 			jarHandling.readFile(file).forEach(classNode -> {
-
-
-				PojoClass pojoClass = pojoClassRepository.getPojoClassByClassNameAndPackageName(classNode.sourceFile, classNode.name);
+/*				PojoClass pojoClass = pojoClassRepository.getPojoClassByClassNameAndPackageName(classNode.sourceFile, classNode.name);
 				if (pojoClass == null){
 					pojoClass = PojoClass.builder().className(classNode.sourceFile).packageName(classNode.name).build();
 				}else{
 
 					// Add members etc.
 				}
-				pojoClassRepository.save(pojoClass);
+				pojoClassRepository.save(pojoClass);*/
+				classHandling.buildPojoClass(classNode);
 			});
 		}catch (IOException e) {
 			e.printStackTrace();
