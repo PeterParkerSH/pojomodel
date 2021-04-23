@@ -1,14 +1,17 @@
 package de.fh.kiel.advancedjava.pojomodel.binaryreading;
 
 import de.fh.kiel.advancedjava.pojomodel.model.ExtendsRs;
+import de.fh.kiel.advancedjava.pojomodel.model.ImplementsRs;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
+import de.fh.kiel.advancedjava.pojomodel.model.PojoInterface;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import org.objectweb.asm.tree.ClassNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -20,43 +23,79 @@ public class ClassHandling {
         this.pojoClassRepository = pojoClassRepository;
     }
 
-    public void buildPojoClass(ClassNode classNode){
-        PojoClass pojoClass = pojoClassRepository.getPojoClassByClassNameAndPackageName(classNode.sourceFile, classNode.name);
-        if (pojoClass == null){
-            ExtendsRs extendsRs = buildExtendsRs(classNode);
-            Set<ExtendsRs> extendsRsSet = null;
-            if (extendsRs != null) {
-                extendsRsSet = new HashSet<>(Arrays.asList(extendsRs));
-            }
-            pojoClass = PojoClass.builder()
-                    .className(classNode.sourceFile)
-                    .packageName(classNode.name)
-                    .extendsClasses(extendsRsSet)
-                    .build();
-        }else{
+    private String parsePackageName(String completeName){
+        int packageEnd = completeName.lastIndexOf("/");
+        return completeName.substring(0, packageEnd);
 
-            // Add members etc.
+    }
+
+    private String parseClassName(String completeName){
+        int packageEnd = completeName.lastIndexOf("/");
+        return completeName.substring(packageEnd+1);
+    }
+
+    public void buildPojoClass(ClassNode classNode){
+
+        String className = parseClassName(classNode.name);
+        String classPackage = parsePackageName(classNode.name);
+
+        PojoClass pojoClass = pojoClassRepository.getPojoClassByClassNameAndPackageName(className, classPackage);
+        if (pojoClass == null){
+            // Class is not known in database
+
+            pojoClass = PojoClass.builder()
+                    .className(className)
+                    .packageName(classPackage).build();
         }
+
+
+        ExtendsRs extendsRs = buildExtendsRs(classNode);
+        Set<ImplementsRs> implementsRsSet = buildImplementsRs(classNode);
+
+        pojoClass.setExtendsClass(extendsRs);
+        pojoClass.setImplementsInterfaces(implementsRsSet);
+
         pojoClassRepository.save(pojoClass);
     }
 
     public ExtendsRs buildExtendsRs(ClassNode classNode){
         ExtendsRs extendsRs = null;
-        // TODO: Mehrfachvererbung
-        String superClassName = classNode.superName;
-        if (!superClassName.equals("java/lang/Object")){
+
+        String superClassName = parseClassName(classNode.superName);
+        String superClassPackage = parsePackageName(classNode.superName);
+
+        if (!(superClassName.equals("Object") && superClassPackage.equals("java/lang/"))){
             // search for super class, if not existing create empty hull
             PojoClass superClass = pojoClassRepository.getPojoClassByClassNameAndPackageName(classNode.sourceFile, classNode.name);
             if (superClass == null) {
-                superClass = createEmptyHull(superClassName);
+                superClass = createEmptyClassHull(superClassName, superClassPackage);
             }
-            extendsRs = ExtendsRs.builder().pojoClass(superClass).build();
+            return ExtendsRs.builder().pojoClass(superClass).build();
         }
         return extendsRs;
     }
 
-    public PojoClass createEmptyHull(String className){
-        PojoClass emptyHull = PojoClass.builder().className(className).build();
+    public Set<ImplementsRs> buildImplementsRs(ClassNode classNode){
+        HashSet<ImplementsRs> result = new HashSet<>();
+
+        classNode.interfaces.forEach(interf -> {
+            if (interf instanceof String) {
+                String interfaceString = (String) interf;
+                int packageEnd = interfaceString.lastIndexOf("/");
+                String interfaceName = interfaceString.substring(packageEnd);
+                String interfacePackage = interfaceString.substring(0, packageEnd);
+                PojoInterface pojoInterface = pojoClassRepository.getPojoInterfaceByInterfaceNameAnAndPackageName(interfaceName, interfacePackage);
+                if (pojoInterface == null){
+                    pojoInterface = PojoInterface.builder().interfaceName(interfaceName).packageName(interfacePackage).build();
+                }
+                result.add(ImplementsRs.builder().pojoInterface(pojoInterface).build());
+            }
+        });
+        return result;
+    }
+
+    public PojoClass createEmptyClassHull(String className, String packageName){
+        PojoClass emptyHull = PojoClass.builder().className(className).packageName(packageName).build();
         pojoClassRepository.save(emptyHull);
         return emptyHull;
     }

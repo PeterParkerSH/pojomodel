@@ -26,7 +26,9 @@ public class PojoClass {
     private String packageName;
 
     @Relationship(type = "EXTENDS", direction = Relationship.Direction.OUTGOING)
-    private Set<ExtendsRs> extendsClasses = new HashSet<>();
+    private ExtendsRs extendsClass = null;
 
+    @Relationship(type = "IMPLEMENTS", direction = Relationship.Direction.OUTGOING)
+    private Set<ImplementsRs> implementsInterfaces = new HashSet<>();
 
 }
