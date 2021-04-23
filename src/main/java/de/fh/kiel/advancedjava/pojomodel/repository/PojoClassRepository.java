@@ -19,6 +19,6 @@ public interface PojoClassRepository extends Neo4jRepository<PojoClass, Long> {
     PojoClass getPojoClassByClassName(@Param("className") String className);
 
     @Query("MATCH (i:Interface) WHERE i.interfaceName = $interfaceName AND i.packageName = $packageName RETURN i")
-    PojoInterface getPojoInterfaceByInterfaceNameAnAndPackageName(@Param("interfaceName") String interfaceName, @Param("packageName") String packageName);
+    PojoInterface getPojoInterfaceByInterfaceNameAndPackageName(@Param("interfaceName") String interfaceName, @Param("packageName") String packageName);
 
 }

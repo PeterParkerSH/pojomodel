@@ -59,20 +59,18 @@ public class ClassHandling {
     }
 
     public ExtendsRs buildExtendsRs(ClassNode classNode){
-        ExtendsRs extendsRs = null;
-
         String superClassName = parseClassName(classNode.superName);
         String superClassPackage = parsePackageName(classNode.superName);
 
-        if (!(superClassName.equals("Object") && superClassPackage.equals("java/lang/"))){
+        if (!(superClassName.equals("Object") && superClassPackage.equals("java/lang"))){
             // search for super class, if not existing create empty hull
-            PojoClass superClass = pojoClassRepository.getPojoClassByClassNameAndPackageName(classNode.sourceFile, classNode.name);
+            PojoClass superClass = pojoClassRepository.getPojoClassByClassNameAndPackageName(superClassName, superClassPackage);
             if (superClass == null) {
                 superClass = createEmptyClassHull(superClassName, superClassPackage);
             }
             return ExtendsRs.builder().pojoClass(superClass).build();
         }
-        return extendsRs;
+        return null;
     }
 
     public Set<ImplementsRs> buildImplementsRs(ClassNode classNode){
@@ -81,10 +79,10 @@ public class ClassHandling {
         classNode.interfaces.forEach(interf -> {
             if (interf instanceof String) {
                 String interfaceString = (String) interf;
-                int packageEnd = interfaceString.lastIndexOf("/");
-                String interfaceName = interfaceString.substring(packageEnd);
-                String interfacePackage = interfaceString.substring(0, packageEnd);
-                PojoInterface pojoInterface = pojoClassRepository.getPojoInterfaceByInterfaceNameAnAndPackageName(interfaceName, interfacePackage);
+                String interfaceName = parseClassName(interfaceString);
+                String interfacePackage = parsePackageName(interfaceString);
+                // TODO: PojoClass repo cannot return type PojoInterface
+                PojoInterface pojoInterface = pojoClassRepository.getPojoInterfaceByInterfaceNameAndPackageName(interfaceName, interfacePackage);
                 if (pojoInterface == null){
                     pojoInterface = PojoInterface.builder().interfaceName(interfaceName).packageName(interfacePackage).build();
                 }

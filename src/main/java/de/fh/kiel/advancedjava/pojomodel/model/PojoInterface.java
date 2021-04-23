@@ -12,7 +12,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Node("Implements")
+@Node("Interface")
 public class PojoInterface {
     @Id
     @GeneratedValue
