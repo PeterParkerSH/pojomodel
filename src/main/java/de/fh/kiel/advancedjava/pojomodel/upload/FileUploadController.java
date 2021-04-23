@@ -4,6 +4,7 @@ import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandling;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.JarHandling;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
+import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,7 +56,11 @@ public class FileUploadController {
 					// Add members etc.
 				}
 				pojoClassRepository.save(pojoClass);*/
-				classHandling.buildPojoClass(classNode);
+				if (((classNode.access & Opcodes.ACC_INTERFACE) != 0)) {
+					classHandling.buildPojoInterface(classNode);
+				} else {
+					classHandling.buildPojoClass(classNode);
+				}
 			});
 		}catch (IOException e) {
 			e.printStackTrace();
