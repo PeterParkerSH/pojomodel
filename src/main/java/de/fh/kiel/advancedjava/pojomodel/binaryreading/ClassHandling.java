@@ -6,6 +6,7 @@ import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoInterface;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
+import lombok.NonNull;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class ClassHandling {
         if (pojoClass == null){
             // Class is not known in database
             pojoClass = PojoClass.builder()
-                    .className(className)
+                    .name(className)
                     .packageName(classPackage).build();
         }
 
@@ -81,7 +82,7 @@ public class ClassHandling {
         String interfacePackage = parsePackageName(classNode.name);
         PojoInterface pojoInterface = pojoInterfaceRepository.getPojoInterfaceByInterfaceNameAndPackageName(interfaceName, interfacePackage);
         if (pojoInterface == null){
-            pojoInterface = PojoInterface.builder().interfaceName(interfaceName).packageName(interfacePackage).build();
+            pojoInterface = PojoInterface.builder().name(interfaceName).packageName(interfacePackage).build();
             pojoInterfaceRepository.save(pojoInterface);
         }
     }
@@ -90,6 +91,7 @@ public class ClassHandling {
         String superClassName = parseClassName(classNode.superName);
         String superClassPackage = parsePackageName(classNode.superName);
 
+        // Avoid Object Notes as Parent class
         if (!(superClassName.equals("Object") && superClassPackage.equals("java/lang"))){
             // search for super class, if not existing create empty hull
             PojoClass superClass = pojoClassRepository.getPojoClassByClassNameAndPackageName(superClassName, superClassPackage);
@@ -101,8 +103,10 @@ public class ClassHandling {
         return null;
     }
 
-    private Set<ImplementsRs> buildImplementsRs(ClassNode classNode){
+    private Set<ImplementsRs> buildImplementsRs(@NonNull ClassNode classNode){
         HashSet<ImplementsRs> result = new HashSet<>();
+
+
 
         classNode.interfaces.forEach(interf -> {
             if (interf instanceof String) {
@@ -110,17 +114,18 @@ public class ClassHandling {
                 String interfaceName = parseClassName(interfaceString);
                 String interfacePackage = parsePackageName(interfaceString);
                 PojoInterface pojoInterface = pojoInterfaceRepository.getPojoInterfaceByInterfaceNameAndPackageName(interfaceName, interfacePackage);
-                if (pojoInterface == null){
-                    pojoInterface = PojoInterface.builder().interfaceName(interfaceName).packageName(interfacePackage).build();
+                if (pojoInterface == null) {
+                    pojoInterface = PojoInterface.builder().name(interfaceName).packageName(interfacePackage).build();
                 }
                 result.add(ImplementsRs.builder().pojoInterface(pojoInterface).build());
             }
         });
+
         return result;
     }
 
     private PojoClass createEmptyClassHull(String className, String packageName){
-        PojoClass emptyHull = PojoClass.builder().className(className).packageName(packageName).build();
+        PojoClass emptyHull = PojoClass.builder().name(className).packageName(packageName).build();
         pojoClassRepository.save(emptyHull);
         return emptyHull;
     }

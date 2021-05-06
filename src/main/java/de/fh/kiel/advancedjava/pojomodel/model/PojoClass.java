@@ -1,9 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -14,20 +12,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @AllArgsConstructor
-@NoArgsConstructor
 @Node("Class")
-public class PojoClass {
-    @Id
-    @GeneratedValue
-    private Long id;
-    private String className;
-    private String packageName;
+public class PojoClass extends PojoElement{
 
+    @Builder.Default
     @Relationship(type = "EXTENDS", direction = Relationship.Direction.OUTGOING)
     private ExtendsRs extendsClass = null;
 
+    @Builder.Default
     @Relationship(type = "IMPLEMENTS", direction = Relationship.Direction.OUTGOING)
     private Set<ImplementsRs> implementsInterfaces = new HashSet<>();
 

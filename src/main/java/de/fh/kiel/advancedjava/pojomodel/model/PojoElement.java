@@ -9,9 +9,14 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
-
+@Data
 @SuperBuilder
-@Node("Interface")
-public class PojoInterface extends PojoElement {
-
+@AllArgsConstructor
+@NoArgsConstructor
+public class PojoElement {
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String name;
+    private String packageName;
 }
