@@ -22,4 +22,8 @@ public class AttributeRs {
 
     @TargetNode
     private PojoElement pojoElement;
+
+    private String name;
+
+    private String visibility;
 }

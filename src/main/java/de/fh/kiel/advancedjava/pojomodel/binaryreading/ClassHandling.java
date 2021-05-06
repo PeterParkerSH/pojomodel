@@ -1,18 +1,19 @@
 package de.fh.kiel.advancedjava.pojomodel.binaryreading;
 
-import de.fh.kiel.advancedjava.pojomodel.model.ExtendsRs;
-import de.fh.kiel.advancedjava.pojomodel.model.ImplementsRs;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoInterface;
+import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
 import lombok.NonNull;
+import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -60,9 +61,7 @@ public class ClassHandling {
         PojoClass pojoClass = pojoClassRepository.getPojoClassByNameAndPackageName(className, classPackage);
         if (pojoClass == null){
             // Class is not known in database
-            pojoClass = PojoClass.builder()
-                    .name(className)
-                    .packageName(classPackage).emptyHull(true).build();
+            pojoClass = createEmptyClassHull(className, classPackage);
         }
 
         if (!pojoClass.getEmptyHull()){
@@ -71,6 +70,7 @@ public class ClassHandling {
 
         ExtendsRs extendsRs = buildExtendsRs(classNode);
         Set<ImplementsRs> implementsRsSet = buildImplementsRs(classNode);
+        List<AttributeRs> attributeRsList = buildAttributeRs(classNode);
 
         pojoClass.setExtendsClass(extendsRs);
         pojoClass.setImplementsInterfaces(implementsRsSet);
@@ -110,7 +110,7 @@ public class ClassHandling {
 
 
 
-        classNode.interfaces.forEach(interf -> {
+        for (Object interf: classNode.interfaces) {
             if (interf instanceof String) {
                 String interfaceString = (String) interf;
                 String interfaceName = parseClassName(interfaceString);
@@ -121,13 +121,28 @@ public class ClassHandling {
                 }
                 result.add(ImplementsRs.builder().pojoInterface(pojoInterface).build());
             }
-        });
+        };
 
         return result;
     }
 
+    private List<AttributeRs> buildAttributeRs(ClassNode classNode) {
+        ArrayList<AttributeRs> result = new ArrayList<>();
+
+        if (classNode.fields != null) {
+            for (Object field: classNode.fields){
+                if(field instanceof FieldNode) {
+                    FieldNode a = (FieldNode) field;
+
+                }
+
+            }
+        }
+        return result;
+    }
+
     private PojoClass createEmptyClassHull(String className, String packageName){
-        PojoClass emptyHull = PojoClass.builder().name(className).packageName(packageName).build();
+        PojoClass emptyHull = PojoClass.builder().name(className).packageName(packageName).emptyHull(true).build();
         pojoClassRepository.save(emptyHull);
         return emptyHull;
     }

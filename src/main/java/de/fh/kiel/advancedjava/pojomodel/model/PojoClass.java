@@ -7,12 +7,14 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor
 @Node("Class")
 public class PojoClass extends PojoElement{
 
@@ -26,5 +28,9 @@ public class PojoClass extends PojoElement{
     @Builder.Default
     @Relationship(type = "IMPLEMENTS", direction = Relationship.Direction.OUTGOING)
     private Set<ImplementsRs> implementsInterfaces = new HashSet<>();
+
+    @Builder.Default
+    @Relationship(type = "HAS_ATTRIBUTE", direction = Relationship.Direction.OUTGOING)
+    private List<AttributeRs> hasAttributes = new ArrayList<>();
 
 }
