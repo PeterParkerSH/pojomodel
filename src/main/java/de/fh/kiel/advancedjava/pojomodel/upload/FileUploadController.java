@@ -1,10 +1,12 @@
 package de.fh.kiel.advancedjava.pojomodel.upload;
 
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandling;
+import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandlingException;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.JarHandling;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,14 +49,17 @@ public class FileUploadController {
 	@PostMapping("/upload")
 	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {
-			jarHandling.readFile(file).forEach(classNode -> {
-
+			for (ClassNode classNode: jarHandling.readFile(file)) {
 				classHandling.handleClassNode(classNode);
-			});
-		}catch (IOException e) {
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
+			return e.getMessage();
+		} catch (ClassHandlingException e) {
+			e.printStackTrace();
+			return e.getMessage();
 		}
-		//System.out.println(file.getOriginalFilename());
+
 
 		return "redirect:/upload";
 	}

@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PojoInterfaceRepository extends Neo4jRepository<PojoInterface, Long> {
-    @Query("MATCH (i:Interface) WHERE i.interfaceName = $interfaceName AND i.packageName = $packageName RETURN i")
-    PojoInterface getPojoInterfaceByInterfaceNameAndPackageName(@Param("interfaceName") String interfaceName, @Param("packageName") String packageName);
+    @Query("MATCH (i:Interface) WHERE i.name = $name AND i.packageName = $packageName RETURN i")
+    PojoInterface getPojoInterfaceByNameAndPackageName(@Param("name") String name, @Param("packageName") String packageName);
 
 }

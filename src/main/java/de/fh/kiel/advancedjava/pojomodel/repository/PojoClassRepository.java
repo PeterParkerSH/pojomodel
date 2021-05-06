@@ -9,12 +9,12 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PojoClassRepository extends Neo4jRepository<PojoClass, Long> {
-    @Query("MATCH (c:Class) WHERE c.className = $className AND c.packageName = $packageName RETURN c")
-    List<PojoClass> getPojoClassesByClassNameAndPackageName(@Param("className") String className, @Param("packageName") String packageName);
+    @Query("MATCH (c:Class) WHERE c.name = $name AND c.packageName = $packageName RETURN c")
+    List<PojoClass> getPojoClassesByNameAndPackageName(@Param("name") String name, @Param("packageName") String packageName);
 
-    @Query("MATCH (c:Class) WHERE c.className = $className AND c.packageName = $packageName RETURN c")
-    PojoClass getPojoClassByClassNameAndPackageName(@Param("className") String className, @Param("packageName") String packageName);
+    @Query("MATCH (c:Class) WHERE c.name = $name AND c.packageName = $packageName RETURN c")
+    PojoClass getPojoClassByNameAndPackageName(@Param("name") String name, @Param("packageName") String packageName);
 
-    @Query("MATCH (c:Class) WHERE c.className = $className RETURN c")
-    PojoClass getPojoClassByClassName(@Param("className") String className);
+    @Query("MATCH (c:Class) WHERE c.name = $name RETURN c")
+    PojoClass getPojoClassByName(@Param("name") String name);
 }

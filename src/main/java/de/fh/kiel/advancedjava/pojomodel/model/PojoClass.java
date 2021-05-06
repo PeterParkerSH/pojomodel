@@ -2,8 +2,6 @@ package de.fh.kiel.advancedjava.pojomodel.model;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
@@ -17,6 +15,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Node("Class")
 public class PojoClass extends PojoElement{
+
+    @Builder.Default
+    private Boolean emptyHull = false;
 
     @Builder.Default
     @Relationship(type = "EXTENDS", direction = Relationship.Direction.OUTGOING)
