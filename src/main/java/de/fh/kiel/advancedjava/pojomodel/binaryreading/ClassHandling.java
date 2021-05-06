@@ -29,13 +29,24 @@ public class ClassHandling {
 
     private String parsePackageName(String completeName){
         int packageEnd = completeName.lastIndexOf("/");
-        return completeName.substring(0, packageEnd);
+        if (packageEnd == -1){
+            // No package
+            return "";
+        }else {
+            return completeName.substring(0, packageEnd);
+        }
 
     }
 
     private String parseClassName(String completeName){
         int packageEnd = completeName.lastIndexOf("/");
-        return completeName.substring(packageEnd+1);
+
+        if (packageEnd == -1){
+            // No package
+            return completeName;
+        }else {
+            return completeName.substring(packageEnd + 1);
+        }
     }
 
     private boolean isInterface(ClassNode classNode){
@@ -133,9 +144,7 @@ public class ClassHandling {
             for (Object field: classNode.fields){
                 if(field instanceof FieldNode) {
                     FieldNode a = (FieldNode) field;
-
                 }
-
             }
         }
         return result;
