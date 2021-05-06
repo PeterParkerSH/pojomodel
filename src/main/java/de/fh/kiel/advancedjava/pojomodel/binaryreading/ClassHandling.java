@@ -38,8 +38,12 @@ public class ClassHandling {
         return completeName.substring(packageEnd+1);
     }
 
+    private boolean isInterface(ClassNode classNode){
+        return (classNode.access & Opcodes.ACC_INTERFACE) != 0;
+    }
+
     public void handleClassNode(ClassNode classNode){
-        if (((classNode.access & Opcodes.ACC_INTERFACE) != 0)) {
+        if (isInterface(classNode)) {
             buildPojoInterface(classNode);
         } else {
             buildPojoClass(classNode);
@@ -50,13 +54,13 @@ public class ClassHandling {
 
     private void buildPojoClass(ClassNode classNode){
         // TODO: How to determine if a class is an interface?
+        // TODO: Still a TODO?
         String className = parseClassName(classNode.name);
         String classPackage = parsePackageName(classNode.name);
 
         PojoClass pojoClass = pojoClassRepository.getPojoClassByClassNameAndPackageName(className, classPackage);
         if (pojoClass == null){
             // Class is not known in database
-
             pojoClass = PojoClass.builder()
                     .className(className)
                     .packageName(classPackage).build();
