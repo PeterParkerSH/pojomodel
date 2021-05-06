@@ -85,6 +85,7 @@ public class ClassHandling {
 
         pojoClass.setExtendsClass(extendsRs);
         pojoClass.setImplementsInterfaces(implementsRsSet);
+        pojoClass.setHasAttributes(attributeRsList);
         pojoClass.setEmptyHull(false);
 
         pojoClassRepository.save(pojoClass);

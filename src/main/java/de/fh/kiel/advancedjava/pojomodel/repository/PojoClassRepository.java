@@ -17,4 +17,7 @@ public interface PojoClassRepository extends Neo4jRepository<PojoClass, Long> {
 
     @Query("MATCH (c:Class) WHERE c.name = $name RETURN c")
     PojoClass getPojoClassByName(@Param("name") String name);
+
+    @Query("MATCH (c:Class) WHERE c.name = $name DELETE c")
+    void deleteAllByName(@Param("name") String name);
 }
