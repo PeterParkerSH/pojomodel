@@ -6,6 +6,7 @@ import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoInterface;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,17 @@ public class ClassHandling {
         return completeName.substring(packageEnd+1);
     }
 
-    public void buildPojoClass(ClassNode classNode){
+    public void handleClassNode(ClassNode classNode){
+        if (((classNode.access & Opcodes.ACC_INTERFACE) != 0)) {
+            buildPojoInterface(classNode);
+        } else {
+            buildPojoClass(classNode);
+        }
+
+    }
+
+
+    private void buildPojoClass(ClassNode classNode){
         // TODO: How to determine if a class is an interface?
         String className = parseClassName(classNode.name);
         String classPackage = parsePackageName(classNode.name);
@@ -61,7 +72,7 @@ public class ClassHandling {
         pojoClassRepository.save(pojoClass);
     }
 
-    public void buildPojoInterface(ClassNode classNode){
+    private void buildPojoInterface(ClassNode classNode){
         String interfaceName = parseClassName(classNode.name);
         String interfacePackage = parsePackageName(classNode.name);
         PojoInterface pojoInterface = pojoInterfaceRepository.getPojoInterfaceByInterfaceNameAndPackageName(interfaceName, interfacePackage);
@@ -71,7 +82,7 @@ public class ClassHandling {
         }
     }
 
-    public ExtendsRs buildExtendsRs(ClassNode classNode){
+    private ExtendsRs buildExtendsRs(ClassNode classNode){
         String superClassName = parseClassName(classNode.superName);
         String superClassPackage = parsePackageName(classNode.superName);
 
@@ -86,7 +97,7 @@ public class ClassHandling {
         return null;
     }
 
-    public Set<ImplementsRs> buildImplementsRs(ClassNode classNode){
+    private Set<ImplementsRs> buildImplementsRs(ClassNode classNode){
         HashSet<ImplementsRs> result = new HashSet<>();
 
         classNode.interfaces.forEach(interf -> {
@@ -104,7 +115,7 @@ public class ClassHandling {
         return result;
     }
 
-    public PojoClass createEmptyClassHull(String className, String packageName){
+    private PojoClass createEmptyClassHull(String className, String packageName){
         PojoClass emptyHull = PojoClass.builder().className(className).packageName(packageName).build();
         pojoClassRepository.save(emptyHull);
         return emptyHull;

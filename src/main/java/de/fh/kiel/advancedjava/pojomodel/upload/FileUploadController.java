@@ -48,19 +48,8 @@ public class FileUploadController {
 	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {
 			jarHandling.readFile(file).forEach(classNode -> {
-/*				PojoClass pojoClass = pojoClassRepository.getPojoClassByClassNameAndPackageName(classNode.sourceFile, classNode.name);
-				if (pojoClass == null){
-					pojoClass = PojoClass.builder().className(classNode.sourceFile).packageName(classNode.name).build();
-				}else{
 
-					// Add members etc.
-				}
-				pojoClassRepository.save(pojoClass);*/
-				if (((classNode.access & Opcodes.ACC_INTERFACE) != 0)) {
-					classHandling.buildPojoInterface(classNode);
-				} else {
-					classHandling.buildPojoClass(classNode);
-				}
+				classHandling.handleClassNode(classNode);
 			});
 		}catch (IOException e) {
 			e.printStackTrace();
