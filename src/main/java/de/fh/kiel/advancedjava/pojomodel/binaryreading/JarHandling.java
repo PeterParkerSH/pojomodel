@@ -15,7 +15,7 @@ import java.util.jar.JarInputStream;
 
 @Service
 public class JarHandling {
-    public List<ClassNode> readFile(MultipartFile file) throws IOException {
+    public List<ClassNode> readFile(MultipartFile file) throws ClassHandlingException, IOException {
         if (file.getOriginalFilename().endsWith(".jar")) {
             return readJarFile(file);
         } else if (file.getOriginalFilename().endsWith(".class")){
@@ -23,11 +23,11 @@ public class JarHandling {
             classes.add(readClassFile(file));
             return classes;
         } else {
-            throw new IOException("Unhandled file type");
+            throw new ClassHandlingException("Unhandled file type");
         }
     }
 
-    public List<ClassNode> readJarFile(MultipartFile mpFile) throws IOException{
+    private List<ClassNode> readJarFile(MultipartFile mpFile) throws IOException{
         List<ClassNode> classes = new ArrayList<>();
         JarInputStream jar = new JarInputStream(mpFile.getInputStream());
         JarEntry entry;
@@ -45,7 +45,7 @@ public class JarHandling {
         return classes;
     }
 
-    public ClassNode readClassFile(MultipartFile mpFile){
+    private ClassNode readClassFile(MultipartFile mpFile){
         try {
             byte[] byteArray = mpFile.getBytes();
             return readClassNode(byteArray);
@@ -56,7 +56,7 @@ public class JarHandling {
         return null;
     }
 
-    public ClassNode readClassNode(byte[] classByteArray){
+    private ClassNode readClassNode(byte[] classByteArray){
         ClassReader cr = new ClassReader(classByteArray);
         ClassNode classNode = new ClassNode();
         try {
