@@ -14,7 +14,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 @AllArgsConstructor
 @NoArgsConstructor
 @Node("Element")
-public class PojoElement {
+public abstract class PojoElement {
     @Id
     @GeneratedValue
     private Long id;

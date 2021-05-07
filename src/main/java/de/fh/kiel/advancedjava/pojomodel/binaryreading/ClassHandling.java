@@ -68,7 +68,7 @@ public class ClassHandling {
 
     public void handleClassNode(ClassNode classNode) throws ClassHandlingException{
         if (isInterface(classNode)) {
-            buildPojoInterface(classNode);
+            buildPojoInterface(classNode.name);
         } else {
             buildPojoClass(classNode);
         }
@@ -102,9 +102,9 @@ public class ClassHandling {
         pojoClassRepository.save(pojoClass);
     }
 
-    private void buildPojoInterface(ClassNode classNode){
-        String interfaceName = parseClassName(classNode.name);
-        String interfacePackage = parsePackageName(classNode.name);
+    private void buildPojoInterface(String nodeName){
+        String interfaceName = parseClassName(nodeName);
+        String interfacePackage = parsePackageName(nodeName);
         PojoInterface pojoInterface = pojoInterfaceRepository.getPojoInterfaceByNameAndPackageName(interfaceName, interfacePackage);
         if (pojoInterface == null){
             pojoInterface = PojoInterface.builder().name(interfaceName).packageName(interfacePackage).build();
@@ -131,8 +131,6 @@ public class ClassHandling {
     private List<ImplementsRs> buildImplementsRs(@NonNull ClassNode classNode){
         List<ImplementsRs> result = new ArrayList<>();
 
-
-
         for (Object interf: classNode.interfaces) {
             if (interf instanceof String) {
                 String interfaceString = (String) interf;
@@ -141,6 +139,7 @@ public class ClassHandling {
                 PojoInterface pojoInterface = pojoInterfaceRepository.getPojoInterfaceByNameAndPackageName(interfaceName, interfacePackage);
                 if (pojoInterface == null) {
                     pojoInterface = PojoInterface.builder().name(interfaceName).packageName(interfacePackage).build();
+                    pojoInterfaceRepository.save(pojoInterface);
                 }
                 result.add(ImplementsRs.builder().pojoInterface(pojoInterface).build());
             }
