@@ -9,5 +9,7 @@ import org.springframework.stereotype.Controller;
 
 public interface PojoElementRepository extends Neo4jRepository<PojoElement, Long> {
     @Query("MATCH (c:Class) WHERE c.name = $name AND c.packageName = $packageName RETURN c")
-    PojoClass getPojoElementByNameAndPackageName(@Param("name") String name, @Param("packageName") String packageName);
+    PojoElement getPojoElementByNameAndPackageName(@Param("name") String name, @Param("packageName") String packageName);
+
+
 }

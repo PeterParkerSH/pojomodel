@@ -3,6 +3,7 @@ package de.fh.kiel.advancedjava.pojomodel.binaryreading;
 import de.fh.kiel.advancedjava.pojomodel.PojoApplication;
 import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
+import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
 import lombok.NonNull;
 import org.objectweb.asm.Attribute;
@@ -27,11 +28,13 @@ public class ClassHandling {
 
     private final PojoClassRepository pojoClassRepository;
     private final PojoInterfaceRepository  pojoInterfaceRepository;
+    private final PojoElementRepository pojoElementRepository;
 
     @Autowired
-    public ClassHandling(final PojoClassRepository pojoClassRepository, final PojoInterfaceRepository  pojoInterfaceRepository){
+    public ClassHandling(final PojoClassRepository pojoClassRepository, final PojoInterfaceRepository  pojoInterfaceRepository, final PojoElementRepository  pojoElementRepository){
         this.pojoClassRepository = pojoClassRepository;
         this.pojoInterfaceRepository = pojoInterfaceRepository;
+        this.pojoElementRepository = pojoElementRepository;
     }
 
     private boolean checkOpcode(int mask, int opcpde){
@@ -138,8 +141,15 @@ public class ClassHandling {
                 String interfacePackage = parsePackageName(interfaceString);
                 PojoInterface pojoInterface = pojoInterfaceRepository.getPojoInterfaceByNameAndPackageName(interfaceName, interfacePackage);
                 if (pojoInterface == null) {
-                    pojoInterface = PojoInterface.builder().name(interfaceName).packageName(interfacePackage).build();
-                    pojoInterfaceRepository.save(pojoInterface);
+                    PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(interfaceName, interfacePackage);
+                    if (pojoElement != null) {
+                        if (pojoElement instanceof PojoClass){
+                            pojoInterface = pojoInterfaceRepository.changeClassToInterfaceById(pojoElement.getId());
+                        }
+                    } else {
+                        pojoInterface = PojoInterface.builder().name(interfaceName).packageName(interfacePackage).build();
+                        pojoInterfaceRepository.save(pojoInterface);
+                    }
                 }
                 result.add(ImplementsRs.builder().pojoInterface(pojoInterface).build());
             }
