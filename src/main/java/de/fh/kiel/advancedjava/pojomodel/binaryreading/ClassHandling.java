@@ -11,6 +11,7 @@ import org.objectweb.asm.tree.FieldNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -80,7 +81,7 @@ public class ClassHandling {
         }
 
         ExtendsRs extendsRs = buildExtendsRs(classNode);
-        Set<ImplementsRs> implementsRsSet = buildImplementsRs(classNode);
+        List<ImplementsRs> implementsRsSet = buildImplementsRs(classNode);
         List<AttributeRs> attributeRsList = buildAttributeRs(classNode);
 
         pojoClass.setExtendsClass(extendsRs);
@@ -117,8 +118,8 @@ public class ClassHandling {
         return null;
     }
 
-    private Set<ImplementsRs> buildImplementsRs(@NonNull ClassNode classNode){
-        HashSet<ImplementsRs> result = new HashSet<>();
+    private List<ImplementsRs> buildImplementsRs(@NonNull ClassNode classNode){
+        List<ImplementsRs> result = new ArrayList<>();
 
 
 
@@ -134,7 +135,6 @@ public class ClassHandling {
                 result.add(ImplementsRs.builder().pojoInterface(pojoInterface).build());
             }
         };
-
         return result;
     }
 

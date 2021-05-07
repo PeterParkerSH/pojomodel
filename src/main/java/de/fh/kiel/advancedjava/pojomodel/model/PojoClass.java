@@ -27,7 +27,7 @@ public class PojoClass extends PojoElement{
 
     @Builder.Default
     @Relationship(type = "IMPLEMENTS", direction = Relationship.Direction.OUTGOING)
-    private Set<ImplementsRs> implementsInterfaces = new HashSet<>();
+    private List<ImplementsRs> implementsInterfaces = new ArrayList<>();
 
     @Builder.Default
     @Relationship(type = "HAS_ATTRIBUTE", direction = Relationship.Direction.OUTGOING)
