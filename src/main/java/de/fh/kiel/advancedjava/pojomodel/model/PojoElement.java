@@ -13,6 +13,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@Node("Element")
 public class PojoElement {
     @Id
     @GeneratedValue

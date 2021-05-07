@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.binaryreading;
 
+import de.fh.kiel.advancedjava.pojomodel.PojoApplication;
 import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
@@ -8,6 +9,8 @@ import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,9 @@ import java.util.Set;
 
 @Service
 public class ClassHandling {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassHandling.class);
+
     private final PojoClassRepository pojoClassRepository;
     private final PojoInterfaceRepository  pojoInterfaceRepository;
 
@@ -149,18 +155,67 @@ public class ClassHandling {
             for (Object field: classNode.fields){
                 if(field instanceof FieldNode) {
                     FieldNode a = (FieldNode) field;
+
                     String access = "private";
                     if (checkOpcode(a.access, Opcodes.ACC_PROTECTED))
                         access = "protected";
                     if (checkOpcode(a.access, Opcodes.ACC_PUBLIC))
                         access = "public";
 
-                    result.add(AttributeRs.builder().visibility(access).name(a.name).build());
+                    String attributeType = "";
+
+                    switch (a.desc.charAt(0)) {
+                        case 'L':
+                            attributeType = a.desc.substring(1, a.desc.length()-1);
+                            break;
+                        case 'Z':
+                            attributeType = Boolean.class.getName();
+                            break;
+                        case 'B':
+                            attributeType = Byte.class.getName();
+                            break;
+                        case 'S':
+                            attributeType = Short.class.getName();
+                            break;
+                        case 'I':
+                            attributeType = Integer.class.getName();
+                            break;
+                        case 'J':
+                            attributeType = Long.class.getName();
+                            break;
+                        case 'F':
+                            attributeType = Float.class.getName();
+                            break;
+                        case 'D':
+                            attributeType = Double.class.getName();
+                            break;
+                        case 'C':
+                            attributeType = Character.class.getName();
+                            break;
+                        default:
+                            LOGGER.info("Unsupported attribute prefix: "+ a.desc.charAt(0));
+                    };
+                    if (!attributeType.equals("")) {
+                        attributeType = attributeType.replace(".", "/");
+
+                        String attributeName = parseClassName(attributeType);
+                        String attributePackage = parsePackageName(attributeType);
+                        PojoElement relatedClass = pojoClassRepository.getPojoClassByNameAndPackageName(attributeName, attributePackage);
+                        if (relatedClass == null){
+                            relatedClass = pojoInterfaceRepository.getPojoInterfaceByNameAndPackageName(attributeName, attributePackage);
+                            if (relatedClass == null) {
+                                relatedClass = createEmptyClassHull(attributeName, attributePackage);
+                            }
+                        }
+                        result.add(AttributeRs.builder().visibility(access).name(a.name).pojoElement(relatedClass).build());
+                    }
                 }
             }
         }
         return result;
     }
+
+
 
     private PojoClass createEmptyClassHull(String className, String packageName){
         PojoClass emptyHull = PojoClass.builder().name(className).packageName(packageName).emptyHull(true).build();
