@@ -28,6 +28,11 @@ public class ClassHandling {
         this.pojoInterfaceRepository = pojoInterfaceRepository;
     }
 
+    private boolean checkOpcode(int mask, int opcpde){
+        return (mask & opcpde) != 0;
+
+    }
+
     private String parsePackageName(String completeName){
         int packageEnd = completeName.lastIndexOf("/");
         if (packageEnd == -1){
@@ -51,7 +56,8 @@ public class ClassHandling {
     }
 
     private boolean isInterface(ClassNode classNode){
-        return (classNode.access & Opcodes.ACC_INTERFACE) != 0;
+        return checkOpcode(classNode.access, Opcodes.ACC_INTERFACE);
+        //return  (classNode.access & Opcodes.ACC_INTERFACE) != 0;
     }
 
     public void handleClassNode(ClassNode classNode) throws ClassHandlingException{
@@ -65,8 +71,6 @@ public class ClassHandling {
 
 
     private void buildPojoClass(ClassNode classNode) throws ClassHandlingException{
-        // TODO: How to determine if a class is an interface?
-        // TODO: Still a TODO?
         String className = parseClassName(classNode.name);
         String classPackage = parsePackageName(classNode.name);
 
@@ -145,6 +149,13 @@ public class ClassHandling {
             for (Object field: classNode.fields){
                 if(field instanceof FieldNode) {
                     FieldNode a = (FieldNode) field;
+                    String access = "private";
+                    if (checkOpcode(a.access, Opcodes.ACC_PROTECTED))
+                        access = "protected";
+                    if (checkOpcode(a.access, Opcodes.ACC_PUBLIC))
+                        access = "public";
+
+                    result.add(AttributeRs.builder().visibility(access).name(a.name).build());
                 }
             }
         }
