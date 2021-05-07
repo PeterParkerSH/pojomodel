@@ -6,6 +6,6 @@ import org.springframework.data.neo4j.core.schema.Node;
 
 @AllArgsConstructor
 @SuperBuilder
-@Node("EmptyHull")
-public class PojoHull extends PojoElement{
+@Node("Reference")
+public class PojoReference extends PojoElement{
 }

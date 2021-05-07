@@ -2,6 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.binaryreading;
 
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
+import de.fh.kiel.advancedjava.pojomodel.repository.PojoReferenceRepository;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,10 +35,14 @@ class JarHandlingTest {
     @Autowired
     PojoInterfaceRepository interfaceRepository;
 
+    @Autowired
+    PojoReferenceRepository referenceRepository;
+
     @BeforeEach
     void clearNodes(){
         pojoClassRepository.deleteAll();
         interfaceRepository.deleteAll();
+        referenceRepository.deleteAll();
     };
 
     @Test
