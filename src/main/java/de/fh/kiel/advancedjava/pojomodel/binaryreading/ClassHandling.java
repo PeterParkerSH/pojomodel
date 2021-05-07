@@ -84,14 +84,7 @@ public class ClassHandling {
 
         PojoClass pojoClass = pojoClassRepository.getPojoClassByNameAndPackageName(className, classPackage);
         if (pojoClass == null){
-            // Class is not known in database
-            PojoReference pojoReference = pojoReferenceRepository.getPojoReferenceByNameAndPackageName(className, classPackage);
-            if (pojoReference != null) {
-                pojoClass = pojoClassRepository.changeReferenceToClassById(pojoReference.getId());
-                pojoClass.setEmptyHull(true);
-            } else {
-                pojoClass = createEmptyClassHull(className, classPackage);
-            }
+            pojoClass = getEmptyClassHull(className, classPackage);
         }
 
         if (!pojoClass.getEmptyHull()){
@@ -136,7 +129,7 @@ public class ClassHandling {
             // search for super class, if not existing create empty hull
             PojoClass superClass = pojoClassRepository.getPojoClassByNameAndPackageName(superClassName, superClassPackage);
             if (superClass == null) {
-                superClass = createEmptyClassHull(superClassName, superClassPackage);
+                superClass = getEmptyClassHull(superClassName, superClassPackage);
             }
             return ExtendsRs.builder().pojoClass(superClass).build();
         }
@@ -213,7 +206,7 @@ public class ClassHandling {
                         PojoElement relatedClass = pojoElementRepository.getPojoElementByNameAndPackageName(attributeName, attributePackage);
                         if (relatedClass == null){
                             if (!isReference) {
-                                relatedClass = createEmptyClassHull(attributeName, attributePackage);
+                                relatedClass = getEmptyClassHull(attributeName, attributePackage);
                             } else {
                                 relatedClass = createPojoReference(attributeName, attributePackage);
                             }
@@ -227,9 +220,15 @@ public class ClassHandling {
     }
 
 
-
-    private PojoClass createEmptyClassHull(String className, String packageName){
-        PojoClass emptyHull = PojoClass.builder().name(className).packageName(packageName).emptyHull(true).build();
+    private PojoClass getEmptyClassHull(String className, String packageName){
+        PojoClass emptyHull;
+        PojoReference pojoReference = pojoReferenceRepository.getPojoReferenceByNameAndPackageName(className, packageName);
+        if (pojoReference != null) {
+            emptyHull = pojoClassRepository.changeReferenceToClassById(pojoReference.getId());
+            emptyHull.setEmptyHull(true);
+        } else {
+            emptyHull = PojoClass.builder().name(className).packageName(packageName).emptyHull(true).build();
+        }
         pojoClassRepository.save(emptyHull);
         return emptyHull;
     }
