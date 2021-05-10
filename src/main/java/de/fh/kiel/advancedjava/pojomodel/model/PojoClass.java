@@ -19,9 +19,6 @@ import java.util.Set;
 public class PojoClass extends PojoElement{
 
     @Builder.Default
-    private Boolean emptyHull = false;
-
-    @Builder.Default
     @Relationship(type = "EXTENDS", direction = Relationship.Direction.OUTGOING)
     private ExtendsRs extendsClass = null;
 

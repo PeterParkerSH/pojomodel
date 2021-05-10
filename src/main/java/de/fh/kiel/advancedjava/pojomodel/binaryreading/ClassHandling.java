@@ -82,14 +82,12 @@ public class ClassHandling {
         String className = parseClassName(classNode.name);
         String classPackage = parsePackageName(classNode.name);
 
-        PojoClass pojoClass = pojoClassRepository.getPojoClassByNameAndPackageName(className, classPackage);
-        if (pojoClass == null){
-            pojoClass = getEmptyClassHull(className, classPackage);
-        }
-
-        if (!pojoClass.getEmptyHull()){
+        PojoElement pojoElement = createPojoReference(className, classPackage);
+        if (!(pojoElement instanceof PojoReference)){
             throw new ClassHandlingException("Item " + className + " in package '" + classPackage + "' is already in the database");
         }
+
+        PojoClass pojoClass = pojoClassRepository.changeReferenceToClassById(pojoElement.getId());
 
         ExtendsRs extendsRs = buildExtendsRs(classNode);
         List<ImplementsRs> implementsRsSet = buildImplementsRs(classNode);
@@ -98,26 +96,20 @@ public class ClassHandling {
         pojoClass.setExtendsClass(extendsRs);
         pojoClass.setImplementsInterfaces(implementsRsSet);
         pojoClass.setHasAttributes(attributeRsList);
-        pojoClass.setEmptyHull(false);
 
         pojoClassRepository.save(pojoClass);
     }
 
-    private PojoInterface buildPojoInterface(String nodeName){
+    private void buildPojoInterface(String nodeName) throws ClassHandlingException{
         String interfaceName = parseClassName(nodeName);
         String interfacePackage = parsePackageName(nodeName);
-        PojoInterface pojoInterface = pojoInterfaceRepository.getPojoInterfaceByNameAndPackageName(interfaceName, interfacePackage);
-        if (pojoInterface == null){
-            PojoReference pojoReference = pojoReferenceRepository.getPojoReferenceByNameAndPackageName(interfaceName, interfacePackage);
-            if (pojoReference != null) {
-                pojoInterface = pojoInterfaceRepository.changeReferenceToInterfaceById(pojoReference.getId());
-            } else {
-                pojoInterface = PojoInterface.builder().name(interfaceName).packageName(interfacePackage).build();
-            }
-            pojoInterfaceRepository.save(pojoInterface);
-            return pojoInterface;
+
+        PojoElement pojoElement = createPojoReference(interfaceName, interfacePackage);
+        if (!(pojoElement instanceof PojoReference)){
+            throw new ClassHandlingException("Item " + interfaceName + " in package '" + interfacePackage + "' is already in the database");
         }
-        return null;
+        PojoInterface pojoInterface = pojoInterfaceRepository.changeReferenceToInterfaceById(pojoElement.getId());
+        pojoInterfaceRepository.save(pojoInterface);
     }
 
     private ExtendsRs buildExtendsRs(ClassNode classNode){
@@ -127,25 +119,28 @@ public class ClassHandling {
         // Avoid Object Notes as Parent class
         if (!(superClassName.equals("Object") && superClassPackage.equals("java/lang"))){
             // search for super class, if not existing create empty hull
-            PojoClass superClass = pojoClassRepository.getPojoClassByNameAndPackageName(superClassName, superClassPackage);
-            if (superClass == null) {
-                superClass = getEmptyClassHull(superClassName, superClassPackage);
+            PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(superClassName, superClassPackage);
+            if (pojoElement == null) {
+                pojoElement = createPojoReference(superClassName, superClassPackage);
             }
-            return ExtendsRs.builder().pojoClass(superClass).build();
+
+            return ExtendsRs.builder().pojoClass(pojoElement).build();
         }
         return null;
     }
 
-    private List<ImplementsRs> buildImplementsRs(@NonNull ClassNode classNode){
+    private List<ImplementsRs> buildImplementsRs(@NonNull ClassNode classNode) throws ClassHandlingException{
         List<ImplementsRs> result = new ArrayList<>();
 
         for (Object interf: classNode.interfaces) {
             if (interf instanceof String) {
                 String interfaceString = (String) interf;
-                PojoInterface pojoInterface = buildPojoInterface(interfaceString);
-                result.add(ImplementsRs.builder().pojoInterface(pojoInterface).build());
+                String interfaceName = parseClassName(interfaceString);
+                String interfacePackage = parsePackageName(interfaceString);
+                PojoElement pojoElement = createPojoReference(interfaceName, interfacePackage);
+                result.add(ImplementsRs.builder().pojoInterface(pojoElement).build());
             }
-        };
+        }
         return result;
     }
 
@@ -164,53 +159,30 @@ public class ClassHandling {
                         access = "public";
 
                     String attributeType = "";
-                    boolean isReference = false;
+
 
                     switch (a.desc.charAt(0)) {
-                        case 'L':
-                            attributeType = a.desc.substring(1, a.desc.length()-1);
-                            isReference = true;
-                            break;
-                        case 'Z':
-                            attributeType = Boolean.class.getName();
-                            break;
-                        case 'B':
-                            attributeType = Byte.class.getName();
-                            break;
-                        case 'S':
-                            attributeType = Short.class.getName();
-                            break;
-                        case 'I':
-                            attributeType = Integer.class.getName();
-                            break;
-                        case 'J':
-                            attributeType = Long.class.getName();
-                            break;
-                        case 'F':
-                            attributeType = Float.class.getName();
-                            break;
-                        case 'D':
-                            attributeType = Double.class.getName();
-                            break;
-                        case 'C':
-                            attributeType = Character.class.getName();
-                            break;
-                        default:
-                            LOGGER.info("Unsupported attribute prefix: "+ a.desc.charAt(0));
-                    };
+                        case 'L' -> {
+                            attributeType = a.desc.substring(1, a.desc.length() - 1);
+
+                        }
+                        case 'Z' -> attributeType = Boolean.class.getName();
+                        case 'B' -> attributeType = Byte.class.getName();
+                        case 'S' -> attributeType = Short.class.getName();
+                        case 'I' -> attributeType = Integer.class.getName();
+                        case 'J' -> attributeType = Long.class.getName();
+                        case 'F' -> attributeType = Float.class.getName();
+                        case 'D' -> attributeType = Double.class.getName();
+                        case 'C' -> attributeType = Character.class.getName();
+                        default -> LOGGER.info("Unsupported attribute prefix: " + a.desc.charAt(0));
+                    }
+
                     if (!attributeType.equals("")) {
                         attributeType = attributeType.replace(".", "/");
 
                         String attributeName = parseClassName(attributeType);
                         String attributePackage = parsePackageName(attributeType);
-                        PojoElement relatedClass = pojoElementRepository.getPojoElementByNameAndPackageName(attributeName, attributePackage);
-                        if (relatedClass == null){
-                            if (!isReference) {
-                                relatedClass = getEmptyClassHull(attributeName, attributePackage);
-                            } else {
-                                relatedClass = createPojoReference(attributeName, attributePackage);
-                            }
-                        }
+                        PojoElement relatedClass = createPojoReference(attributeName, attributePackage);
                         result.add(AttributeRs.builder().visibility(access).name(a.name).pojoElement(relatedClass).build());
                     }
                 }
@@ -220,22 +192,13 @@ public class ClassHandling {
     }
 
 
-    private PojoClass getEmptyClassHull(String className, String packageName){
-        PojoClass emptyHull;
-        PojoReference pojoReference = pojoReferenceRepository.getPojoReferenceByNameAndPackageName(className, packageName);
-        if (pojoReference != null) {
-            emptyHull = pojoClassRepository.changeReferenceToClassById(pojoReference.getId());
-            emptyHull.setEmptyHull(true);
-        } else {
-            emptyHull = PojoClass.builder().name(className).packageName(packageName).emptyHull(true).build();
+    private PojoElement createPojoReference(String className, String packageName){
+        PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(className, packageName);
+        if (pojoElement == null) {
+            PojoReference pojoReference = PojoReference.builder().name(className).packageName(packageName).build();
+            pojoReferenceRepository.save(pojoReference);
+            pojoElement = pojoReference;
         }
-        pojoClassRepository.save(emptyHull);
-        return emptyHull;
-    }
-
-    private PojoReference createPojoReference(String className, String packageName){
-        PojoReference pojoReference = PojoReference.builder().name(className).packageName(packageName).build();
-        pojoReferenceRepository.save(pojoReference);
-        return pojoReference;
+        return pojoElement;
     }
 }

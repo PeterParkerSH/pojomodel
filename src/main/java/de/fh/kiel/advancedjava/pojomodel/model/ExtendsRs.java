@@ -20,5 +20,5 @@ public class ExtendsRs {
     private Long id;
 
     @TargetNode
-    private PojoClass pojoClass;
+    private PojoElement pojoClass;
 }
