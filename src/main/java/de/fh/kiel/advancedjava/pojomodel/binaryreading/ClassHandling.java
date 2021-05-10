@@ -88,7 +88,7 @@ public class ClassHandling {
         }
 
         if (!pojoClass.getEmptyHull()){
-            throw new ClassHandlingException("Class " + className + "is already in the Database");
+            throw new ClassHandlingException("Item " + className + " in package \"" + classPackage + "\" is already in the database");
         }
 
         ExtendsRs extendsRs = buildExtendsRs(classNode);

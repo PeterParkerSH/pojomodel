@@ -1,23 +1,25 @@
-package de.fh.kiel.advancedjava.pojomodel.upload;
+package de.fh.kiel.advancedjava.pojomodel.rest;
 
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandling;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandlingException;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.JarHandling;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
-import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * In order to upload class and jar files you may choose to either encode binary data in base64
@@ -28,7 +30,7 @@ import java.util.List;
  */
 @Controller
 public class FileUploadController {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadController.class);
 	private JarHandling jarHandling;
 	//private PojoClassRepository pojoClassRepository;
 	private ClassHandling classHandling;
@@ -53,11 +55,18 @@ public class FileUploadController {
 				classHandling.handleClassNode(classNode);
 			}
 		} catch (IOException e) {
+			LOGGER.error(e.getMessage());
 			e.printStackTrace();
-			return e.getMessage();
+			throw new ResponseStatusException(
+					HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()
+			);
 		} catch (ClassHandlingException e) {
+			LOGGER.error(e.getMessage());
 			e.printStackTrace();
-			return e.getMessage();
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, e.getMessage()
+			);
+
 		}
 
 
