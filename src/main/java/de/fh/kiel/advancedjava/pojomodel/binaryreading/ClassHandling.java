@@ -82,7 +82,7 @@ public class ClassHandling {
         String className = parseClassName(classNode.name);
         String classPackage = parsePackageName(classNode.name);
 
-        PojoElement pojoElement = createPojoReference(className, classPackage);
+        PojoElement pojoElement = getOrCreatePojoElement(className, classPackage);
         if (!(pojoElement instanceof PojoReference)){
             throw new ClassHandlingException("Item " + className + " in package '" + classPackage + "' is already in the database");
         }
@@ -104,7 +104,7 @@ public class ClassHandling {
         String interfaceName = parseClassName(nodeName);
         String interfacePackage = parsePackageName(nodeName);
 
-        PojoElement pojoElement = createPojoReference(interfaceName, interfacePackage);
+        PojoElement pojoElement = getOrCreatePojoElement(interfaceName, interfacePackage);
         if (!(pojoElement instanceof PojoReference)){
             throw new ClassHandlingException("Item " + interfaceName + " in package '" + interfacePackage + "' is already in the database");
         }
@@ -119,11 +119,7 @@ public class ClassHandling {
         // Avoid Object Notes as Parent class
         if (!(superClassName.equals("Object") && superClassPackage.equals("java/lang"))){
             // search for super class, if not existing create empty hull
-            PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(superClassName, superClassPackage);
-            if (pojoElement == null) {
-                pojoElement = createPojoReference(superClassName, superClassPackage);
-            }
-
+            PojoElement pojoElement = getOrCreatePojoElement(superClassName, superClassPackage);
             return ExtendsRs.builder().pojoClass(pojoElement).build();
         }
         return null;
@@ -137,7 +133,7 @@ public class ClassHandling {
                 String interfaceString = (String) interf;
                 String interfaceName = parseClassName(interfaceString);
                 String interfacePackage = parsePackageName(interfaceString);
-                PojoElement pojoElement = createPojoReference(interfaceName, interfacePackage);
+                PojoElement pojoElement = getOrCreatePojoElement(interfaceName, interfacePackage);
                 result.add(ImplementsRs.builder().pojoInterface(pojoElement).build());
             }
         }
@@ -182,7 +178,7 @@ public class ClassHandling {
 
                         String attributeName = parseClassName(attributeType);
                         String attributePackage = parsePackageName(attributeType);
-                        PojoElement relatedClass = createPojoReference(attributeName, attributePackage);
+                        PojoElement relatedClass = getOrCreatePojoElement(attributeName, attributePackage);
                         result.add(AttributeRs.builder().visibility(access).name(a.name).pojoElement(relatedClass).build());
                     }
                 }
@@ -192,7 +188,7 @@ public class ClassHandling {
     }
 
 
-    private PojoElement createPojoReference(String className, String packageName){
+    private PojoElement getOrCreatePojoElement(String className, String packageName){
         PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(className, packageName);
         if (pojoElement == null) {
             PojoReference pojoReference = PojoReference.builder().name(className).packageName(packageName).build();
