@@ -20,5 +20,5 @@ public class ImplementsRs {
     private Long id;
 
     @TargetNode
-    private PojoInterface pojoInterface;
+    private PojoElement pojoInterface;
 }
