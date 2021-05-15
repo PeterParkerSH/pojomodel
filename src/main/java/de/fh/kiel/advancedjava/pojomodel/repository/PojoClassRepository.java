@@ -23,4 +23,7 @@ public interface PojoClassRepository extends Neo4jRepository<PojoClass, Long> {
 
     @Query("MATCH (n:Element) WHERE ID(n) = $id REMOVE n:Reference SET n:Class RETURN n")
     PojoClass changeReferenceToClassById(@Param("id") Long id);
+
+    @Query("MATCH (n:Class)<-[rel]-(x) WHERE ID(n) = $id REMOVE n:Class DELETE rel")
+    void removeClassLabelAndFieldsById(@Param("id") Long id);
 }

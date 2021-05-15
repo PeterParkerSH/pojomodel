@@ -67,8 +67,6 @@ public class FileUploadController {
 			);
 
 		}
-
-
 		return "redirect:/upload";
 	}
 

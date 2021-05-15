@@ -1,6 +1,8 @@
 package de.fh.kiel.advancedjava.pojomodel.binaryreading;
 
+import de.fh.kiel.advancedjava.pojomodel.TestDataBaseController;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
+import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoReferenceRepository;
 import org.apache.commons.io.IOUtils;
@@ -25,48 +27,21 @@ import static org.junit.jupiter.api.Assertions.*;
 class JarHandlingTest {
 
     @Autowired
-    JarHandling jarHandling;
-    @Autowired
-    ClassHandling classHandling;
-
-    @Autowired
-    PojoClassRepository pojoClassRepository;
-
-    @Autowired
-    PojoInterfaceRepository interfaceRepository;
-
-    @Autowired
-    PojoReferenceRepository referenceRepository;
+    TestDataBaseController testDataBaseController;
 
     @BeforeEach
-    void clearNodes(){
-        pojoClassRepository.deleteAll();
-        interfaceRepository.deleteAll();
-        referenceRepository.deleteAll();
+    void initDataBase(){
+        testDataBaseController.buildTestDataBase();
     };
 
     @Test
     void readFile() {
-        URL url = this.getClass().getClassLoader().getResource("ExampleJar-1.0-SNAPSHOT.jar");
-            File file = null;
-            try {
-                file = new File(url.toURI());
-                FileInputStream input = new FileInputStream(file);
-                MultipartFile multipartFile = new MockMultipartFile("ExampleJar-1.0-SNAPSHOT.jar", "ExampleJar-1.0-SNAPSHOT.jar", "application/octet-stream", IOUtils.toByteArray(input));
-
-                try {
-                    for (ClassNode classNode: jarHandling.readFile(multipartFile)) {
-                        classHandling.handleClassNode(classNode);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    fail(e.getMessage());
-                }
-
-            } catch (Exception e) {
-                fail(e.toString());
-            }
-
 
     }
+
+
+
+
+
+
 }
