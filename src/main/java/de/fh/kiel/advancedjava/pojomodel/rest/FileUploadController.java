@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,14 +43,8 @@ public class FileUploadController {
 		this.classHandling = classHandling;
 	}
 
-	@GetMapping("/upload")
-	public String listUploadedFiles(Model model) throws IOException {
-
-		return "upload";
-	}
-
 	@PostMapping("/upload")
-	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+	public @ResponseBody ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {
 			List<ClassNode> classNodeList= binaryHandling.readFile(file);
 
@@ -75,9 +70,9 @@ public class FileUploadController {
 			throw new ResponseStatusException(
 					HttpStatus.BAD_REQUEST, e.getMessage()
 			);
-
 		}
-		return "redirect:/upload";
+
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 }
