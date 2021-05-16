@@ -43,6 +43,17 @@ public class FileUploadController {
 		this.classHandling = classHandling;
 	}
 
+	/**
+	 *
+	 * @param model
+	 * @return
+	 * @throws IOException
+	 */
+	@GetMapping("/upload")
+	public String listUploadedFiles(Model model) throws IOException {
+		return "upload";
+	}
+
 	@PostMapping("/upload")
 	public @ResponseBody ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {

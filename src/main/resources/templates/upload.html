@@ -14,6 +14,20 @@
             </tr>
         </table>
     </form>
+
+    <form method="POST" enctype="multipart/form-data" action="/jsonImport">
+        <table>
+            <tr>
+                <td>Json File to upload:</td>
+                <td><input type="file" name="json" accept=".json"/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Upload"/></td>
+            </tr>
+        </table>
+    </form>
+    <a href="/jsonExport">Export data</a>
 </div>
 </body>
 </html>

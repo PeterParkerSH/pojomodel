@@ -35,7 +35,7 @@ class ImportExportControllerTest {
         pojoElementRepository.deleteAll();
     }
 
-    MockMultipartFile getMockMultipartFileFromResource(String resource) throws URISyntaxException, IOException {
+    private MockMultipartFile getMockMultipartFileFromResource(String resource) throws URISyntaxException, IOException {
         URL url = this.getClass().getClassLoader().getResource(resource);
         File file = new File(url.toURI());
         FileInputStream fis = new FileInputStream(file);
