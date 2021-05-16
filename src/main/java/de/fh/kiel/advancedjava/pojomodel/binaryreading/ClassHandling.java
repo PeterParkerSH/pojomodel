@@ -3,9 +3,8 @@ package de.fh.kiel.advancedjava.pojomodel.binaryreading;
 import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
-import de.fh.kiel.advancedjava.pojomodel.repository.PojoReferenceRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
-import lombok.NonNull;
+import de.fh.kiel.advancedjava.pojomodel.repository.PojoReferenceRepository;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
@@ -36,9 +35,21 @@ public class ClassHandling {
         this.pojoReferenceRepository = pojoReferenceRepository;
     }
 
+    public boolean checkClassNodeAlreadyExists(ClassNode classNode){
+        String className = parseClassName(classNode.name);
+        String classPackage = parsePackageName(classNode.name);
+        PojoElement pojoElement= pojoElementRepository.getPojoElementByNameAndPackageName(className, classPackage);
+        if (pojoElement == null){
+            return false;
+        } else {
+            // The element exists if it is a PojoClass or PojoElement
+            return (!(pojoElement instanceof PojoReference));
+        }
+
+    }
+
     private boolean checkOpcode(int mask, int opcpde){
         return (mask & opcpde) != 0;
-
     }
 
     private String parsePackageName(String completeName){
@@ -125,7 +136,7 @@ public class ClassHandling {
         return null;
     }
 
-    private List<ImplementsRs> buildImplementsRs(@NonNull ClassNode classNode) throws ClassHandlingException{
+    private List<ImplementsRs> buildImplementsRs(ClassNode classNode) {
         List<ImplementsRs> result = new ArrayList<>();
 
         for (Object interf: classNode.interfaces) {
@@ -158,10 +169,7 @@ public class ClassHandling {
 
 
                     switch (a.desc.charAt(0)) {
-                        case 'L' -> {
-                            attributeType = a.desc.substring(1, a.desc.length() - 1);
-
-                        }
+                        case 'L' -> attributeType = a.desc.substring(1, a.desc.length() - 1);
                         case 'Z' -> attributeType = Boolean.class.getName();
                         case 'B' -> attributeType = Byte.class.getName();
                         case 'S' -> attributeType = Short.class.getName();
