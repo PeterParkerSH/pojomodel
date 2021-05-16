@@ -1,0 +1,165 @@
+{
+  "pojoClasses": [
+    {
+      "@type": "PojoClass",
+      "id": 10,
+      "name": "PojoClass4",
+      "packageName": "testpackage/subpackage",
+      "extendsClass": null,
+      "implementsInterfaces": [],
+      "hasAttributes": [
+        {
+          "id": 5,
+          "pojoElement": 11,
+          "name": "protectedString",
+          "visibility": "protected"
+        }
+      ]
+    },
+    {
+      "@type": "PojoClass",
+      "id": 33,
+      "name": "PojoClass1",
+      "packageName": "",
+      "extendsClass": null,
+      "implementsInterfaces": [
+        {
+          "id": 32,
+          "pojoInterface": 34
+        }
+      ],
+      "hasAttributes": [
+        {
+          "id": 27,
+          "pojoElement": 34,
+          "name": "attrInterface1",
+          "visibility": "private"
+        },
+        {
+          "id": 13,
+          "pojoElement": 35,
+          "name": "attrPojoClass2",
+          "visibility": "private"
+        },
+        {
+          "id": 28,
+          "pojoElement": 36,
+          "name": "attrInterface2",
+          "visibility": "private"
+        },
+        {
+          "id": 29,
+          "pojoElement": 37,
+          "name": "arrtGenericList",
+          "visibility": "private"
+        },
+        {
+          "id": 30,
+          "pojoElement": 38,
+          "name": "attrInteger",
+          "visibility": "private"
+        },
+        {
+          "id": 31,
+          "pojoElement": 39,
+          "name": "attrBoolean",
+          "visibility": "private"
+        }
+      ]
+    },
+    {
+      "@type": "PojoClass",
+      "id": 35,
+      "name": "PojoClass2",
+      "packageName": "testpackage",
+      "extendsClass": {
+        "id": 2,
+        "pojoClass": 40
+      },
+      "implementsInterfaces": [
+        {
+          "id": 1,
+          "pojoInterface": 8
+        }
+      ],
+      "hasAttributes": [
+        {
+          "id": 0,
+          "pojoElement": 38,
+          "name": "protectedInteger",
+          "visibility": "protected"
+        }
+      ]
+    },
+    {
+      "@type": "PojoClass",
+      "id": 40,
+      "name": "PojoClass3",
+      "packageName": "testpackage",
+      "extendsClass": null,
+      "implementsInterfaces": [
+        {
+          "id": 4,
+          "pojoInterface": 9
+        },
+        {
+          "id": 3,
+          "pojoInterface": 36
+        }
+      ],
+      "hasAttributes": []
+    }
+  ],
+  "pojoInterfaces": [
+    {
+      "@type": "PojoInterface",
+      "id": 8,
+      "name": "PojoInterface3",
+      "packageName": "testpackage"
+    },
+    {
+      "@type": "PojoInterface",
+      "id": 9,
+      "name": "PojoInterface4",
+      "packageName": "testpackage"
+    },
+    {
+      "@type": "PojoInterface",
+      "id": 34,
+      "name": "PojoInterface1",
+      "packageName": ""
+    },
+    {
+      "@type": "PojoInterface",
+      "id": 36,
+      "name": "PojoInterface2",
+      "packageName": "testpackage"
+    }
+  ],
+  "pojoReferences": [
+    {
+      "@type": "PojoReference",
+      "id": 11,
+      "name": "String",
+      "packageName": "java/lang"
+    },
+    {
+      "@type": "PojoReference",
+      "id": 37,
+      "name": "List",
+      "packageName": "java/util"
+    },
+    {
+      "@type": "PojoReference",
+      "id": 38,
+      "name": "Integer",
+      "packageName": "java/lang"
+    },
+    {
+      "@type": "PojoReference",
+      "id": 39,
+      "name": "Boolean",
+      "packageName": "java/lang"
+    }
+  ]
+}
