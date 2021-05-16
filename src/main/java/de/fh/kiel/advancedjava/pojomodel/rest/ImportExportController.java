@@ -48,13 +48,13 @@ public class ImportExportController {
     }
 
     @GetMapping("/deleteAll")
-    public @ResponseBody String deleteAll() {
+    public String deleteAll() {
         pojoElementRepository.deleteAll();
         return "redirect:/upload";
     }
 
     @PostMapping("/jsonImport")
-    public @ResponseBody String jsonImport(@RequestParam("json") MultipartFile json){
+    public String jsonImport(@RequestParam("json") MultipartFile json){
         try {
             InputStream stream = json.getInputStream();
             byte[] buffer = new byte[stream.available()];

@@ -55,7 +55,7 @@ public class FileUploadController {
 	}
 
 	@PostMapping("/upload")
-	public @ResponseBody String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {
 			List<ClassNode> classNodeList= binaryHandling.readFile(file);
 
