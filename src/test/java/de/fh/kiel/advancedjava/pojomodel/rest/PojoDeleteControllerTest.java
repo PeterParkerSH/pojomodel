@@ -41,6 +41,7 @@ class PojoDeleteControllerTest {
     void pojoDeleteExisting() throws Exception {
         assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage"));
         this.mockMvc.perform(get("/pojoDelete/PojoClass4/testpackage.subpackage")).andExpect(status().isOk());
+        this.mockMvc.perform(get("/pojoDelete/String/java.lang")).andExpect(status().isOk());
         assertNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage"));
     }
 
