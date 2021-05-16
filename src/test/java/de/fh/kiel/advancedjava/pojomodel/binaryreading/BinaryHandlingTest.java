@@ -24,7 +24,7 @@ import java.net.URL;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class JarHandlingTest {
+class BinaryHandlingTest {
 
     @Autowired
     TestDataBaseController testDataBaseController;

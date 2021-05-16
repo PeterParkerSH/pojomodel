@@ -2,7 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.rest;
 
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandling;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandlingException;
-import de.fh.kiel.advancedjava.pojomodel.binaryreading.JarHandling;
+import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryHandling;
 import org.objectweb.asm.tree.ClassNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * In order to upload class and jar files you may choose to either encode binary data in base64
@@ -29,28 +28,34 @@ import java.io.IOException;
  */
 @Controller
 public class FileUploadController {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadController.class);
-	private JarHandling jarHandling;
-	//private PojoClassRepository pojoClassRepository;
+
+	private BinaryHandling binaryHandling;
+
 	private ClassHandling classHandling;
+
 	@Autowired
-	FileUploadController(final JarHandling jarHandling, /*final PojoClassRepository pojoClassRepository,*/
+	FileUploadController(final BinaryHandling binaryHandling, /*final PojoClassRepository pojoClassRepository,*/
 						 final ClassHandling classHandling){
-		this.jarHandling = jarHandling;
+		this.binaryHandling = binaryHandling;
 		//this.pojoClassRepository = pojoClassRepository;
 		this.classHandling = classHandling;
 	}
 
-	@GetMapping("/upload")
-	public String listUploadedFiles(Model model) throws IOException {
-
-		return "upload";
-	}
-
 	@PostMapping("/upload")
-	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+	public @ResponseBody ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {
-			for (ClassNode classNode: jarHandling.readFile(file)) {
+			List<ClassNode> classNodeList= binaryHandling.readFile(file);
+
+			// Check if elements already exist
+			for (ClassNode classNode: classNodeList) {
+				if (classHandling.checkClassNodeAlreadyExists(classNode)){
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Element " + classNode.name + " already exists in database");
+				}
+			}
+
+			for (ClassNode classNode: classNodeList) {
 				classHandling.handleClassNode(classNode);
 			}
 		} catch (IOException e) {
@@ -65,9 +70,9 @@ public class FileUploadController {
 			throw new ResponseStatusException(
 					HttpStatus.BAD_REQUEST, e.getMessage()
 			);
-
 		}
-		return "redirect:/upload";
+
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 }

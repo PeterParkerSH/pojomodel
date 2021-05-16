@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.binaryreading;
 
 import org.apache.commons.io.IOUtils;
+import org.neo4j.driver.util.Pair;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 @Service
-public class JarHandling {
+public class BinaryHandling {
     public List<ClassNode> readFile(MultipartFile file) throws ClassHandlingException, IOException {
         if (file.getOriginalFilename().endsWith(".jar")) {
             return readJarFile(file);
@@ -44,6 +45,7 @@ public class JarHandling {
         } while (entry != null);
         return classes;
     }
+
 
     private ClassNode readClassFile(MultipartFile mpFile){
         try {
