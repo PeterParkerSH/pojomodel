@@ -41,7 +41,7 @@ public class PojoDeleteController {
         long pojoId = pojoElement.getId();
 
         // Todo: Not Working!!
-        if (pojoElementRepository.getPojoElementByIdIfRelationExists(pojoElement.getId()) == null){
+        if (pojoElementRepository.getPojoElementsByPointingToId(pojoElement.getId()).isEmpty()){
             // No relation exists -> Delete Node
             pojoElementRepository.delete(pojoElement);
         }else{

@@ -2,8 +2,8 @@ package de.fh.kiel.advancedjava.pojomodel.rest;
 
 
 import de.fh.kiel.advancedjava.pojomodel.TestDataBaseController;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoElement;
-import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
+import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
+import de.fh.kiel.advancedjava.pojomodel.model.PojoReference;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,9 +12,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,15 +39,16 @@ class PojoDeleteControllerTest {
     }
     @Test
     void pojoDeleteExisting() throws Exception {
-        assertTrue(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage") != null);
+        assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage"));
         this.mockMvc.perform(get("/pojoDelete/PojoClass4/testpackage.subpackage")).andExpect(status().isOk());
-        assertTrue(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage") == null);
+        assertNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage"));
     }
 
     @Test
     void pojoDeleteReferenced() throws Exception {
+        assertTrue(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass2", "testpackage") instanceof PojoClass);
         this.mockMvc.perform(get("/pojoDelete/PojoClass2/testpackage")).andExpect(status().isOk());
-        assertTrue(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass2", "testpackage") instanceof PojoClassRepository);
+        assertTrue(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass2", "testpackage") instanceof PojoReference);
 
     }
 }
