@@ -48,15 +48,13 @@ public class ImportExportController {
     }
 
     @GetMapping("/deleteAll")
-    public @ResponseBody String jsonExport() {
+    public @ResponseBody String deleteAll() {
         pojoElementRepository.deleteAll();
-
         return "redirect:/upload";
     }
 
     @PostMapping("/jsonImport")
-    public @ResponseBody ResponseEntity<String> jsonImport(@RequestParam("json") MultipartFile json){
-        // todo: ungetestet
+    public @ResponseBody String jsonImport(@RequestParam("json") MultipartFile json){
         try {
             InputStream stream = json.getInputStream();
             byte[] buffer = new byte[stream.available()];
@@ -76,6 +74,6 @@ public class ImportExportController {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return "redirect:/upload";
     }
 }

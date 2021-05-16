@@ -55,7 +55,7 @@ public class FileUploadController {
 	}
 
 	@PostMapping("/upload")
-	public @ResponseBody ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+	public @ResponseBody String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {
 			List<ClassNode> classNodeList= binaryHandling.readFile(file);
 
@@ -82,8 +82,7 @@ public class FileUploadController {
 					HttpStatus.BAD_REQUEST, e.getMessage()
 			);
 		}
-
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return "redirect:/upload";
 	}
 
 }
