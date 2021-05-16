@@ -34,24 +34,23 @@ class FileUploadControllerTest {
 
     @BeforeEach
     void clearNodes(){
-        //testDataBaseController.buildTestDataBase();
+        pojoElementRepository.deleteAll();
     }
 
     MockMultipartFile getMockMultipartFileFromResource(String resource) throws URISyntaxException, IOException {
         URL url = this.getClass().getClassLoader().getResource(resource);
         File file = new File(url.toURI());
         FileInputStream fis = new FileInputStream(file);
-        return new MockMultipartFile("upload", fis);
+        return new MockMultipartFile("file", fis);
     }
 
     @Test
     void uploadFile() throws Exception {
         MockMultipartFile upload = getMockMultipartFileFromResource("ExampleJar-1.0-SNAPSHOT.jar");
-
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload")
-                .file(upload).
-                .andExpect(status().is2xxSuccessful()))
-
-
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is2xxSuccessful());
+        upload = getMockMultipartFileFromResource("testpackage/PojoClass3.class");
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is4xxClientError());
+        upload = getMockMultipartFileFromResource("testpackage/subpackage/PojoClass5.class");
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is2xxSuccessful());
     }
 }

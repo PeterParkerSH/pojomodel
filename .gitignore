@@ -119,3 +119,5 @@ fabric.properties
 /.idea/.name
 /.idea/jarRepositories.xml
 /.idea/**
+
+!/src/test/resources/**
