@@ -50,11 +50,11 @@ class FileUploadControllerTest {
     @Test
     void uploadFile() throws Exception {
         MockMultipartFile upload = getMockMultipartFileFromResource("ExampleJar-1.0-SNAPSHOT.jar");
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is2xxSuccessful());
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
         upload = getMockMultipartFileFromResource("testpackage/PojoClass3.class");
         mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is4xxClientError());
         upload = getMockMultipartFileFromResource("testpackage/subpackage/PojoClass5.class");
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is2xxSuccessful());
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
         assertNotNull( pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass5", "testpackage/subpackage"));
     }
 }
