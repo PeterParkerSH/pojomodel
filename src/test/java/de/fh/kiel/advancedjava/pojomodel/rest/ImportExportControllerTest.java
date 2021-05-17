@@ -1,6 +1,5 @@
 package de.fh.kiel.advancedjava.pojomodel.rest;
 
-import de.fh.kiel.advancedjava.pojomodel.TestDataBaseController;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -19,16 +18,12 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class FileUploadControllerTest {
-
-    @Autowired
-    TestDataBaseController testDataBaseController;
-
+class ImportExportControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -40,21 +35,18 @@ class FileUploadControllerTest {
         pojoElementRepository.deleteAll();
     }
 
-    MockMultipartFile getMockMultipartFileFromResource(String resource) throws URISyntaxException, IOException {
+    private MockMultipartFile getMockMultipartFileFromResource(String resource) throws URISyntaxException, IOException {
         URL url = this.getClass().getClassLoader().getResource(resource);
         File file = new File(url.toURI());
         FileInputStream fis = new FileInputStream(file);
-        return new MockMultipartFile("file", FilenameUtils.getName(url.getFile()), "application/octet-stream", IOUtils.toByteArray(fis));
+        return new MockMultipartFile("json", FilenameUtils.getName(url.getFile()), "application/octet-stream", IOUtils.toByteArray(fis));
     }
 
     @Test
-    void uploadFile() throws Exception {
-        MockMultipartFile upload = getMockMultipartFileFromResource("ExampleJar-1.0-SNAPSHOT.jar");
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
-        upload = getMockMultipartFileFromResource("testpackage/PojoClass3.class");
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is4xxClientError());
-        upload = getMockMultipartFileFromResource("testpackage/subpackage/PojoClass5.class");
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
-        assertNotNull( pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass5", "testpackage/subpackage"));
+    void jsonImport() throws Exception{
+        // Todo: Count Elements -> Export -> import -> count elements
+        MockMultipartFile json = getMockMultipartFileFromResource("sampleJson.json");
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is3xxRedirection());;
+        assertFalse(pojoElementRepository.findAll().isEmpty());
     }
 }

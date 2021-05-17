@@ -1,5 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.neo4j.core.schema.Node;

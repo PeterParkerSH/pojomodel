@@ -32,7 +32,8 @@ public class PojoDeleteController {
     }
 
     @GetMapping("/pojoDelete/{className}/{packageName}")
-    public @ResponseBody ResponseEntity<String> pojoDelete(@PathVariable String className, @PathVariable String packageName){
+    public String pojoDelete(@PathVariable String className, @PathVariable String packageName){
+        // Todo: Bug - Error if the package is an empty string
         packageName = packageName.replace(".", "/");
         PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(className, packageName);
         if (pojoElement == null)
@@ -58,6 +59,6 @@ public class PojoDeleteController {
                 }
             }
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return "redirect:/index";
     }
 }
