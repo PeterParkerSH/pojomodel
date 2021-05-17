@@ -9,11 +9,9 @@ import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoReferenceRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 @Controller
@@ -31,8 +29,14 @@ public class PojoDeleteController {
         this.pojoReferenceRepository = pojoReferenceRepository;
     }
 
-    @GetMapping("/pojoDelete/{className}/{packageName}")
-    public String pojoDelete(@PathVariable String className, @PathVariable String packageName){
+    @GetMapping("/deleteAll")
+    public String deleteAll() {
+        pojoElementRepository.deleteAll();
+        return "redirect:/index";
+    }
+
+    @GetMapping("/pojoDelete")
+    public String pojoDelete(@RequestParam("package") String packageName, @RequestParam("name") String className){
         // Todo: Bug - Error if the package is an empty string
         packageName = packageName.replace(".", "/");
         PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(className, packageName);
@@ -41,7 +45,6 @@ public class PojoDeleteController {
 
         long pojoId = pojoElement.getId();
 
-        // Todo: Not Working!!
         if (pojoElementRepository.getPojoElementsByPointingToId(pojoElement.getId()).isEmpty()){
             // No relation exists -> Delete Node
             pojoElementRepository.delete(pojoElement);

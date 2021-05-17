@@ -37,18 +37,24 @@ class PojoDeleteControllerTest {
     void pojoDeleteUnknown() throws Exception {
         this.mockMvc.perform(get("/pojoDelete/sdfsdf/sdfdsf")).andExpect(status().is4xxClientError());
     }
+
+    private String buildDeleteRequest(String className, String packageName){
+        packageName = packageName.replace("/", ".");
+        return "/pojoDelete?package="+packageName+"&name="+className;
+    }
+
     @Test
     void pojoDeleteExisting() throws Exception {
         assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage"));
-        this.mockMvc.perform(get("/pojoDelete/PojoClass4/testpackage.subpackage")).andExpect(status().isOk());
-        this.mockMvc.perform(get("/pojoDelete/String/java.lang")).andExpect(status().isOk());
+        this.mockMvc.perform(get(buildDeleteRequest("PojoClass4", "testpackage/subpackage"))).andExpect(status().is3xxRedirection());
+        this.mockMvc.perform(get(buildDeleteRequest("String", "java/lang"))).andExpect(status().is3xxRedirection());
         assertNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage"));
     }
 
     @Test
     void pojoDeleteReferenced() throws Exception {
         assertTrue(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass2", "testpackage") instanceof PojoClass);
-        this.mockMvc.perform(get("/pojoDelete/PojoClass2/testpackage")).andExpect(status().isOk());
+        this.mockMvc.perform(get(buildDeleteRequest("PojoClass2", "testpackage"))).andExpect(status().is3xxRedirection());
         assertTrue(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass2", "testpackage") instanceof PojoReference);
 
     }

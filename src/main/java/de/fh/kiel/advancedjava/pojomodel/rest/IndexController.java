@@ -2,25 +2,22 @@ package de.fh.kiel.advancedjava.pojomodel.rest;
 
 import de.fh.kiel.advancedjava.pojomodel.model.PojoElement;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.io.IOException;
 
 
 @Controller
 public class IndexController {
 
-    @Autowired
-    PojoElementRepository pojoElementRepository;
+    final PojoElementRepository pojoElementRepository;
+
+    public IndexController(PojoElementRepository pojoElementRepository) {
+        this.pojoElementRepository = pojoElementRepository;
+    }
 
     @GetMapping("/index")
-    public @ResponseBody String listUploadedFiles(Model model) throws IOException {
+    public @ResponseBody String listUploadedFiles() {
         String answerHtml = """
    
             
@@ -58,15 +55,18 @@ public class IndexController {
             </div>
              
                 """;
-        String pojoTable = "";
+        StringBuilder pojoTable = new StringBuilder();
         for (PojoElement element: pojoElementRepository.findAll()){
-           pojoTable = pojoTable + "<tr>" +
-                       "<td>" + element.getName() + "</td>" +
-                       "<td>" + element.getPackageName() + "</td>" +
-                       "<td>" + "<a href=\"pojoDelete/"+element.getName()+"/" + element.getPackageName().replace("/",".")+ "\">Delete" + "</td>" +
-                   "</tr>";
+           pojoTable.append("<tr>")
+                        .append("<td>").append(element.getName()).append("</td>")
+                        .append("<td>").append(element.getPackageName()).append("</td>")
+                        .append("<td>").append("<a href=\"pojoDelete?name=")
+                            .append(element.getName()).append("&package=")
+                            .append(element.getPackageName().replace("/", ".")).append("\">Delete")
+                            .append("</td>")
+                    .append("</tr>");
         }
-        answerHtml = answerHtml.replace("[POJOTABLE]", pojoTable);
+        answerHtml = answerHtml.replace("[POJOTABLE]", pojoTable.toString());
 
         return answerHtml;
     }

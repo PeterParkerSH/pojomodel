@@ -8,12 +8,13 @@ import de.fh.kiel.advancedjava.pojomodel.repository.PojoReferenceRepository;
 import de.fh.kiel.advancedjava.pojomodel.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -43,15 +44,10 @@ public class ImportExportController {
     @GetMapping(value = "/jsonExport", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String jsonExport() {
         ExportFormat export = new ExportFormat(pojoClassRepository.findAll(), pojoInterfaceRepository.findAll(), pojoReferenceRepository.findAll());
-
         return JsonUtils.objectToJsonString(export);
     }
 
-    @GetMapping("/deleteAll")
-    public String deleteAll() {
-        pojoElementRepository.deleteAll();
-        return "redirect:/index";
-    }
+
 
     @PostMapping("/jsonImport")
     public String jsonImport(@RequestParam("json") MultipartFile json){
@@ -79,11 +75,11 @@ public class ImportExportController {
             pojoInterfaceRepository.saveAll(imported.pojoInterfaces);
             pojoReferenceRepository.saveAll(imported.pojoReferences);
             pojoClassRepository.saveAll(imported.pojoClasses);
-        } catch (IOException e) {
+        } catch (IOException|NullPointerException e) {
             LOGGER.error(e.getMessage());
             e.printStackTrace();
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Could not convert json file");
         }
         return "redirect:/index";
     }
