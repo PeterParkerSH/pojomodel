@@ -50,18 +50,29 @@ public class ImportExportController {
     @GetMapping("/deleteAll")
     public String deleteAll() {
         pojoElementRepository.deleteAll();
-        return "redirect:/upload";
+        return "redirect:/index";
     }
 
     @PostMapping("/jsonImport")
     public String jsonImport(@RequestParam("json") MultipartFile json){
         try {
+
+            if (!json.getOriginalFilename().endsWith(".json")){
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "File extension has to be \".json\"");
+            }
+
             InputStream stream = json.getInputStream();
             byte[] buffer = new byte[stream.available()];
             stream.read(buffer);
             String jsonString = new String(buffer, StandardCharsets.UTF_8);
             jsonString = jsonString.replaceAll("(\r\n)", "" );
             ExportFormat imported = JsonUtils.jsonStringToObject(jsonString, ExportFormat.class);
+
+            if (imported == null){
+                throw new ResponseStatusException(
+                        HttpStatus.INTERNAL_SERVER_ERROR, "Could not convert json file");
+            }
 
             pojoElementRepository.deleteAll();
 
@@ -74,6 +85,6 @@ public class ImportExportController {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
-        return "redirect:/upload";
+        return "redirect:/index";
     }
 }

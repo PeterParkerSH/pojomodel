@@ -44,8 +44,9 @@ class ImportExportControllerTest {
 
     @Test
     void jsonImport() throws Exception{
+        // Todo: Count Elements -> Export -> import -> count elements
         MockMultipartFile json = getMockMultipartFileFromResource("sampleJson.json");
         mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is3xxRedirection());;
-        assertNotNull(pojoElementRepository.findAll());
+        assertFalse(pojoElementRepository.findAll().isEmpty());
     }
 }

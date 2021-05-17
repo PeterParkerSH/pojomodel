@@ -82,7 +82,7 @@ public class FileUploadController {
 					HttpStatus.BAD_REQUEST, e.getMessage()
 			);
 		}
-		return "redirect:/upload";
+		return "redirect:/index";
 	}
 
 }
