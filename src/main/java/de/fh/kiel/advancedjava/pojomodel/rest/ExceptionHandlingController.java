@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.rest;
 
+import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

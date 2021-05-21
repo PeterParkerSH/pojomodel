@@ -1,6 +1,8 @@
 package de.fh.kiel.advancedjava.pojomodel.repository;
 
-import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
+import de.fh.kiel.advancedjava.pojomodel.TestDataBaseController;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoClass;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +14,9 @@ class PojoClassRepositoryTest {
 
     @Autowired
     PojoClassRepository pojoClassRepository;
+
+    @Autowired
+    TestDataBaseController testDataBaseController;
 
     @Test
     void getPojoClassByNameAndPackageName() {
@@ -27,6 +32,4 @@ class PojoClassRepositoryTest {
         pojoClass = pojoClassRepository.getPojoClassByNameAndPackageName("TestClass123", "de/fhkiel/pojo");
         assertNull(pojoClass);
     }
-
-
 }

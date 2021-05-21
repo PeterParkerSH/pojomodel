@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.rest;
 
-import de.fh.kiel.advancedjava.pojomodel.model.PojoElement;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,6 +64,10 @@ public class IndexController {
                             .append(element.getName()).append("&package=")
                             .append(element.getPackageName().replace("/", ".")).append("\">Delete")
                             .append("</td>")
+                        .append("<td>").append("<a href=\"pojoStatistic?name=")
+                           .append(element.getName()).append("&package=")
+                           .append(element.getPackageName().replace("/", ".")).append("\">Statistic")
+                           .append("</td>")
                     .append("</tr>");
         }
         answerHtml = answerHtml.replace("[POJOTABLE]", pojoTable.toString());

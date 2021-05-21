@@ -19,7 +19,7 @@ public class JsonUtils {
     public static String objectToJsonString(Object obj){
         ObjectMapper om = new ObjectMapper();
         try {
-            return om.writeValueAsString(obj);
+            return om.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             LOGGER.error("Error converting object to json", e);
         }

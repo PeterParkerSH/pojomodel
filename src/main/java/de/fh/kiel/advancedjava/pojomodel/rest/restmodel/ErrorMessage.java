@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.rest;
+package de.fh.kiel.advancedjava.pojomodel.rest.restmodel;
 
 
 import lombok.Data;

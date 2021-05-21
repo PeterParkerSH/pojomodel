@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.model;
+package de.fh.kiel.advancedjava.pojomodel.pojomodel;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
