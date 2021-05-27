@@ -46,16 +46,7 @@ public class FileUploadController {
 		try {
 			List<ClassNode> classNodeList= binaryHandling.readFile(file);
 
-			// Check if elements already exist
-			for (ClassNode classNode: classNodeList) {
-				if (classHandling.checkClassNodeAlreadyExists(classNode)){
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Element " + classNode.name + " already exists in database");
-				}
-			}
-
-			for (ClassNode classNode: classNodeList) {
-				classHandling.handleClassNode(classNode);
-			}
+			classHandling.handleClassNodes(classNodeList);
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage());
 

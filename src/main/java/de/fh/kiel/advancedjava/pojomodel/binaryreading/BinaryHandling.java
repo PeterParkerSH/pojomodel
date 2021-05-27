@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class BinaryHandling {
+
     public List<ClassNode> readFile(MultipartFile file) throws ClassHandlingException, IOException {
         if (file.getOriginalFilename().endsWith(".jar")) {
             return readJarFile(file);
