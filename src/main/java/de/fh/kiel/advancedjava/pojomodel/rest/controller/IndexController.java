@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.rest;
+package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;

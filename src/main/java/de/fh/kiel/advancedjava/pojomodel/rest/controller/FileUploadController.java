@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.rest;
+package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryHandling;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandling;

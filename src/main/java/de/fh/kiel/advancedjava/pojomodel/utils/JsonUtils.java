@@ -2,7 +2,6 @@ package de.fh.kiel.advancedjava.pojomodel.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.fh.kiel.advancedjava.pojomodel.rest.FileUploadController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.rest;
+package de.fh.kiel.advancedjava.pojomodel.rest.service;
 
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
@@ -8,6 +8,8 @@ import de.fh.kiel.advancedjava.pojomodel.utils.JsonUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,17 +17,17 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Collectors;
 
-@Controller
-public class StatisticController {
+@Service
+public class StatisticService {
 
     final PojoElementRepository pojoElementRepository;
 
-    public StatisticController(PojoElementRepository pojoElementRepository) {
+    public StatisticService(PojoElementRepository pojoElementRepository) {
         this.pojoElementRepository = pojoElementRepository;
     }
 
-    @GetMapping(value = "/pojoStatistic", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody String pojoStatistic(@RequestParam("package") String packageName, @RequestParam("name") String className) {
+    @Transactional
+    public String pojoStatistic( String packageName, String className) {
         packageName = packageName.replace(".", "/");
         PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(className, packageName);
 
@@ -53,5 +55,4 @@ public class StatisticController {
         }
         return result;
     }
-
 }

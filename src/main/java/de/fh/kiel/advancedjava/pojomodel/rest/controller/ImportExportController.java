@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.rest;
+package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ExportFormat;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
