@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.rest;
 
-import de.fh.kiel.advancedjava.pojomodel.export.ExportFormat;
+import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ExportFormat;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;

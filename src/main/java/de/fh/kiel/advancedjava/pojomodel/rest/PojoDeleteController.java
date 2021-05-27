@@ -1,9 +1,9 @@
 package de.fh.kiel.advancedjava.pojomodel.rest;
 
-import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoElement;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoInterface;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoReference;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoClass;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoInterface;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoReference;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
@@ -37,7 +37,6 @@ public class PojoDeleteController {
 
     @GetMapping("/pojoDelete")
     public String pojoDelete(@RequestParam("package") String packageName, @RequestParam("name") String className){
-        // Todo: Bug - Error if the package is an empty string
         packageName = packageName.replace(".", "/");
         PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(className, packageName);
         if (pojoElement == null)

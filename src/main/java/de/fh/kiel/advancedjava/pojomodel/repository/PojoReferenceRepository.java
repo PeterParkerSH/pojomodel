@@ -1,7 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.repository;
 
-import de.fh.kiel.advancedjava.pojomodel.model.PojoInterface;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoReference;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoInterface;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoReference;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;

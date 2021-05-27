@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "",
+  "title": "POJOs",
+  "description": "An array of POJO objects",
+  "definitions": {
+    "PojoClass": {
+      "type" : "object",
+      "properties": {
+        "id" : {
+          "type" :  "integer"
+        },
+        "name" : {
+          "type": "string"
+        },
+        "packageName" : {
+          "type": "string"
+        },
+        "implementsInterfaces" : {
+          "type": "array",
+          "items": [{
+            "$ref" : "#/definitions/PojoInterface"
+          }]
+        },
+        "hasAttributes" : {
+          "type": "array",
+          "items": [{
+            "anyOf" : [
+              {
+                "$ref": "#/definitions/PojoClass"
+              },
+              {
+                "$ref": "#/definitions/PojoInterface"
+              },
+              {
+                "$ref": "#/definitions/PojoReference"
+              }
+            ]
+          }]
+        }
+      }
+    },
+    "PojoInterface": {
+      "type" : "object",
+      "properties": {
+        "id" : {
+          "type" :  "integer"
+        },
+        "name" : {
+          "type": "string"
+        },
+        "packageName" : {
+          "type": "string"
+        }
+      }
+    },
+    "PojoReference": {
+      "type" : "object",
+      "properties": {
+        "id" : {
+          "type" :  "integer"
+        },
+        "name" : {
+          "type": "string"
+        },
+        "packageName" : {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "pojoClasses": {
+      "title": "PojoClasses",
+      "type": "array",
+      "default": [],
+      "items": [{
+        "$ref" : "#/definitions/PojoClass"
+      }]
+    },
+    "pojoInterfaces": {
+      "title": "PojoInterfaces",
+      "type": "array",
+      "default": [],
+      "items":[{
+        "$ref" : "#/definitions/PojoInterface"
+        }]
+    },
+    "pojoReferences": {
+      "title": "PojoInterfaces",
+      "type": "array",
+      "default": [],
+      "items":[{
+        "$ref" : "#/definitions/PojoReference"
+      }]
+    }
+  }
+}

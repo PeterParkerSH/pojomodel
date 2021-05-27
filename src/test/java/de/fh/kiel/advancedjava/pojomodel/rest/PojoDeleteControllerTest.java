@@ -2,8 +2,8 @@ package de.fh.kiel.advancedjava.pojomodel.rest;
 
 
 import de.fh.kiel.advancedjava.pojomodel.TestDataBaseController;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoReference;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoClass;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoReference;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

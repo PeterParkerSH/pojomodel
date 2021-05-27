@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.binaryreading;
 
-import de.fh.kiel.advancedjava.pojomodel.model.*;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;

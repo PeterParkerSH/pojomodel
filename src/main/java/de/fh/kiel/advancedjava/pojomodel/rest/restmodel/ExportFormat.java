@@ -1,8 +1,8 @@
-package de.fh.kiel.advancedjava.pojomodel.export;
+package de.fh.kiel.advancedjava.pojomodel.rest.restmodel;
 
-import de.fh.kiel.advancedjava.pojomodel.model.PojoClass;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoInterface;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoReference;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoClass;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoInterface;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoReference;
 import lombok.*;
 
 import java.util.List;

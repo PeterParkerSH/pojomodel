@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.model;
+package de.fh.kiel.advancedjava.pojomodel.pojomodel;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -13,23 +13,18 @@ import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id", scope = AttributeRs.class)
-
+        property = "id", scope = ExtendsRs.class)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @RelationshipProperties
-public class AttributeRs {
+public class ExtendsRs {
     @Id
     @GeneratedValue
     private Long id;
 
     @JsonIdentityReference(alwaysAsId = true)
     @TargetNode
-    private PojoElement pojoElement;
-
-    private String name;
-
-    private String visibility;
+    private PojoElement pojoClass;
 }
