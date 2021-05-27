@@ -11,7 +11,10 @@ import org.objectweb.asm.tree.FieldNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +38,20 @@ public class ClassHandling {
         this.pojoReferenceRepository = pojoReferenceRepository;
     }
 
-    public boolean checkClassNodeAlreadyExists(ClassNode classNode){
+    @Transactional
+    public void handleClassNodes(List<ClassNode> classNodes) throws ClassHandlingException{
+        // Check if elements already exist
+        for (ClassNode classNode: classNodes) {
+            if (checkClassNodeAlreadyExists(classNode)){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Element " + classNode.name + " already exists in database");
+            }
+        }
+        for (ClassNode classNode: classNodes) {
+            handleClassNode(classNode);
+        }
+    }
+
+    private boolean checkClassNodeAlreadyExists(ClassNode classNode){
         String className = parseClassName(classNode.name);
         String classPackage = parsePackageName(classNode.name);
         PojoElement pojoElement= pojoElementRepository.getPojoElementByNameAndPackageName(className, classPackage);
@@ -79,7 +95,8 @@ public class ClassHandling {
         //return  (classNode.access & Opcodes.ACC_INTERFACE) != 0;
     }
 
-    public void handleClassNode(ClassNode classNode) throws ClassHandlingException{
+
+    private void handleClassNode(ClassNode classNode) throws ClassHandlingException{
         if (isInterface(classNode)) {
             buildPojoInterface(classNode.name);
         } else {
@@ -87,7 +104,6 @@ public class ClassHandling {
         }
 
     }
-
 
     private void buildPojoClass(ClassNode classNode) throws ClassHandlingException{
         String className = parseClassName(classNode.name);
