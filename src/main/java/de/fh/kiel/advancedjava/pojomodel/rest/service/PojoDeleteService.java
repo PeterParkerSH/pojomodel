@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.rest;
+package de.fh.kiel.advancedjava.pojomodel.rest.service;
 
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoClass;
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
@@ -9,34 +9,32 @@ import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoReferenceRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-@Controller
-public class PojoDeleteController {
+@Service
+public class PojoDeleteService {
 
     final PojoElementRepository pojoElementRepository;
     final PojoClassRepository pojoClassRepository;
     final PojoInterfaceRepository pojoInterfaceRepository;
     final PojoReferenceRepository pojoReferenceRepository;
 
-    public PojoDeleteController(PojoElementRepository pojoElementRepository, PojoClassRepository pojoClassRepository, PojoInterfaceRepository pojoInterfaceRepository, PojoReferenceRepository pojoReferenceRepository) {
+    public PojoDeleteService(PojoElementRepository pojoElementRepository, PojoClassRepository pojoClassRepository, PojoInterfaceRepository pojoInterfaceRepository, PojoReferenceRepository pojoReferenceRepository) {
         this.pojoElementRepository = pojoElementRepository;
         this.pojoClassRepository = pojoClassRepository;
         this.pojoInterfaceRepository = pojoInterfaceRepository;
         this.pojoReferenceRepository = pojoReferenceRepository;
     }
 
-    @GetMapping("/deleteAll")
-    public String deleteAll() {
+    @Transactional
+    public void deleteAll() {
         pojoElementRepository.deleteAll();
-        return "redirect:/index";
     }
 
-    @GetMapping("/pojoDelete")
-    public String pojoDelete(@RequestParam("package") String packageName, @RequestParam("name") String className){
+    @Transactional
+    public void pojoDelete(String packageName, String className){
         packageName = packageName.replace(".", "/");
         PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(className, packageName);
         if (pojoElement == null)
@@ -61,6 +59,6 @@ public class PojoDeleteController {
                 }
             }
         }
-        return "redirect:/index";
     }
+
 }

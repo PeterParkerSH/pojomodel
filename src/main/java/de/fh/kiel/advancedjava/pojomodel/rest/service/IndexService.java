@@ -1,23 +1,20 @@
-package de.fh.kiel.advancedjava.pojomodel.rest;
+package de.fh.kiel.advancedjava.pojomodel.rest.service;
 
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.stereotype.Service;
 
-
-@Controller
-public class IndexController {
+@Service
+public class IndexService {
 
     final PojoElementRepository pojoElementRepository;
 
-    public IndexController(PojoElementRepository pojoElementRepository) {
+    public IndexService(PojoElementRepository pojoElementRepository) {
         this.pojoElementRepository = pojoElementRepository;
     }
 
-    @GetMapping("/index")
-    public @ResponseBody String listUploadedFiles() {
+
+    public String listUploadedFiles() {
         String answerHtml = """
    
             
@@ -57,17 +54,17 @@ public class IndexController {
                 """;
         StringBuilder pojoTable = new StringBuilder();
         for (PojoElement element: pojoElementRepository.findAll()){
-           pojoTable.append("<tr>")
-                        .append("<td>").append(element.getName()).append("</td>")
-                        .append("<td>").append(element.getPackageName()).append("</td>")
-                        .append("<td>").append("<a href=\"pojoDelete?name=")
-                            .append(element.getName()).append("&package=")
-                            .append(element.getPackageName().replace("/", ".")).append("\">Delete")
-                            .append("</td>")
-                        .append("<td>").append("<a href=\"pojoStatistic?name=")
-                           .append(element.getName()).append("&package=")
-                           .append(element.getPackageName().replace("/", ".")).append("\">Statistic")
-                           .append("</td>")
+            pojoTable.append("<tr>")
+                    .append("<td>").append(element.getName()).append("</td>")
+                    .append("<td>").append(element.getPackageName()).append("</td>")
+                    .append("<td>").append("<a href=\"pojoDelete?name=")
+                    .append(element.getName()).append("&package=")
+                    .append(element.getPackageName().replace("/", ".")).append("\">Delete")
+                    .append("</td>")
+                    .append("<td>").append("<a href=\"pojoStatistic?name=")
+                    .append(element.getName()).append("&package=")
+                    .append(element.getPackageName().replace("/", ".")).append("\">Statistic")
+                    .append("</td>")
                     .append("</tr>");
         }
         answerHtml = answerHtml.replace("[POJOTABLE]", pojoTable.toString());
