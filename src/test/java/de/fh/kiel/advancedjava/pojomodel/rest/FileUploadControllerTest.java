@@ -58,7 +58,7 @@ class FileUploadControllerTest {
         assertNotNull( pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass5", "testpackage/subpackage"));
     }
 
-    @Test
+    //@Test
     void uploadLargeJarFile() throws Exception {
         MockMultipartFile upload = getMockMultipartFileFromResource("TheGeneticPoemGenerator.jar");
         mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
