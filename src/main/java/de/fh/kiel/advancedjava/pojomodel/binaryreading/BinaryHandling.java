@@ -28,7 +28,7 @@ public class BinaryHandling {
         }
     }
 
-    private List<ClassNode> readJarFile(MultipartFile mpFile) throws IOException{
+    private List<ClassNode> readJarFile(MultipartFile mpFile) throws IOException, ClassHandlingException{
         List<ClassNode> classes = new ArrayList<>();
         JarInputStream jar = new JarInputStream(mpFile.getInputStream());
         JarEntry entry;
@@ -38,7 +38,11 @@ public class BinaryHandling {
                 if (entry.getName().endsWith(".class")) {
                     //JarInputStream jip = new JarInputStream(jar);
                     byte[] byteArray = IOUtils.toByteArray(jar);
-                    classes.add(readClassNode(byteArray));
+                    ClassNode cn = readClassNode(byteArray);
+                    if (cn == null){
+                        throw new ClassHandlingException("Could not read ClassNode: " + entry.getName());
+                    }
+                    classes.add(cn);
                 }
             }
 
