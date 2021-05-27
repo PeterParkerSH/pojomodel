@@ -77,7 +77,7 @@ public class ImportExportController {
             pojoClassRepository.saveAll(imported.pojoClasses);
         } catch (IOException|NullPointerException e) {
             LOGGER.error(e.getMessage());
-            e.printStackTrace();
+
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Could not convert json file");
         }

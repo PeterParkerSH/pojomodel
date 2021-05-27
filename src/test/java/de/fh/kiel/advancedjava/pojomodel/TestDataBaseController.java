@@ -55,7 +55,6 @@ public class TestDataBaseController {
                     classHandling.handleClassNode(classNode);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 fail(e.getMessage());
             }
 

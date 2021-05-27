@@ -58,13 +58,13 @@ public class FileUploadController {
 			}
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage());
-			e.printStackTrace();
+
 			throw new ResponseStatusException(
 					HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()
 			);
 		} catch (ClassHandlingException e) {
 			LOGGER.error(e.getMessage());
-			e.printStackTrace();
+
 			throw new ResponseStatusException(
 					HttpStatus.BAD_REQUEST, e.getMessage()
 			);
