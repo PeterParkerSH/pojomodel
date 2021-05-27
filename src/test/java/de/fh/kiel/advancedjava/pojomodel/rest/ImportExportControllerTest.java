@@ -55,7 +55,7 @@ class ImportExportControllerTest {
         pojoElementRepository.deleteAll();
     }
 
-    private MockMultipartFile getMockMultipartFileFromResource(String resource) throws URISyntaxException, IOException {
+    private MockMultipartFile getJsonMockMultipartFileFromResource(String resource) throws URISyntaxException, IOException {
         URL url = this.getClass().getClassLoader().getResource(resource);
         File file = new File(url.toURI());
         FileInputStream fis = new FileInputStream(file);
@@ -64,10 +64,10 @@ class ImportExportControllerTest {
 
     @Test
     void jsonImport() throws Exception{
-        MockMultipartFile json = getMockMultipartFileFromResource("sampleJson.json");
+        MockMultipartFile json = getJsonMockMultipartFileFromResource("sampleJson.json");
         mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is3xxRedirection());
         assertFalse(pojoElementRepository.findAll().isEmpty());
-        json = getMockMultipartFileFromResource("ExampleJar-1.0-SNAPSHOT.jar");
+        json = getJsonMockMultipartFileFromResource("ExampleJar-1.0-SNAPSHOT.jar");
         mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is4xxClientError());
     }
 
@@ -90,9 +90,16 @@ class ImportExportControllerTest {
         assertEquals(pojoElementRepository.findAll().size(), elementCount);
     }
 
+    MockMultipartFile getJarMockMultipartFileFromResource(String resource) throws URISyntaxException, IOException {
+        URL url = this.getClass().getClassLoader().getResource(resource);
+        File file = new File(url.toURI());
+        FileInputStream fis = new FileInputStream(file);
+        return new MockMultipartFile("file", FilenameUtils.getName(url.getFile()), "application/octet-stream", IOUtils.toByteArray(fis));
+    }
+
     @Test
     void ExportImportLarge() throws Exception {
-        MockMultipartFile upload = getMockMultipartFileFromResource("TheGeneticPoemGenerator.jar");
+        MockMultipartFile upload = getJarMockMultipartFileFromResource("rita.jar");
         mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
 
         int refCount = pojoReferenceRepository.findAll().size();
