@@ -28,11 +28,6 @@ public class AddPojoController {
                     HttpStatus.BAD_REQUEST, "Pojo name and package are required"
             );
         }
-        if (addPojoService.checkPojoAlreadyExists(pojoName, packageName)){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Pojo exists already"
-            );
-        }
         if (!SourceVersion.isIdentifier(pojoName) || SourceVersion.isKeyword(pojoName)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Invalid class name: " + pojoName
@@ -46,7 +41,6 @@ public class AddPojoController {
                 );
             }
         }
-
         addPojoService.addPojo(pojoName, packageName);
         return "redirect:/index";
     }
