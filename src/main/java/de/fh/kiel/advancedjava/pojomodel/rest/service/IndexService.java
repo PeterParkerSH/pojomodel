@@ -46,6 +46,7 @@ public class IndexService {
                 </form>
                 <a href="/jsonExport">Export data</a>
                 <a href="/deleteAll">Delete all</a>
+                <a href="/addPojo?package=bdskjfla&name=public">Add a POJO</a>
                 <table>
                     [POJOTABLE]
                 </table>
