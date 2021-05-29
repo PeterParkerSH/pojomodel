@@ -64,6 +64,7 @@ class ImportExportControllerTest {
 
     @Test
     void jsonImport() throws Exception{
+        testDataBaseController.buildTestDataBase();
         MockMultipartFile json = getJsonMockMultipartFileFromResource("sampleJson.json");
         mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is3xxRedirection());
         assertFalse(pojoElementRepository.findAll().isEmpty());
@@ -99,7 +100,7 @@ class ImportExportControllerTest {
 
     @Test
     void ExportImportLarge() throws Exception {
-        MockMultipartFile upload = getJarMockMultipartFileFromResource("rita.jar");
+        MockMultipartFile upload = getJarMockMultipartFileFromResource("ExampleJar-1.0-SNAPSHOT.jar");
         mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
 
         int refCount = pojoReferenceRepository.findAll().size();
