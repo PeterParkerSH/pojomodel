@@ -51,9 +51,7 @@ public class TestDataBaseController {
             MultipartFile multipartFile = new MockMultipartFile("ExampleJar-1.0-SNAPSHOT.jar", "ExampleJar-1.0-SNAPSHOT.jar", "application/octet-stream", IOUtils.toByteArray(input));
 
             try {
-                for (ClassNode classNode: binaryHandling.readFile(multipartFile)) {
-                    classHandling.handleClassNode(classNode);
-                }
+                classHandling.handleClassNodes(binaryHandling.readFile(multipartFile));
             } catch (Exception e) {
                 fail(e.getMessage());
             }

@@ -44,6 +44,24 @@ public class IndexService {
                         </tr>
                     </table>
                 </form>
+                
+                Add class with class name and package name:
+                <form method="GET" action="/addPojo">
+                    <table>
+                        <tr>
+                            <td>Class Name:</td>
+                            <td><input type="text" name="name"/></td>
+                        </tr>
+                        <tr>
+                            <td>Package Name:</td>
+                            <td><input type="text" name="package"/></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="submit" value="Add POJO"/></td>
+                        </tr>
+                    </table>
+                </form>             
                 <a href="/jsonExport">Export data</a>
                 <a href="/deleteAll">Delete all</a>
                 <table>
