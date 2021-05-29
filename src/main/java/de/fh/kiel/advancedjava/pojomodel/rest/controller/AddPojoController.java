@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.rest.service.AddPojoService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.lang.model.SourceVersion;
 import java.util.Arrays;
 
+@Api
 @Controller
 public class AddPojoController {
     final
