@@ -16,10 +16,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class Swagger2Config {
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2).select()
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
                 .apis(RequestHandlerSelectors
-                        .basePackage("net.guides.springboot2.springboot2swagger2.controller"))
-                .paths(PathSelectors.regex("/.*"))
+                        .any())
+                .paths(PathSelectors.any())
                 .build().apiInfo(apiEndPointsInfo());
     }
 
