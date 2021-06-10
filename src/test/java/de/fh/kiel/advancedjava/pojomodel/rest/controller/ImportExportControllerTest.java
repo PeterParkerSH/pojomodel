@@ -13,10 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +40,11 @@ class ImportExportControllerTest {
     @Autowired
     PojoElementRepository pojoElementRepository;
 
+    @Autowired
+    ImportExportController importExportController;
+
+    @Autowired
+    FileUploadController fileUploadController;
 
     @Autowired
     PojoClassRepository pojoClassRepository;
@@ -67,10 +74,17 @@ class ImportExportControllerTest {
     void jsonImport() throws Exception{
         testDataBaseController.buildTestDataBase();
         MockMultipartFile json = getJsonMockMultipartFileFromResource("sampleJson.json");
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is3xxRedirection());
+        assertNotNull(importExportController.jsonImport(json));
+        //mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is3xxRedirection());
         assertFalse(pojoElementRepository.findAll().isEmpty());
         json = getJsonMockMultipartFileFromResource("ExampleJar-1.0-SNAPSHOT.jar");
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is4xxClientError());
+        try {
+            importExportController.jsonImport(json);
+            fail();
+        }catch (ResponseStatusException e){
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
+        }
+        //mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -79,16 +93,17 @@ class ImportExportControllerTest {
         AtomicReference<String> exportJsonAtomic = new AtomicReference<>("");
         int elementCount = pojoElementRepository.findAll().size();
         assertNotEquals(0, elementCount);
-        this.mockMvc.perform(get("/jsonExport")).andDo(result -> {
-            exportJsonAtomic.set(result.getResponse().getContentAsString());
-        }).andExpect(status().isOk());
+        exportJsonAtomic.set(importExportController.jsonExport());
+        //this.mockMvc.perform(get("/jsonExport")).andDo(result -> {
+        //    exportJsonAtomic.set(result.getResponse().getContentAsString());
+        //}).andExpect(status().isOk());
 
         String exportString = exportJsonAtomic.get();
         assertFalse(exportString.isEmpty());
 
         MockMultipartFile json = new MockMultipartFile("json", FilenameUtils.getName("sampleJson.json"), MediaType.APPLICATION_JSON_VALUE, exportString.getBytes());
-
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is3xxRedirection());;
+        assertNotNull(importExportController.jsonImport(json));
+        //mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is3xxRedirection());;
         assertEquals(pojoElementRepository.findAll().size(), elementCount);
     }
 
@@ -102,7 +117,8 @@ class ImportExportControllerTest {
     @Test
     void ExportImportLarge() throws Exception {
         MockMultipartFile upload = getJarMockMultipartFileFromResource("ExampleJar-1.0-SNAPSHOT.jar");
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
+        assertNotNull(fileUploadController.uploadFile(upload));
+        //mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
 
         int refCount = pojoReferenceRepository.findAll().size();
         int classCount = pojoClassRepository.findAll().size();
@@ -113,9 +129,10 @@ class ImportExportControllerTest {
 
         AtomicReference<String> exportJsonAtomic = new AtomicReference<>("");
         int elementCount = pojoElementRepository.findAll().size();
-        this.mockMvc.perform(get("/jsonExport")).andDo(result -> {
-            exportJsonAtomic.set(result.getResponse().getContentAsString());
-        }).andExpect(status().isOk());
+        exportJsonAtomic.set(importExportController.jsonExport());
+        //this.mockMvc.perform(get("/jsonExport")).andDo(result -> {
+        //    exportJsonAtomic.set(result.getResponse().getContentAsString());
+        //}).andExpect(status().isOk());
 
         String exportString = exportJsonAtomic.get();
         assertFalse(exportString.isEmpty());
@@ -127,7 +144,8 @@ class ImportExportControllerTest {
 
         MockMultipartFile json = new MockMultipartFile("json", FilenameUtils.getName("sampleJson.json"), MediaType.APPLICATION_JSON_VALUE, exportString.getBytes());
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is3xxRedirection());;
+        assertNotNull(importExportController.jsonImport(json));
+        //mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is3xxRedirection());;
 
         assertEquals(refCount, pojoReferenceRepository.findAll().size());
         assertEquals(classCount, pojoClassRepository.findAll().size());

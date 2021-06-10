@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.binaryreading;
+package de.fh.kiel.advancedjava.pojomodel.binaryreading.model;
 
 import lombok.Data;
 

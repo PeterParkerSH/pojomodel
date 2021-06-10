@@ -48,7 +48,7 @@ pitest {
                      'de.fh.kiel.advancedjava.pojomodel.rest.controller.*',
                      'de.fh.kiel.advancedjava.pojomodel.rest.service.*',
                      'de.fh.kiel.advancedjava.pojomodel.utils.*']
-    excludedClasses = ['de.fh.kiel.advancedjava.pojomodel.binaryreading.PojoElementIdentifier.java']
+    excludedClasses = ['de.fh.kiel.advancedjava.pojomodel.binaryreading.model.*']
     //pitestVersion = '1.6.0'
     threads = 4
     outputFormats = ['HTML']

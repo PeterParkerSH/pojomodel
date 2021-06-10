@@ -68,30 +68,9 @@ class StatisticControllerTest {
         return "/pojoStatistic?package="+packageName+"&name="+className;
     }
 
+
     @Test
     void pojoStatistic() throws Exception {
-
-        AtomicReference<String> statisticJsonAtomic = new AtomicReference<>("");
-        try {
-            this.mockMvc.perform(get(buildStatisticRequest("PojoClass3", "testpackage"))).andDo(result -> {
-                statisticJsonAtomic.set(result.getResponse().getContentAsString());
-            }).andExpect(status().isOk());
-        }catch (Exception e){
-            fail(e.getMessage());
-        }
-        String res = statisticJsonAtomic.get();
-
-        PojoStatistic pojoStatistic = JsonUtils.jsonStringToObject(res, PojoStatistic.class);
-        PojoStatistic original = JsonUtils.jsonStringToObject(testRes, PojoStatistic.class);
-        original.getImplementsList().sort(Comparator.comparing(ApiPojoElement::getClassName).thenComparing(ApiPojoElement::getPackageName));
-        pojoStatistic.getImplementsList().sort(Comparator.comparing(ApiPojoElement::getClassName).thenComparing(ApiPojoElement::getPackageName));
-
-        assertNotNull(original);
-        assertEquals(original, pojoStatistic);
-    }
-
-    @Test
-    void pojoStatisticDirect() throws Exception {
 
         AtomicReference<String> statisticJsonAtomic = new AtomicReference<>("");
         try {
