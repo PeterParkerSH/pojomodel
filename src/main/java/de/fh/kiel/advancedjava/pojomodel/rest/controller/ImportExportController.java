@@ -54,7 +54,7 @@ public class ImportExportController {
             byte[] buffer = new byte[stream.available()];
             stream.read(buffer);
             String jsonString = new String(buffer, StandardCharsets.UTF_8);
-            jsonString = jsonString.replaceAll("(\r\n)", "" );
+
             ExportFormat imported = JsonUtils.jsonStringToObject(jsonString, ExportFormat.class);
 
             if (imported == null){
