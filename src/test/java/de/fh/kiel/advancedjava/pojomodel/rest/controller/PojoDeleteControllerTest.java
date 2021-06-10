@@ -3,6 +3,7 @@ package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.TestDataBaseController;
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoClass;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoInterface;
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoReference;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.rest.controller.PojoDeleteController;
@@ -66,6 +67,9 @@ class PojoDeleteControllerTest {
         //this.mockMvc.perform(get(buildDeleteRequest("PojoClass2", "testpackage"))).andExpect(status().is3xxRedirection());
         pojoDeleteController.pojoDelete("testpackage", "PojoClass2");
         assertTrue(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass2", "testpackage") instanceof PojoReference);
+        assertTrue(pojoElementRepository.getPojoElementByNameAndPackageName("PojoInterface1", "") instanceof PojoInterface);
+        pojoDeleteController.pojoDelete("", "PojoInterface1");
+        assertTrue(pojoElementRepository.getPojoElementByNameAndPackageName("PojoInterface1", "") instanceof PojoReference);
 
         //this.mockMvc.perform(get("/deleteAll")).andExpect(status().is3xxRedirection());
         pojoDeleteController.deleteAll();
