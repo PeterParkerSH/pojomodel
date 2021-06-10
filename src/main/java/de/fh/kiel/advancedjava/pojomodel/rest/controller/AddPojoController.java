@@ -1,17 +1,15 @@
 package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.rest.service.AddPojoService;
-import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.lang.model.SourceVersion;
-import java.util.Arrays;
 
 @Api
 @Controller
@@ -23,8 +21,14 @@ public class AddPojoController {
         this.addPojoService = addPojoService;
     }
 
+    @ApiOperation(value = "Add a Pojo with package name and class name",
+            notes = "Only adds Pojo if it doesn't exist in the database yet",
+            response = RedirectView.class
+    )
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "Parameter error")})
     @GetMapping("/addPojo")
-    public String addPojo(@RequestParam("package") String packageName, @RequestParam("name") String pojoName){
+    public RedirectView addPojo(@ApiParam(value = "package of the class", required = true) @RequestParam("package") String packageName,
+                                @ApiParam(value = "name of the class", required = true) @RequestParam("name") String pojoName){
         if (pojoName.equals("") || packageName.equals("")){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Pojo name and package are required"
@@ -44,7 +48,7 @@ public class AddPojoController {
             }
         }
         addPojoService.addPojo(pojoName, packageName);
-        return "redirect:/index";
+        return new RedirectView("/index");
     }
 
 }

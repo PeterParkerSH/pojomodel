@@ -45,6 +45,7 @@ public class StatisticService {
                 .numberOfClassesInPackage(pojoElementRepository.countPojoElementsWithPackageName(packageName))
                 .build()
         );
+
         if (result.isEmpty()){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error generating response");
         }
