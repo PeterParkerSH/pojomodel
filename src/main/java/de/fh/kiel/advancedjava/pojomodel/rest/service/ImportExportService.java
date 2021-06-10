@@ -49,13 +49,11 @@ public class ImportExportService {
     }
 
     @Transactional
-    public String jsonImport(ExportFormat imported){
+    public void jsonImport(ExportFormat imported){
         pojoElementRepository.deleteAll();
 
         pojoInterfaceRepository.saveAll(imported.pojoInterfaces);
         pojoReferenceRepository.saveAll(imported.pojoReferences);
         pojoClassRepository.saveAll(imported.pojoClasses);
-
-        return "redirect:/index";
     }
 }
