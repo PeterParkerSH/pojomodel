@@ -1,7 +1,8 @@
-package de.fh.kiel.advancedjava.pojomodel.rest;
+package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.TestDataBaseController;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
+import de.fh.kiel.advancedjava.pojomodel.rest.controller.FileUploadController;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -28,6 +29,9 @@ class FileUploadControllerTest {
 
     @Autowired
     TestDataBaseController testDataBaseController;
+
+    @Autowired
+    FileUploadController fileUploadController;
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,11 +54,32 @@ class FileUploadControllerTest {
     @Test
     void uploadFile() throws Exception {
         MockMultipartFile upload = getMockMultipartFileFromResource("ExampleJar-1.0-SNAPSHOT.jar");
+
         mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
+        assertNotEquals(0, pojoElementRepository.count());
         upload = getMockMultipartFileFromResource("testpackage/PojoClass3.class");
         mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is4xxClientError());
         upload = getMockMultipartFileFromResource("testpackage/subpackage/PojoClass5.class");
         mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
+        assertNotNull( pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass5", "testpackage/subpackage"));
+    }
+    @Test
+    void uploadFileDirect() throws Exception {
+        MockMultipartFile upload = getMockMultipartFileFromResource("ExampleJar-1.0-SNAPSHOT.jar");
+        fileUploadController.uploadFile(upload);
+        //mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
+        assertNotEquals(0, pojoElementRepository.count());
+        upload = getMockMultipartFileFromResource("testpackage/PojoClass3.class");
+        try {
+            fileUploadController.uploadFile(upload);
+            fail("No Exception");
+        }catch(Exception c){
+
+        }
+        //mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is4xxClientError());
+        upload = getMockMultipartFileFromResource("testpackage/subpackage/PojoClass5.class");
+        fileUploadController.uploadFile(upload);
+        //mockMvc.perform(MockMvcRequestBuilders.multipart("/upload").file(upload)).andExpect(status().is3xxRedirection());
         assertNotNull( pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass5", "testpackage/subpackage"));
     }
 
