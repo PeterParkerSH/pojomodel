@@ -15,9 +15,7 @@ public class IndexService {
 
 
     public String listUploadedFiles() {
-        String answerHtml = """
-   
-            
+        String answerHtml = """           
             <div>
                 <form method="POST" enctype="multipart/form-data" action="/upload">
                     <table>
@@ -68,7 +66,6 @@ public class IndexService {
                     [POJOTABLE]
                 </table>
             </div>
-             
                 """;
         StringBuilder pojoTable = new StringBuilder();
         for (PojoElement element: pojoElementRepository.findAll()){

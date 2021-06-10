@@ -1,7 +1,8 @@
-package de.fh.kiel.advancedjava.pojomodel.rest;
+package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.TestDataBaseController;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
+import de.fh.kiel.advancedjava.pojomodel.rest.controller.StatisticController;
 import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ApiPojoElement;
 import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.PojoStatistic;
 import de.fh.kiel.advancedjava.pojomodel.utils.JsonUtils;
@@ -16,6 +17,7 @@ import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -24,6 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class StatisticControllerTest {
     @Autowired
     PojoElementRepository pojoElementRepository;
+
+    @Autowired
+    StatisticController statisticController;
 
     @Autowired
     TestDataBaseController testDataBaseController;
@@ -65,11 +70,37 @@ class StatisticControllerTest {
 
     @Test
     void pojoStatistic() throws Exception {
+
         AtomicReference<String> statisticJsonAtomic = new AtomicReference<>("");
-               this.mockMvc.perform(get(buildStatisticRequest("PojoClass3", "testpackage"))).andDo(result -> {
-            statisticJsonAtomic.set(result.getResponse().getContentAsString());
-        }).andExpect(status().isOk());
+        try {
+            this.mockMvc.perform(get(buildStatisticRequest("PojoClass3", "testpackage"))).andDo(result -> {
+                statisticJsonAtomic.set(result.getResponse().getContentAsString());
+            }).andExpect(status().isOk());
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
         String res = statisticJsonAtomic.get();
+
+        PojoStatistic pojoStatistic = JsonUtils.jsonStringToObject(res, PojoStatistic.class);
+        PojoStatistic original = JsonUtils.jsonStringToObject(testRes, PojoStatistic.class);
+        original.getImplementsList().sort(Comparator.comparing(ApiPojoElement::getClassName).thenComparing(ApiPojoElement::getPackageName));
+        pojoStatistic.getImplementsList().sort(Comparator.comparing(ApiPojoElement::getClassName).thenComparing(ApiPojoElement::getPackageName));
+
+        assertNotNull(original);
+        assertEquals(original, pojoStatistic);
+    }
+
+    @Test
+    void pojoStatisticDirect() throws Exception {
+
+        AtomicReference<String> statisticJsonAtomic = new AtomicReference<>("");
+        try {
+            statisticJsonAtomic.set(statisticController.pojoStatistic("testpackage", "PojoClass3"));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        String res = statisticJsonAtomic.get();
+
         PojoStatistic pojoStatistic = JsonUtils.jsonStringToObject(res, PojoStatistic.class);
         PojoStatistic original = JsonUtils.jsonStringToObject(testRes, PojoStatistic.class);
         original.getImplementsList().sort(Comparator.comparing(ApiPojoElement::getClassName).thenComparing(ApiPojoElement::getPackageName));

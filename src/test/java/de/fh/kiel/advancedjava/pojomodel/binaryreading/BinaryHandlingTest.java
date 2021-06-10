@@ -34,13 +34,5 @@ class BinaryHandlingTest {
         testDataBaseController.buildTestDataBase();
     }
 
-    @Test
-    void readFile() {
 
-    }
-
-    @Test
-    void exportFile(){
-
-    }
 }
