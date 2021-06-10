@@ -13,7 +13,7 @@ import java.util.Date;
 
 @ControllerAdvice
 public class ExceptionHandlingController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlingController.class);
 
     @ExceptionHandler(value = ResponseStatusException.class)
     public ResponseEntity<ErrorMessage>

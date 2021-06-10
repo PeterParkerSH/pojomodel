@@ -3,6 +3,7 @@ package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryHandling;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandling;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandlingException;
+import io.swagger.annotations.*;
 import org.objectweb.asm.tree.ClassNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +26,8 @@ import java.util.List;
  * and hit http://localhost:8080/upload and choose a file for upload and upload it. This class is only an example
  * and not feature complete.
  */
+
+@Api
 @Controller
 public class FileUploadController {
 
@@ -41,8 +45,12 @@ public class FileUploadController {
 		this.classHandling = classHandling;
 	}
 
+	@ApiOperation(value = "Upload a JAR or Class file",
+			notes = "Does not add duplicates to the database",
+			response = RedirectView.class
+			)
 	@PostMapping("/upload")
-	public String uploadFile(@RequestParam("file") MultipartFile file) {
+	public RedirectView uploadFile(@ApiParam(value = "File to be uploaded", required = true) @RequestParam("file") MultipartFile file) {
 		try {
 			List<ClassNode> classNodeList= binaryHandling.readFile(file);
 
@@ -60,7 +68,7 @@ public class FileUploadController {
 					HttpStatus.BAD_REQUEST, e.getMessage()
 			);
 		}
-		return "redirect:/index";
+		return new RedirectView("/index");
 	}
 
 }
