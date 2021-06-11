@@ -2,10 +2,16 @@ package de.fh.kiel.advancedjava.pojomodel.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.ValidationException;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class JsonUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
@@ -39,6 +45,19 @@ public class JsonUtils {
         } catch (IOException e) {
             LOGGER.error("Error converting json to object", e);
             return null;
+        }
+    }
+
+    public static void validateJSON(String json) throws ValidationException{
+        try (InputStream inputStream = JsonUtils.class.getClassLoader().getResourceAsStream("pojo-schema.json")) {
+            assert inputStream != null;
+            JSONObject jsonSchema = new JSONObject(
+                    new JSONTokener(inputStream));
+            JSONObject jsonObject = new JSONObject(json);
+            Schema schema = SchemaLoader.load(jsonSchema);
+            schema.validate(jsonObject);
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
         }
     }
 }

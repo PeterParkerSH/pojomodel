@@ -6,6 +6,11 @@ import de.fh.kiel.advancedjava.pojomodel.utils.JsonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.ValidationException;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.view.RedirectView;
+import springfox.documentation.spring.web.json.Json;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,33 +58,39 @@ public class ImportExportController {
     )
     @PostMapping("/jsonImport")
     public RedirectView jsonImport(@ApiParam(value = "JSON file to be imported", required = true) @RequestParam("json") MultipartFile json){
-        try {
+        if (!Objects.requireNonNull(json.getOriginalFilename()).endsWith(".json")){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "File extension has to be \".json\"");
+        }
 
-            if (!Objects.requireNonNull(json.getOriginalFilename()).endsWith(".json")){
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "File extension has to be \".json\"");
-            }
-
-            InputStream stream = json.getInputStream();
+        // convert JSON file to string
+        String jsonString;
+        try (InputStream stream = json.getInputStream()){
             byte[] buffer = new byte[stream.available()];
             stream.read(buffer);
-            String jsonString = new String(buffer, StandardCharsets.UTF_8);
-
-            ExportFormat imported = JsonUtils.jsonStringToObject(jsonString, ExportFormat.class);
-
-            if (imported == null){
-                throw new ResponseStatusException(
-                        HttpStatus.INTERNAL_SERVER_ERROR, "Could not convert json file");
-            }
-
-            importExportService.jsonImport(imported);
-
+            jsonString = new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException|NullPointerException e) {
             LOGGER.error(e.getMessage());
-
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Could not convert json file");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Could not read json file");
         }
+
+        try {
+            JsonUtils.validateJSON(jsonString);
+        } catch (ValidationException e) {
+            LOGGER.error(e.getMessage());
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Invalid JSON file: " + e.getMessage());
+        }
+
+        ExportFormat imported = JsonUtils.jsonStringToObject(jsonString, ExportFormat.class);
+        if (imported == null){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Could not convert json file to pojo import format");
+        }
+
+        importExportService.jsonImport(imported);
+
         return new RedirectView("/index");
     }
 }
