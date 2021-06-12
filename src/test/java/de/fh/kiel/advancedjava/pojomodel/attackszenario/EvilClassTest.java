@@ -1,8 +1,10 @@
 package de.fh.kiel.advancedjava.pojomodel.attackszenario;
 
+import de.fh.kiel.advancedjava.pojomodel.TestDataBaseController;
 import de.fh.kiel.advancedjava.pojomodel.rest.controller.FileUploadController;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +24,13 @@ class EvilClassTest {
     @Autowired
     FileUploadController fileUploadController;
 
+    @Autowired
+    TestDataBaseController testDataBaseController;
+
+    @BeforeEach
+    void prepare(){
+        testDataBaseController.buildTestDataBase();
+    }
 
 
     @Test
@@ -31,7 +40,7 @@ class EvilClassTest {
         assertTrue(file.exists());
         file.delete();
 
-        File file2 = new File("build/classes/java/main/de/fh/kiel/advancedjava/pojomodel/EvilClass.class");
+        File file2 = new File("build/classes/java/test/de/fh/kiel/advancedjava/pojomodel/attackszenario/EvilClass.class");
         FileInputStream fis = new FileInputStream(file2);
         MockMultipartFile mpf = new MockMultipartFile("file", FilenameUtils.getName("EvilClass.class"), "application/octet-stream", IOUtils.toByteArray(fis));
         fileUploadController.uploadFile(mpf);
