@@ -80,7 +80,18 @@ public class IndexService {
                     .append(element.getName()).append("&package=")
                     .append(element.getPackageName().replace("/", ".")).append("\">Statistic")
                     .append("</td>")
+                    .append("<form method=\"GET\" action=\"/addAttribute\">")
+                    .append("<td>Attribute: id: </td><td><input type=\"text\" name=\"id\" value=\"")
+                    .append(element.getId())
+                    .append("\"/></td>")
+                    .append("<td>type: </td><td><input type=\"text\" name=\"type\"/></td>")
+                    .append("<td>name: </td><td><input type=\"text\" name=\"name\"/></td>")
+                    .append("<td>visibility: </td><td><input type=\"text\" name=\"visibility\"/></td>")
+                    .append("<td>package: </td><td><input type=\"text\" name=\"package\"/></td>")
+                    .append("<td><input type=\"submit\" value=\"Add Attribute\"/></td>")
+                    .append("</form>")
                     .append("</tr>");
+
         }
         answerHtml = answerHtml.replace("[POJOTABLE]", pojoTable.toString());
 
