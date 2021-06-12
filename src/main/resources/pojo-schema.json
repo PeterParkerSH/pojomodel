@@ -1,12 +1,13 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "",
   "title": "POJOs",
   "description": "An array of POJO objects",
   "definitions": {
     "PojoClass": {
       "type" : "object",
       "properties": {
+        "@type": {
+        },
         "id" : {
           "type" :  "integer"
         },
@@ -16,33 +17,60 @@
         "packageName" : {
           "type": "string"
         },
+        "extendsClass":{
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "pojoClass": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        },
         "implementsInterfaces" : {
           "type": "array",
           "items": [{
-            "$ref" : "#/definitions/PojoInterface"
+            "properties": {
+              "id": {
+                "type"  : "integer"
+              },
+              "pojoInterface" : {
+                "type": "integer"
+              }
+            },
+            "additionalProperties": false
           }]
         },
         "hasAttributes" : {
           "type": "array",
           "items": [{
-            "anyOf" : [
-              {
-                "$ref": "#/definitions/PojoClass"
+            "properties": {
+              "id": {
+                "type"  : "integer"
               },
-              {
-                "$ref": "#/definitions/PojoInterface"
+              "pojoElement" : {
+                "type": "integer"
               },
-              {
-                "$ref": "#/definitions/PojoReference"
+              "name" : {
+                "type": "string"
+              },
+              "visibility" : {
+                "type": "string"
               }
-            ]
+            },
+            "additionalProperties": false
           }]
         }
-      }
+      },
+      "required" : ["id", "name"],
+      "additionalProperties": false
     },
     "PojoInterface": {
       "type" : "object",
       "properties": {
+        "@type": {
+        },
         "id" : {
           "type" :  "integer"
         },
@@ -52,11 +80,15 @@
         "packageName" : {
           "type": "string"
         }
-      }
+      },
+      "required" : ["id", "name"],
+      "additionalProperties": false
     },
     "PojoReference": {
       "type" : "object",
       "properties": {
+        "@type": {
+        },
         "id" : {
           "type" :  "integer"
         },
@@ -66,7 +98,9 @@
         "packageName" : {
           "type": "string"
         }
-      }
+      },
+      "required" : ["id", "name"],
+      "additionalProperties": false
     }
   },
   "type": "object",
@@ -85,7 +119,7 @@
       "default": [],
       "items":[{
         "$ref" : "#/definitions/PojoInterface"
-        }]
+      }]
     },
     "pojoReferences": {
       "title": "PojoInterfaces",
