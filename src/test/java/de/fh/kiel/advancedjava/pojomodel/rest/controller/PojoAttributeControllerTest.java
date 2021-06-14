@@ -63,7 +63,7 @@ class PojoAttributeControllerTest {
         try {
             pojoAttributeController.addAttribute("hello.world", "HelloClass", "PojoClass2", "attrPojoClass2", "private", "testpackage");
         } catch (ResponseStatusException e) {
-            assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
         }
     }
 
