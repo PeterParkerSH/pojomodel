@@ -155,57 +155,55 @@ public class ClassHandlingService {
     private List<ImplementsRs> buildImplementsRs(ClassNode classNode) {
         List<ImplementsRs> result = new ArrayList<>();
 
-        for (Object interf: classNode.interfaces) {
-            if (interf instanceof String) {
-                String interfaceString = (String) interf;
-                String interfaceName = parseClassName(interfaceString);
-                String interfacePackage = parsePackageName(interfaceString);
-                PojoElement pojoElement = getOrCreatePojoElement(interfaceName, interfacePackage);
-                result.add(ImplementsRs.builder().pojoInterface(pojoElement).build());
-            }
+        for (String interfaceString: classNode.interfaces) {
+            String interfaceName = parseClassName(interfaceString);
+            String interfacePackage = parsePackageName(interfaceString);
+            PojoElement pojoElement = getOrCreatePojoElement(interfaceName, interfacePackage);
+            result.add(ImplementsRs.builder().pojoInterface(pojoElement).build());
         }
         return result;
+    }
+
+    private String attributeTypeFromFieldNode(FieldNode a){
+        String attributeType = "";
+        switch (a.desc.charAt(0)) {
+            case 'L' -> attributeType = a.desc.substring(1, a.desc.length() - 1);
+            case 'Z' -> attributeType = Boolean.class.getName();
+            case 'B' -> attributeType = Byte.class.getName();
+            case 'S' -> attributeType = Short.class.getName();
+            case 'I' -> attributeType = Integer.class.getName();
+            case 'J' -> attributeType = Long.class.getName();
+            case 'F' -> attributeType = Float.class.getName();
+            case 'D' -> attributeType = Double.class.getName();
+            case 'C' -> attributeType = Character.class.getName();
+            default -> LOGGER.info("Unsupported attribute prefix: {}", a.desc.charAt(0));
+        }
+        return attributeType;
     }
 
     private List<AttributeRs> buildAttributeRs(ClassNode classNode) {
         ArrayList<AttributeRs> result = new ArrayList<>();
 
         if (classNode.fields != null) {
-            for (Object field: classNode.fields){
-                if(field instanceof FieldNode) {
-                    FieldNode a = (FieldNode) field;
+            for (FieldNode field: classNode.fields){
 
-                    String access = "private";
-                    if (checkOpcode(a.access, Opcodes.ACC_PROTECTED))
-                        access = "protected";
-                    if (checkOpcode(a.access, Opcodes.ACC_PUBLIC))
-                        access = "public";
+                String access = "private";
+                if (checkOpcode(field.access, Opcodes.ACC_PROTECTED))
+                    access = "protected";
+                if (checkOpcode(field.access, Opcodes.ACC_PUBLIC))
+                    access = "public";
 
-                    String attributeType = "";
+                String attributeType = attributeTypeFromFieldNode(field);
 
+                if (!attributeType.isEmpty()) {
+                    attributeType = attributeType.replace(".", "/");
 
-                    switch (a.desc.charAt(0)) {
-                        case 'L' -> attributeType = a.desc.substring(1, a.desc.length() - 1);
-                        case 'Z' -> attributeType = Boolean.class.getName();
-                        case 'B' -> attributeType = Byte.class.getName();
-                        case 'S' -> attributeType = Short.class.getName();
-                        case 'I' -> attributeType = Integer.class.getName();
-                        case 'J' -> attributeType = Long.class.getName();
-                        case 'F' -> attributeType = Float.class.getName();
-                        case 'D' -> attributeType = Double.class.getName();
-                        case 'C' -> attributeType = Character.class.getName();
-                        default -> LOGGER.info("Unsupported attribute prefix: " + a.desc.charAt(0));
-                    }
-
-                    if (!attributeType.equals("")) {
-                        attributeType = attributeType.replace(".", "/");
-
-                        String attributeName = parseClassName(attributeType);
-                        String attributePackage = parsePackageName(attributeType);
-                        PojoElement relatedClass = getOrCreatePojoElement(attributeName, attributePackage);
-                        result.add(AttributeRs.builder().visibility(access).name(a.name).pojoElement(relatedClass).build());
-                    }
+                    String attributeName = parseClassName(attributeType);
+                    String attributePackage = parsePackageName(attributeType);
+                    PojoElement relatedClass = getOrCreatePojoElement(attributeName, attributePackage);
+                    result.add(AttributeRs.builder().visibility(access).name(field.name).pojoElement(relatedClass).build());
                 }
+
             }
         }
         return result;
