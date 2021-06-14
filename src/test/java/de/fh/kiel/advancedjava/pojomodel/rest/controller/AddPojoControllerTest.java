@@ -46,7 +46,7 @@ class AddPojoControllerTest {
     void addPojoNotExisting() throws Exception {
         //this.mockMvc.perform(get(buildPostRequest("MyBeautifulClass", "MyBeautifulPackage"))).andExpect(status().is3xxRedirection());
         addPojoController.addPojo("MyBeautifulPackage", "MyBeautifulClass");
-        pojoElementRepository.getPojoElementByNameAndPackageName("MyBeautifulClass", "MyBeautifulPackage");
+        assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("MyBeautifulClass", "MyBeautifulPackage"));
     }
 
     @Test
