@@ -55,4 +55,23 @@ public class PojoAttributeController {
         return new RedirectView("index");
     }
 
+    @ApiOperation(value = "Remove an attribute from an existing POJO",
+            notes = "Removes an attribute if it exists in the given POJO",
+            response = RedirectView.class
+    )
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "Parameter error")})
+    @GetMapping("/removeAttribute")
+    public RedirectView removeAttribute(@ApiParam(value = "package of POJO", required = true) @RequestParam("pojoPackage") String pojoPackage,
+                                     @ApiParam(value = "name of POJO", required = true) @RequestParam("pojoName") String pojoName,
+                                     @ApiParam(value = "name of attribute", required = true) @RequestParam("name") String name) {
+        if (name.isEmpty() || pojoName.isEmpty() ){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "POJO name and attribute name are required"
+            );
+        }
+        pojoPackage = pojoPackage.replace(".", "/");
+        pojoAttributeService.removeAttribute(pojoPackage, pojoName, name);
+
+        return new RedirectView("index");
+    }
 }
