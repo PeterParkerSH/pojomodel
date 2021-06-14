@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface PojoElementRepository extends Neo4jRepository<PojoElement, Long> {
 
-    PojoElement findByPackageNameAndName(String name, String packageName);
+    PojoElement findByPackageNameAndName(String packageName, String name);
 
     @Query("MATCH (e:Element) WHERE e.name = $name AND e.packageName = $packageName RETURN e")
     PojoElement getPojoElementByNameAndPackageName(@Param("name") String name, @Param("packageName") String packageName);

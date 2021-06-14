@@ -1,6 +1,8 @@
 package de.fh.kiel.advancedjava.pojomodel.rest.service;
 
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoClass;
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoReference;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import org.springframework.stereotype.Service;
 
@@ -74,13 +76,30 @@ public class IndexService {
                     .append("<td>").append(element.getPackageName()).append("</td>")
                     .append("<td>").append("<a href=\"pojoDelete?name=")
                     .append(element.getName()).append("&package=")
-                    .append(element.getPackageName().replace("/", ".")).append("\">Delete")
+                    .append(element.getPackageName().replace("/", ".")).append("\">Delete</a>")
                     .append("</td>")
                     .append("<td>").append("<a href=\"pojoStatistic?name=")
                     .append(element.getName()).append("&package=")
-                    .append(element.getPackageName().replace("/", ".")).append("\">Statistic")
-                    .append("</td>")
-                    .append("</tr>");
+                    .append(element.getPackageName().replace("/", ".")).append("\">Statistic</a>")
+                    .append("</td>");
+            if (element instanceof PojoReference || element instanceof PojoClass) {
+                pojoTable
+                        .append("<form method=\"GET\" action=\"/addAttribute\">")
+                        .append("<td>Attribute:</td>")
+                        .append("<input type=\"hidden\" name=\"pojoPackage\" value=\"").append(element.getPackageName()).append("\"/>")
+                        .append("<input type=\"hidden\" name=\"pojoName\" value=\"").append(element.getName()).append("\"/>")
+                        .append("<td>type: </td><td><input type=\"text\" name=\"type\"/></td>")
+                        .append("<td>package: </td><td><input type=\"text\" name=\"attributePackage\"/></td>")
+                        .append("<td>name: </td><td><input type=\"text\" name=\"name\"/></td>")
+                        .append("<td>visibility: </td><td><input type=\"text\" name=\"visibility\"/></td>")
+                        .append("<td><input type=\"submit\" value=\"Add Attribute\"/></td>")
+                        .append("</form>");
+            } else {
+                pojoTable
+                    .append("<td></td>".repeat(6));
+            }
+            pojoTable.append("</tr>");
+
         }
         answerHtml = answerHtml.replace("[POJOTABLE]", pojoTable.toString());
 

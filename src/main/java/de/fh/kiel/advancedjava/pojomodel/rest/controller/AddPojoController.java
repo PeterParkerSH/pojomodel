@@ -29,7 +29,7 @@ public class AddPojoController {
     @GetMapping("/addPojo")
     public RedirectView addPojo(@ApiParam(value = "package of the class", required = true) @RequestParam("package") String packageName,
                                 @ApiParam(value = "name of the class", required = true) @RequestParam("name") String pojoName){
-        if (pojoName.equals("") || packageName.equals("")){
+        if (pojoName.isEmpty() || packageName.isEmpty()){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Pojo name and package are required"
             );

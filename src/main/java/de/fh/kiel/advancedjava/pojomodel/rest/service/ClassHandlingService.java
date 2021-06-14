@@ -1,5 +1,6 @@
-package de.fh.kiel.advancedjava.pojomodel.binaryreading;
+package de.fh.kiel.advancedjava.pojomodel.rest.service;
 
+import de.fh.kiel.advancedjava.pojomodel.rest.exceptions.ClassHandlingException;
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
@@ -20,9 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ClassHandling {
+public class ClassHandlingService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClassHandling.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassHandlingService.class);
 
     private final PojoClassRepository pojoClassRepository;
     private final PojoInterfaceRepository  pojoInterfaceRepository;
@@ -30,8 +31,8 @@ public class ClassHandling {
     private final PojoReferenceRepository pojoReferenceRepository;
 
     @Autowired
-    public ClassHandling(final PojoClassRepository pojoClassRepository, final PojoInterfaceRepository  pojoInterfaceRepository,
-                         final PojoElementRepository  pojoElementRepository, final PojoReferenceRepository pojoReferenceRepository){
+    public ClassHandlingService(final PojoClassRepository pojoClassRepository, final PojoInterfaceRepository  pojoInterfaceRepository,
+                                final PojoElementRepository  pojoElementRepository, final PojoReferenceRepository pojoReferenceRepository){
         this.pojoClassRepository = pojoClassRepository;
         this.pojoInterfaceRepository = pojoInterfaceRepository;
         this.pojoElementRepository = pojoElementRepository;
@@ -39,7 +40,7 @@ public class ClassHandling {
     }
 
     @Transactional
-    public void handleClassNodes(List<ClassNode> classNodes) throws ClassHandlingException{
+    public void handleClassNodes(List<ClassNode> classNodes) throws ClassHandlingException {
         // Check if elements already exist
         for (ClassNode classNode: classNodes) {
             if (checkClassNodeAlreadyExists(classNode)){
@@ -92,7 +93,6 @@ public class ClassHandling {
 
     private boolean isInterface(ClassNode classNode){
         return checkOpcode(classNode.access, Opcodes.ACC_INTERFACE);
-        //return  (classNode.access & Opcodes.ACC_INTERFACE) != 0;
     }
 
 
@@ -212,8 +212,8 @@ public class ClassHandling {
     }
 
 
-    private PojoElement getOrCreatePojoElement(String className, String packageName){
-        PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(className, packageName);
+    public PojoElement getOrCreatePojoElement(String className, String packageName){
+        PojoElement pojoElement = pojoElementRepository.findByPackageNameAndName(packageName, className);
         if (pojoElement == null) {
             PojoReference pojoReference = PojoReference.builder().name(className).packageName(packageName).build();
             pojoReferenceRepository.save(pojoReference);

@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.binaryreading;
+package de.fh.kiel.advancedjava.pojomodel.rest.exceptions;
 
 public class ClassHandlingException extends Exception {
     public ClassHandlingException(String msg){

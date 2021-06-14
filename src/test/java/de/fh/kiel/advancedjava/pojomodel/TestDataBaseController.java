@@ -1,13 +1,12 @@
 package de.fh.kiel.advancedjava.pojomodel;
 
-import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandling;
-import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryHandling;
+import de.fh.kiel.advancedjava.pojomodel.rest.service.ClassHandlingService;
+import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryReading;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoReferenceRepository;
 import org.apache.commons.io.IOUtils;
-import org.objectweb.asm.tree.ClassNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
@@ -23,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class TestDataBaseController {
 
     @Autowired
-    BinaryHandling binaryHandling;
+    BinaryReading binaryReading;
     @Autowired
-    ClassHandling classHandling;
+    ClassHandlingService classHandlingService;
 
     @Autowired
     PojoClassRepository pojoClassRepository;
@@ -51,7 +50,7 @@ public class TestDataBaseController {
             MultipartFile multipartFile = new MockMultipartFile("ExampleJar-1.0-SNAPSHOT.jar", "ExampleJar-1.0-SNAPSHOT.jar", "application/octet-stream", IOUtils.toByteArray(input));
 
             try {
-                classHandling.handleClassNodes(binaryHandling.readFile(multipartFile));
+                classHandlingService.handleClassNodes(binaryReading.readFile(multipartFile));
             } catch (Exception e) {
                 fail(e.getMessage());
             }
