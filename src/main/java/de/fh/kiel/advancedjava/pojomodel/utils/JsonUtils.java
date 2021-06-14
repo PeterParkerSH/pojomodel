@@ -16,6 +16,10 @@ import java.io.InputStream;
 public class JsonUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
 
+    private JsonUtils(){
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * Converts an object to a json sting
      * @param obj object to convert

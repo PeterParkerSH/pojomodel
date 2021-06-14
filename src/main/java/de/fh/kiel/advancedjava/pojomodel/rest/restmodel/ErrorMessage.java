@@ -8,6 +8,6 @@ public class ErrorMessage {
 
     private String timestamp;
     private String status;
-    private String errorMessage;
+    private String message;
 
 }

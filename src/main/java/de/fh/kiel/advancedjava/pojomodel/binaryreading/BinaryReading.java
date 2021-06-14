@@ -18,9 +18,16 @@ import java.util.jar.JarInputStream;
 public class BinaryReading {
 
     public List<ClassNode> readFile(MultipartFile file) throws BinaryReadingException, IOException {
-        if (file.getOriginalFilename().endsWith(".jar")) {
+        if (file == null){
+            throw new BinaryReadingException("File is null");
+        }
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null){
+            throw new BinaryReadingException("No original file name");
+        }
+        if (originalFilename.endsWith(".jar")) {
             return readJarFile(file);
-        } else if (file.getOriginalFilename().endsWith(".class")){
+        } else if (originalFilename.endsWith(".class")){
             List<ClassNode> classes = new ArrayList<>();
             classes.add(readClassFile(file));
             return classes;
@@ -34,17 +41,14 @@ public class BinaryReading {
         JarInputStream jar = new JarInputStream(mpFile.getInputStream());
         JarEntry entry;
         do {
-
             entry = jar.getNextJarEntry();
-            if (entry != null){
-                if (entry.getName().endsWith(".class")) {
-                    byte[] byteArray = IOUtils.toByteArray(jar);
-                    try {
-                        ClassNode cn = readClassNode(byteArray);
-                        classes.add(cn);
-                    }catch (BinaryReadingException e){
-                        throw new BinaryReadingException("Could not read ClassNode: " + entry.getName());
-                    }
+            if (entry != null && entry.getName().endsWith(".class")){
+                byte[] byteArray = IOUtils.toByteArray(jar);
+                try {
+                    ClassNode cn = readClassNode(byteArray);
+                    classes.add(cn);
+                }catch (BinaryReadingException e){
+                    throw new BinaryReadingException("Could not read ClassNode: " + entry.getName());
                 }
             }
         } while (entry != null);
