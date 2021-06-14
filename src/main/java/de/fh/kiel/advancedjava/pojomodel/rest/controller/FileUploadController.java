@@ -2,12 +2,12 @@ package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryReading;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryReadingException;
-import de.fh.kiel.advancedjava.pojomodel.rest.service.ClassHandlingService;
 import de.fh.kiel.advancedjava.pojomodel.rest.exceptions.ClassHandlingException;
-import io.swagger.annotations.*;
+import de.fh.kiel.advancedjava.pojomodel.rest.service.ClassHandlingService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.objectweb.asm.tree.ClassNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -31,9 +31,6 @@ import java.util.List;
 @Api
 @Controller
 public class FileUploadController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadController.class);
-
 	private final BinaryReading binaryReading;
 
 	private final ClassHandlingService classHandlingService;
@@ -56,20 +53,10 @@ public class FileUploadController {
 
 			classHandlingService.handleClassNodes(classNodeList);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
-
 			throw new ResponseStatusException(
 					HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()
 			);
-		} catch (BinaryReadingException e) {
-			LOGGER.error(e.getMessage());
-
-			throw new ResponseStatusException(
-					HttpStatus.BAD_REQUEST, e.getMessage()
-			);
-		} catch (ClassHandlingException e) {
-			LOGGER.error(e.getMessage());
-
+		} catch (BinaryReadingException | ClassHandlingException e) {
 			throw new ResponseStatusException(
 					HttpStatus.BAD_REQUEST, e.getMessage()
 			);

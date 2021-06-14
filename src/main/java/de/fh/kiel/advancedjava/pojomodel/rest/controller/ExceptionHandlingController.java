@@ -21,7 +21,7 @@ public class ExceptionHandlingController {
         ErrorMessage emsg = new ErrorMessage();
         emsg.setTimestamp(new Date().toString());
         emsg.setStatus(String.valueOf(e.getStatus().value()));
-        emsg.setErrorMessage(e.getMessage());
+        emsg.setMessage(e.getMessage());
         LOGGER.error("Exception Occured : {}", req);
 
         return new ResponseEntity<>(emsg, e.getStatus());

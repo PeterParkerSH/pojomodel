@@ -27,7 +27,7 @@ class PojoClassRepositoryTest {
         pojoClassRepository.save(pojoClass);
         pojoClass = pojoClassRepository.getPojoClassByNameAndPackageName("TestClass123", "de/fhkiel/pojo");
         assertNotNull(pojoClass);
-        assertEquals(pojoClass.getName(), "TestClass123");
+        assertEquals("TestClass123", pojoClass.getName());
         pojoClassRepository.deleteAllByName("TestClass123");
         pojoClass = pojoClassRepository.getPojoClassByNameAndPackageName("TestClass123", "de/fhkiel/pojo");
         assertNull(pojoClass);

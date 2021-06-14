@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExportFormat {
-    public List<PojoClass> pojoClasses;
-    public List<PojoInterface> pojoInterfaces;
-    public List<PojoReference> pojoReferences;
+    private List<PojoClass> pojoClasses;
+    private List<PojoInterface> pojoInterfaces;
+    private List<PojoReference> pojoReferences;
 }

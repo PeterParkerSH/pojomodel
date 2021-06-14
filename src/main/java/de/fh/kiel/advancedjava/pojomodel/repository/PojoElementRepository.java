@@ -1,13 +1,11 @@
 package de.fh.kiel.advancedjava.pojomodel.repository;
 
-import de.fh.kiel.advancedjava.pojomodel.pojomodel.AttributeRs;
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface PojoElementRepository extends Neo4jRepository<PojoElement, Long> {
