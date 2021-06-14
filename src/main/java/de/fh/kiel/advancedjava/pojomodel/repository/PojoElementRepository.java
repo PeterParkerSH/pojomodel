@@ -39,4 +39,12 @@ public interface PojoElementRepository extends Neo4jRepository<PojoElement, Long
     @Query("MATCH (e:Element) WHERE e.name = $name RETURN count(e)")
     int countPojoElementsWithClassName(@Param("name") String name);
 
+    @Query("match (e:Element {packageName: $packageName }) return e")
+    List<PojoElement> getPojoElementsWithPackageName(@Param("packageName") String packageName);
+
+    @Query("MATCH (e:Element) WHERE e.packageName STARTS WITH $packageName RETURN e")
+    List<PojoElement> getPojoElementStartsWithByPackageName(@Param("packageName") String packageName);
+
+
+
 }

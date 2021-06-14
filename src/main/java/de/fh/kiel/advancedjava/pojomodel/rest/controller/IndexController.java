@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class IndexController {
 
-    @Autowired
+    final
     IndexService indexService;
+
+    public IndexController(IndexService indexService) {
+        this.indexService = indexService;
+    }
 
     @ApiOperation(value = "Get index page",
             notes = "Index page lists all existing POJOs",

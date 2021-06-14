@@ -40,9 +40,13 @@ class PojoElementRepositoryTest {
     }
 
     @Test
+    void getElementCountByNameWildcard() {
+        assertEquals(6, pojoElementRepository.getPojoElementStartsWithByPackageName("test").size());
+    }
+
+    @Test
     void getPojoElementByPackageName() {
         assertEquals(5, pojoElementRepository.countPojoElementsWithPackageName("testpackage"));
         assertEquals(1, pojoElementRepository.countPojoElementsWithPackageName("testpackage/subpackage"));
-
     }
 }
