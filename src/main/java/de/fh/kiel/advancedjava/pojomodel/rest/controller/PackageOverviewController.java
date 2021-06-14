@@ -1,12 +1,12 @@
 package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
-import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ApiOverviewElement;
+import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ApiPackageOverviewElement;
 import de.fh.kiel.advancedjava.pojomodel.rest.service.PackageOverviewService;
 import io.swagger.annotations.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -21,14 +21,14 @@ public class PackageOverviewController {
     }
 
     @ApiOperation(value = "Returns a list of elements in a specific packages and its subpackages",
-            response = ApiOverviewElement.class,
+            response = ApiPackageOverviewElement.class,
             responseContainer = "List"
     )
 
-    @GetMapping("/getOverview")
-    public List<ApiOverviewElement> getOverview(@ApiParam(value = "package name", required = true) @RequestParam("package") String packageName){
+    @GetMapping("/packageOverview")
+    public @ResponseBody List<ApiPackageOverviewElement> packageOverview(@ApiParam(value = "package name", required = true) @RequestParam("package") String packageName){
         packageName = packageName.replace(".", "/");
-        return packageOverviewService.getOverview(packageName);
+        return packageOverviewService.packageOverview(packageName);
     }
 
 

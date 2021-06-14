@@ -2,8 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.rest.service;
 
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
-import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ApiOverviewElement;
-import org.springframework.beans.factory.annotation.Autowired;
+import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ApiPackageOverviewElement;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,7 @@ public class PackageOverviewService {
     }
 
     @Transactional
-    public List<ApiOverviewElement> getOverview(String packageName) {
+    public List<ApiPackageOverviewElement> packageOverview(String packageName) {
         List<PojoElement> elements;
         if (packageName.isEmpty()){
             elements = pojoElementRepository.findAll();
@@ -30,15 +29,10 @@ public class PackageOverviewService {
             elements.addAll(pojoElementRepository.getPojoElementStartsWithByPackageName(packageName + '/'));
         }
 
-        List<ApiOverviewElement> result = elements.stream()
-                .map(ApiOverviewElement::new)
-                .collect(Collectors.toList());
-        return result.stream()
-                    .sorted(Comparator
-                            .comparing(ApiOverviewElement::getPackageName)
-
-                            .thenComparing(ApiOverviewElement::getType)
-                            .thenComparing(ApiOverviewElement::getClassName))
-                            .collect(Collectors.toList());
+        return elements.stream()
+                .map(ApiPackageOverviewElement::new).sorted(Comparator
+                        .comparing(ApiPackageOverviewElement::getPackageName)
+                        .thenComparing(ApiPackageOverviewElement::getType)
+                        .thenComparing(ApiPackageOverviewElement::getClassName)).collect(Collectors.toList());
     }
 }

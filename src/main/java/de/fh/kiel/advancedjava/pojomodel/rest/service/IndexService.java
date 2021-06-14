@@ -74,7 +74,7 @@ public class IndexService {
         for (PojoElement element: pojoElementRepository.findAll()){
             pojoTable.append("<tr>")
                     .append("<td style='background-color:#d3d3d3;'>").append(element.getName()).append("</td>")
-                    .append("<td style='background-color:#d3d3d3;'>").append(element.getPackageName()).append("</td>")
+                    .append("<td style='background-color:#d3d3d3;'><a href=\"/packageOverview?package=").append(element.getPackageName().replace("/", ".")).append("\">").append(element.getPackageName()).append("</a></td>")
                     .append("<td>").append("<a href=\"pojoDelete?name=")
                     .append(element.getName()).append("&package=")
                     .append(element.getPackageName().replace("/", ".")).append("\">Delete</a>")

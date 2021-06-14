@@ -10,28 +10,25 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
-public class ApiOverviewElement {
+public class ApiPackageOverviewElement {
     String className;
     String packageName;
-    ApiOverviewTypeEnum type;
-    public ApiOverviewElement(PojoElement pojoElement) {
+    ApiPackageOverviewTypeEnum type;
+    public ApiPackageOverviewElement(PojoElement pojoElement) {
         if (pojoElement == null) {
             className = "Object";
             packageName = "java.lang";
-            type = ApiOverviewTypeEnum.HULL;
+            type = ApiPackageOverviewTypeEnum.HULL;
         } else {
             className = pojoElement.getName();
             packageName = pojoElement.getPackageName().replace("/", ".");
-            type = ApiOverviewTypeEnum.HULL;
+            type = ApiPackageOverviewTypeEnum.HULL;
             if (pojoElement instanceof PojoInterface) {
-                type = ApiOverviewTypeEnum.INTERFACE;
+                type = ApiPackageOverviewTypeEnum.INTERFACE;
             }
             if (pojoElement instanceof PojoClass) {
-                type = ApiOverviewTypeEnum.CLASS;
+                type = ApiPackageOverviewTypeEnum.CLASS;
             }
         }
-    }
-    public int getPackageDepth(){
-        return packageName.split("\\.").length;
     }
 }

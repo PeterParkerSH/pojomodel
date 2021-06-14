@@ -1,17 +1,13 @@
 package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.TestDataBaseController;
-import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
-import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
-import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ApiOverviewElement;
-import de.fh.kiel.advancedjava.pojomodel.rest.service.ClassHandlingService;
+import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ApiPackageOverviewElement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
@@ -35,13 +31,14 @@ class PackageOverviewControllerTest {
 
     @Test
     void getOverview() {
-        List<ApiOverviewElement> list = packageOverviewController.getOverview("testpackage");
+        List<ApiPackageOverviewElement> list = packageOverviewController.packageOverview("testpackage");
         LOGGER.info(list.toString());
         assertEquals(6, list.size());
-        list = packageOverviewController.getOverview("");
+        list = packageOverviewController.packageOverview("");
         assertEquals(12, list.size());
-        list = packageOverviewController.getOverview("testpackage.subpackage");
+        list = packageOverviewController.packageOverview("testpackage.subpackage");
         assertEquals(1, list.size());
-
+        list = packageOverviewController.packageOverview("java/util");
+        assertEquals(1, list.size());
     }
 }
