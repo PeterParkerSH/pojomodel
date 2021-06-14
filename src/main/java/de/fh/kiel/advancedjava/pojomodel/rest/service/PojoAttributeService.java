@@ -6,6 +6,7 @@ import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoReferenceRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -16,13 +17,16 @@ public class PojoAttributeService {
     final PojoElementRepository pojoElementRepository;
     final PojoReferenceRepository pojoReferenceRepository;
     final PojoClassRepository pojoClassRepository;
+    final ClassHandlingService classHandlingService;
 
-    public PojoAttributeService(PojoElementRepository pojoElementRepository, PojoReferenceRepository pojoReferenceRepository, PojoClassRepository pojoClassRepository) {
+    public PojoAttributeService(PojoElementRepository pojoElementRepository, PojoReferenceRepository pojoReferenceRepository, PojoClassRepository pojoClassRepository, ClassHandlingService classHandlingService) {
         this.pojoElementRepository = pojoElementRepository;
         this.pojoReferenceRepository = pojoReferenceRepository;
         this.pojoClassRepository = pojoClassRepository;
+        this.classHandlingService = classHandlingService;
     }
 
+    @Transactional
     public void addAttribute(long id, String type, String name, String visibility, String packageName) {
         Optional<PojoClass> optionalPojoClass = pojoClassRepository.findById(id);
         PojoClass pojoClass;
@@ -50,9 +54,9 @@ public class PojoAttributeService {
                 || type.equals(Double.class.getSimpleName())
                 || type.equals(Character.class.getSimpleName()))
                 && (packageName.isEmpty() || packageName.equalsIgnoreCase("java/lang"))) {
-            typePojo = getOrCreatePojoElement(type, "java/lang");
+            typePojo = classHandlingService.getOrCreatePojoElement(type, "java/lang");
         } else if (!packageName.isEmpty()){
-            typePojo = getOrCreatePojoElement(type, packageName);
+            typePojo = classHandlingService.getOrCreatePojoElement(type, packageName);
         } else {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Invalid type: " + type);
@@ -61,16 +65,5 @@ public class PojoAttributeService {
         attributes.add(newAttribute);
         pojoClass.setHasAttributes(attributes);
         pojoClassRepository.save(pojoClass);
-    }
-
-    // TODO: Funktion in Utils Klasse packen, damit sie von dieser Klasse und ClassHandling genutzt werden kann
-    private PojoElement getOrCreatePojoElement(String className, String packageName){
-        PojoElement pojoElement = pojoElementRepository.findByPackageNameAndName(packageName, className);
-        if (pojoElement == null) {
-            PojoReference pojoReference = PojoReference.builder().name(className).packageName(packageName).build();
-            pojoReferenceRepository.save(pojoReference);
-            pojoElement = pojoReference;
-        }
-        return pojoElement;
     }
 }

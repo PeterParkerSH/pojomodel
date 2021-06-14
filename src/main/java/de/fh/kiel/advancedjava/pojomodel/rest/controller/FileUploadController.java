@@ -1,8 +1,9 @@
 package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
-import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryHandling;
-import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandling;
-import de.fh.kiel.advancedjava.pojomodel.binaryreading.ClassHandlingException;
+import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryReading;
+import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryReadingException;
+import de.fh.kiel.advancedjava.pojomodel.rest.service.ClassHandlingService;
+import de.fh.kiel.advancedjava.pojomodel.rest.exceptions.ClassHandlingException;
 import io.swagger.annotations.*;
 import org.objectweb.asm.tree.ClassNode;
 import org.slf4j.Logger;
@@ -33,16 +34,15 @@ public class FileUploadController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadController.class);
 
-	private final BinaryHandling binaryHandling;
+	private final BinaryReading binaryReading;
 
-	private final ClassHandling classHandling;
+	private final ClassHandlingService classHandlingService;
 
 	@Autowired
-	FileUploadController(final BinaryHandling binaryHandling, /*final PojoClassRepository pojoClassRepository,*/
-						 final ClassHandling classHandling){
-		this.binaryHandling = binaryHandling;
-		//this.pojoClassRepository = pojoClassRepository;
-		this.classHandling = classHandling;
+	FileUploadController(final BinaryReading binaryReading, /*final PojoClassRepository pojoClassRepository,*/
+						 final ClassHandlingService classHandlingService){
+		this.binaryReading = binaryReading;
+		this.classHandlingService = classHandlingService;
 	}
 
 	@ApiOperation(value = "Upload a JAR or Class file",
@@ -52,14 +52,20 @@ public class FileUploadController {
 	@PostMapping("/upload")
 	public RedirectView uploadFile(@ApiParam(value = "File to be uploaded", required = true) @RequestParam("file") MultipartFile file) {
 		try {
-			List<ClassNode> classNodeList= binaryHandling.readFile(file);
+			List<ClassNode> classNodeList= binaryReading.readFile(file);
 
-			classHandling.handleClassNodes(classNodeList);
+			classHandlingService.handleClassNodes(classNodeList);
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage());
 
 			throw new ResponseStatusException(
 					HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()
+			);
+		} catch (BinaryReadingException e) {
+			LOGGER.error(e.getMessage());
+
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, e.getMessage()
 			);
 		} catch (ClassHandlingException e) {
 			LOGGER.error(e.getMessage());
