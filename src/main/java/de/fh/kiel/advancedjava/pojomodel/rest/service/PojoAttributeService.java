@@ -61,4 +61,23 @@ public class PojoAttributeService {
         pojoClass.setHasAttributes(attributes);
         pojoClassRepository.save(pojoClass);
     }
+
+    @Transactional
+    public void removeAttribute(String pojoPackage,String pojoName, String name){
+        PojoClass pojoClass = pojoClassRepository.findByPackageNameAndName(pojoPackage, pojoName);
+        if (pojoClass == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "POJO does not exist or has incompatible type"
+            );
+        }
+        List<AttributeRs> attributes = pojoClass.getHasAttributes();
+        boolean containsAttr =  attributes.removeIf(attributeRs -> attributeRs.getName().equals(name));
+        if (!containsAttr) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "POJO does not have attribute with name: " + name
+            );
+        }
+        pojoClass.setHasAttributes(attributes);
+        pojoClassRepository.save(pojoClass);
+    }
 }

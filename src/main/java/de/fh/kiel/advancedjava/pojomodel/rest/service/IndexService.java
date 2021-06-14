@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.rest.service;
 
+import de.fh.kiel.advancedjava.pojomodel.pojomodel.AttributeRs;
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoClass;
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
 import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoReference;
@@ -72,8 +73,8 @@ public class IndexService {
         StringBuilder pojoTable = new StringBuilder();
         for (PojoElement element: pojoElementRepository.findAll()){
             pojoTable.append("<tr>")
-                    .append("<td>").append(element.getName()).append("</td>")
-                    .append("<td>").append(element.getPackageName()).append("</td>")
+                    .append("<td style='background-color:#d3d3d3;'>").append(element.getName()).append("</td>")
+                    .append("<td style='background-color:#d3d3d3;'>").append(element.getPackageName()).append("</td>")
                     .append("<td>").append("<a href=\"pojoDelete?name=")
                     .append(element.getName()).append("&package=")
                     .append(element.getPackageName().replace("/", ".")).append("\">Delete</a>")
@@ -99,6 +100,21 @@ public class IndexService {
                     .append("<td></td>".repeat(6));
             }
             pojoTable.append("</tr>");
+            if (element instanceof PojoClass) {
+                for (AttributeRs attributeRs : ((PojoClass) element).getHasAttributes()) {
+                    pojoTable
+                            .append("<tr>")
+                            .append("<td>").append(attributeRs.getPojoElement().getName()).append("</td>")
+                            .append("<td>").append(attributeRs.getName()).append("</td>")
+                            .append("<td>").append("<a href=\"removeAttribute?pojoPackage=")
+                            .append(element.getPackageName().replace("/", "."))
+                            .append("&pojoName=").append(element.getName())
+                            .append("&name=").append(attributeRs.getName())
+                            .append("\">Delete</a>")
+                            .append("</td>")
+                            .append("</tr>");
+                }
+            }
 
         }
         answerHtml = answerHtml.replace("[POJOTABLE]", pojoTable.toString());
