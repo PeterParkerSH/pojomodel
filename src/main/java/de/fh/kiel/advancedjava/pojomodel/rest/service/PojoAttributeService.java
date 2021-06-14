@@ -27,40 +27,35 @@ public class PojoAttributeService {
     }
 
     @Transactional
-    public void addAttribute(long id, String type, String name, String visibility, String packageName) {
-        Optional<PojoClass> optionalPojoClass = pojoClassRepository.findById(id);
-        PojoClass pojoClass;
-        if (optionalPojoClass.isEmpty()){
+    public void addAttribute(String pojoPackage,String pojoName, String type, String name, String visibility, String packageName) {
+        PojoElement pojoElement = pojoElementRepository.findByPackageNameAndName(pojoPackage, pojoName);
+        if (pojoElement == null || pojoElement instanceof PojoInterface){
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "POJO does not exist or has incompatible type"
+                    HttpStatus.BAD_REQUEST, "POJO does not exist or has incompatible type"
             );
-        } else {
+        }
+        if (pojoElement instanceof PojoReference) {
+            pojoElement = pojoClassRepository.changeReferenceToClassById(pojoElement.getId());
+        }
+        PojoClass pojoClass;
+        Optional<PojoClass> optionalPojoClass = pojoClassRepository.findById(pojoElement.getId());
+        if (optionalPojoClass.isPresent()) {
             pojoClass = optionalPojoClass.get();
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "POJO does not exist"
+            );
         }
         List<AttributeRs> attributes = pojoClass.getHasAttributes();
         if (attributes.stream().anyMatch(ars -> ars.getName().equals(name))) {
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "POJO already has attribute " + name
+                    HttpStatus.BAD_REQUEST, "POJO already has attribute " + name
             );
         }
 
         PojoElement typePojo;
-        if ((type.equals(Boolean.class.getSimpleName())
-                || type.equals(Byte.class.getSimpleName())
-                || type.equals(Short.class.getSimpleName())
-                || type.equals(Integer.class.getSimpleName())
-                || type.equals(Long.class.getSimpleName())
-                || type.equals(Float.class.getSimpleName())
-                || type.equals(Double.class.getSimpleName())
-                || type.equals(Character.class.getSimpleName()))
-                && (packageName.isEmpty() || packageName.equalsIgnoreCase("java/lang"))) {
-            typePojo = classHandlingService.getOrCreatePojoElement(type, "java/lang");
-        } else if (!packageName.isEmpty()){
-            typePojo = classHandlingService.getOrCreatePojoElement(type, packageName);
-        } else {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Invalid type: " + type);
-        }
+        typePojo = classHandlingService.getOrCreatePojoElement(type, packageName);
+
         AttributeRs newAttribute = AttributeRs.builder().visibility(visibility).name(name).pojoElement(typePojo).build();
         attributes.add(newAttribute);
         pojoClass.setHasAttributes(attributes);

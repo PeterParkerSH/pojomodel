@@ -1,6 +1,5 @@
 package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
-import de.fh.kiel.advancedjava.pojomodel.rest.service.AddPojoService;
 import de.fh.kiel.advancedjava.pojomodel.rest.service.PojoAttributeService;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -28,11 +27,12 @@ public class PojoAttributeController {
     )
     @ApiResponses(value = { @ApiResponse(code = 400, message = "Parameter error")})
     @GetMapping("/addAttribute")
-    public RedirectView addAttribute(@ApiParam(value = "id of POJO", required = true) @RequestParam("id") long id,
+    public RedirectView addAttribute(@ApiParam(value = "package of POJO", required = true) @RequestParam("pojoPackage") String pojoPackage,
+                                     @ApiParam(value = "name of POJO", required = true) @RequestParam("pojoName") String pojoName,
                                      @ApiParam(value = "type of attribute", required = true) @RequestParam("type") String type,
                                      @ApiParam(value = "name of attribute", required = true) @RequestParam("name") String name,
                                      @ApiParam(value = "visibility of attribute", required = true) @RequestParam("visibility") String visibility,
-                                     @ApiParam(value = "package of attribute", required = true) @RequestParam("package") String packageName) {
+                                     @ApiParam(value = "package of attribute", required = true) @RequestParam("attributePackage") String attributePackage) {
         if (type.isEmpty() || name.isEmpty() || visibility.isEmpty()){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Attribute type, name and visibility are required"
@@ -48,7 +48,10 @@ public class PojoAttributeController {
                     HttpStatus.BAD_REQUEST, "Visibility must be one of: private, protected, public"
             );
         }
-        pojoAttributeService.addAttribute(id, type, name, visibility, packageName);
+        pojoPackage = pojoPackage.replace(".", "/");
+        attributePackage = attributePackage.replace(".", "/");
+
+        pojoAttributeService.addAttribute(pojoPackage, pojoName, type, name, visibility, attributePackage);
         return new RedirectView("index");
     }
 

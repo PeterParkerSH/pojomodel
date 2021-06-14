@@ -40,19 +40,28 @@ class PojoAttributeControllerTest {
     @Test
     void addReferenceAttributeToExistingPojo() {
         assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage"));
-        long id = pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage").getId();
         assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass2", "testpackage"));
-        assertNotNull(pojoAttributeController.addAttribute(id, "PojoClass2", "attrPojoClass2", "private", "testpackage"));
+        assertNotNull(pojoAttributeController.addAttribute("testpackage.subpackage", "PojoClass4","PojoClass2", "attrPojoClass2", "private", "testpackage"));
         assertTrue(pojoClassRepository.findByPackageNameAndName("testpackage/subpackage", "PojoClass4")
                 .getHasAttributes().stream().anyMatch(attrs -> attrs.getName().equals("attrPojoClass2"))
         );
     }
 
     @Test
+    void addReferenceAttributeWithEmptyPackageToExistingPojo() {
+        assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage"));
+        assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass1", ""));
+        assertNotNull(pojoAttributeController.addAttribute("testpackage.subpackage", "PojoClass4","PojoClass1", "attrPojoClass1", "private", ""));
+        assertTrue(pojoClassRepository.findByPackageNameAndName("testpackage/subpackage", "PojoClass4")
+                .getHasAttributes().stream().anyMatch(attrs -> attrs.getName().equals("attrPojoClass1"))
+        );
+    }
+
+    @Test
     void addAttributeToNonexistentPojo() {
-        assertTrue(pojoElementRepository.findById(12345L).isEmpty());
+        assertNull(pojoElementRepository.findByPackageNameAndName("hello/world", "HelloClass"));
         try {
-            pojoAttributeController.addAttribute(12345L, "PojoClass2", "attrPojoClass2", "private", "testpackage");
+            pojoAttributeController.addAttribute("hello.world", "HelloClass", "PojoClass2", "attrPojoClass2", "private", "testpackage");
         } catch (ResponseStatusException e) {
             assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
         }
@@ -61,13 +70,12 @@ class PojoAttributeControllerTest {
     @Test
     void addIntegerAndLongAttributeToExistingPojo() {
         assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage"));
-        long id = pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage").getId();
-        assertNotNull(pojoAttributeController.addAttribute(id, "Integer", "intAttr", "private", ""));
+        assertNotNull(pojoAttributeController.addAttribute("testpackage.subpackage", "PojoClass4", "Integer", "intAttr", "private", ""));
         assertTrue(pojoClassRepository.findByPackageNameAndName("testpackage/subpackage", "PojoClass4")
                 .getHasAttributes().stream().anyMatch(attrs -> attrs.getName().equals("intAttr"))
         );
 
-        assertNotNull(pojoAttributeController.addAttribute(id, "Long", "longAttr", "private", "java/lang"));
+        assertNotNull(pojoAttributeController.addAttribute("testpackage.subpackage", "PojoClass4", "Long", "longAttr", "private", "java/lang"));
         assertTrue(pojoClassRepository.findByPackageNameAndName("testpackage/subpackage", "PojoClass4")
                 .getHasAttributes().stream().anyMatch(attrs -> attrs.getName().equals("longAttr"))
         );
@@ -76,9 +84,27 @@ class PojoAttributeControllerTest {
     @Test
     void addAttributeWithInvalidName() {
         assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage"));
-        long id = pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage").getId();
         try {
-            pojoAttributeController.addAttribute(id, "Integer", "int", "private", "");
+            pojoAttributeController.addAttribute("testpackage.subpackage", "PojoClass4", "Integer", "int", "private", "");
+        } catch (ResponseStatusException e) {
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
+        }
+    }
+
+    @Test
+    void addAttributeToPojoReference() {
+        assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("String", "java/lang"));
+        assertNotNull(pojoAttributeController.addAttribute("java.lang", "String", "Integer", "intAttr", "private", "java.lang"));
+        assertTrue(pojoClassRepository.findByPackageNameAndName("java/lang", "String")
+                .getHasAttributes().stream().anyMatch(attrs -> attrs.getName().equals("intAttr"))
+        );
+    }
+
+    @Test
+    void addAttributeToInterface() {
+        assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoInterface2", "testpackage"));
+        try {
+            pojoAttributeController.addAttribute("testpackage", "PojoInterface2", "Integer", "int", "private", "java.lang");
         } catch (ResponseStatusException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
         }
