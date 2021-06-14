@@ -109,4 +109,34 @@ class PojoAttributeControllerTest {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
         }
     }
+
+    @Test
+    void removeExistingAttribute() {
+        assertTrue(pojoClassRepository.findByPackageNameAndName("testpackage/subpackage", "PojoClass4" )
+                .getHasAttributes().stream().anyMatch(ars -> ars.getName().equals("protectedString")));
+        pojoAttributeController.removeAttribute("testpackage.subpackage", "PojoClass4", "protectedString");
+        assertFalse(pojoClassRepository.findByPackageNameAndName("testpackage/subpackage", "PojoClass4")
+                .getHasAttributes().stream().anyMatch(ars -> ars.getName().equals("attrBoolean")));
+    }
+
+    @Test
+    void removeNonexistentAttribute() {
+        assertFalse(pojoClassRepository.findByPackageNameAndName("testpackage/subpackage", "PojoClass4" )
+                .getHasAttributes().stream().anyMatch(ars -> ars.getName().equals("someAttr")));
+        try {
+            pojoAttributeController.removeAttribute("testpackage.subpackage", "PojoClass4", "someAttr");
+        } catch (ResponseStatusException e) {
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
+        }
+    }
+
+    @Test
+    void removeAttributeFromReference() {
+        assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("Integer", "java/lang"));
+        try {
+            pojoAttributeController.removeAttribute("java.lang", "Integer", "someAttr");
+        } catch (ResponseStatusException e) {
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
+        }
+    }
 }
