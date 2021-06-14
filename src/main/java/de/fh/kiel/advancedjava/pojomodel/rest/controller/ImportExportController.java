@@ -6,11 +6,7 @@ import de.fh.kiel.advancedjava.pojomodel.utils.JsonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
-import org.everit.json.schema.loader.SchemaLoader;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.view.RedirectView;
-import springfox.documentation.spring.web.json.Json;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,8 +62,11 @@ public class ImportExportController {
         String jsonString;
         try (InputStream stream = json.getInputStream()){
             byte[] buffer = new byte[stream.available()];
-            stream.read(buffer);
-            jsonString = new String(buffer, StandardCharsets.UTF_8);
+            jsonString = "";
+            while (stream.read(buffer) > 0) {
+                jsonString = new String(buffer, StandardCharsets.UTF_8);
+
+            }
         } catch (IOException|NullPointerException e) {
             LOGGER.error(e.getMessage());
             throw new ResponseStatusException(
@@ -78,7 +76,6 @@ public class ImportExportController {
         try {
             JsonUtils.validateJSON(jsonString);
         } catch (ValidationException e) {
-            LOGGER.error(e.getMessage());
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Invalid JSON file: " + e.getMessage());
         }

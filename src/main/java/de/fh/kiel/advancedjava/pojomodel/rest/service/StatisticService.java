@@ -37,7 +37,7 @@ public class StatisticService {
                 .extendsClass(new ApiPojoElement(pojoElementRepository.getPojoElementByExtendsRS(pojoElement.getId())))
                 .implementsList(pojoElementRepository.getPojoElementsByImplementsRS(pojoElement.getId())
                         .stream()
-                        .map(pojoStreamEl -> new ApiPojoElement(pojoStreamEl))
+                        .map(ApiPojoElement::new)
                         .collect(Collectors.toList()))
                 .subClassCount(pojoElementRepository.getPojoElementsExtendedById(pojoElement.getId()).size())
                 .usedAsAttributeCount(pojoElementRepository.contAttributesOfElementById(pojoElement.getId()))
