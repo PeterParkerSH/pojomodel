@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-@Api
+@Api(tags = {"Pojo Interface"})
 @Controller
 public class ImportExportController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImportExportController.class);

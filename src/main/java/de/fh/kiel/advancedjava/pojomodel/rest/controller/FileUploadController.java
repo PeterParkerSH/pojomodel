@@ -27,7 +27,7 @@ import java.util.List;
  * and not feature complete.
  */
 
-@Api
+@Api(tags = {"Pojo Interface"})
 @Controller
 public class FileUploadController {
 	private final BinaryReading binaryReading;

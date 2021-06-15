@@ -11,7 +11,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.lang.model.SourceVersion;
 
-@Api
+@Api(tags = {"Pojo Interface"})
 @Controller
 public class PojoAttributeController {
     final

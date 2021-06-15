@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-@Api
+@Api(tags = {"Pojo Interface"})
 @Controller
 public class PackageOverviewController {
 

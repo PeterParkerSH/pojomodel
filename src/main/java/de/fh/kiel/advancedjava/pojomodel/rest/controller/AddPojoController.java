@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
+import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ErrorMessage;
 import de.fh.kiel.advancedjava.pojomodel.rest.service.AddPojoService;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.lang.model.SourceVersion;
 
-@Api
+@Api(tags = {"Pojo Interface"})
 @Controller
 public class AddPojoController {
     final
@@ -21,11 +22,15 @@ public class AddPojoController {
         this.addPojoService = addPojoService;
     }
 
+    // TODO: Find a way to hide RedirectView as result in swagger
     @ApiOperation(value = "Add a Pojo with package name and class name",
             notes = "Only adds Pojo if it doesn't exist in the database yet",
-            response = RedirectView.class
+            response = void.class
+
     )
-    @ApiResponses(value = { @ApiResponse(code = 400, message = "Parameter error")})
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Redirect to index", response = void.class),
+                            @ApiResponse(code = 300, message = "Redirect to index", response = void.class),
+                            @ApiResponse(code = 400, message = "Parameter error", response = ErrorMessage.class)})
     @GetMapping("/addPojo")
     public RedirectView addPojo(@ApiParam(value = "package of the class", required = true) @RequestParam("package") String packageName,
                                 @ApiParam(value = "name of the class", required = true) @RequestParam("name") String pojoName){

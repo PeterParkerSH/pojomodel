@@ -7,8 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.view.RedirectView;
+import springfox.documentation.annotations.ApiIgnore;
 
-@Api
+@Api(tags = {"Pojo Interface"})
 @Controller
 public class IndexController {
 
@@ -28,7 +29,7 @@ public class IndexController {
         return indexService.listUploadedFiles();
     }
 
-
+    @ApiIgnore
     @GetMapping("/")
     public RedirectView redirectIndex() {
         return new RedirectView("index");
