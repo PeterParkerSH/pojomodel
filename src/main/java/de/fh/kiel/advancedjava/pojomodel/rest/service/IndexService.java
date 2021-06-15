@@ -63,7 +63,7 @@ public class IndexService {
                             <td><input type="submit" value="Add POJO"/></td>
                         </tr>
                     </table>
-                </form>             
+                </form>
                 <p><a href="/jsonExport">Export data</a></p>
                 <p><a href="/deleteAll">Delete all</a></p>
                 <table>
@@ -75,7 +75,7 @@ public class IndexService {
         for (PojoElement element: pojoElementRepository.findAll()){
             pojoTable.append("<tr>")
                     .append("<td style='background-color:#d3d3d3;'>").append(element.getName()).append("</td>")
-                    .append("<td style='background-color:#d3d3d3;'><a href=\"/packageOverview?package=").append(element.getPackageName().replace("/", ".")).append("\">").append(element.getPackageName()).append("</a></td>")
+                    .append("<td style='background-color:#d3d3d3;'><a href=\"/packageOverview?package=").append(element.getPackageName().replace("/", ".")).append("\">").append(element.getPackageName().replace("/", ".")).append("</a></td>")
                     .append("<td>").append("<a href=\"pojoDelete?name=")
                     .append(element.getName()).append("&package=")
                     .append(element.getPackageName().replace("/", ".")).append("\">Delete</a>")
@@ -88,7 +88,7 @@ public class IndexService {
                 pojoTable
                         .append("<form method=\"GET\" action=\"/addAttribute\">")
                         .append("<td>Attribute:</td>")
-                        .append("<input type=\"hidden\" name=\"pojoPackage\" value=\"").append(element.getPackageName()).append("\"/>")
+                        .append("<input type=\"hidden\" name=\"pojoPackage\" value=\"").append(element.getPackageName().replace("/", ".")).append("\"/>")
                         .append("<input type=\"hidden\" name=\"pojoName\" value=\"").append(element.getName()).append("\"/>")
                         .append("<td>type: </td><td><input type=\"text\" name=\"type\"/></td>")
                         .append("<td>package: </td><td><input type=\"text\" name=\"attributePackage\"/></td>")
