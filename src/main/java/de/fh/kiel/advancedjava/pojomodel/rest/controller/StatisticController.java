@@ -5,7 +5,6 @@ import de.fh.kiel.advancedjava.pojomodel.rest.service.StatisticService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +15,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class StatisticController {
 
-    @Autowired
-    StatisticService statisticService;
+    final StatisticService statisticService;
+
+    public StatisticController(StatisticService statisticService) {
+        this.statisticService = statisticService;
+    }
 
     @ApiOperation(value = "Get POJO statistics",
             notes = "Gets statics of POJO given by package and class name",

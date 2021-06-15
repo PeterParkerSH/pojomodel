@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiParam;
 import org.everit.json.schema.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -31,11 +30,11 @@ import java.util.Objects;
 public class ImportExportController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImportExportController.class);
 
-    @Autowired
-    ImportExportService importExportService;
+    final ImportExportService importExportService;
 
     public ImportExportController(ImportExportService importExportService) {
         this.importExportService = importExportService;
+
     }
 
     @ApiOperation(value = "Export POJOs as JSON",

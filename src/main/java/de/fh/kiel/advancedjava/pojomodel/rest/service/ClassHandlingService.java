@@ -11,7 +11,6 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,6 @@ public class ClassHandlingService {
     private final PojoElementRepository pojoElementRepository;
     private final PojoReferenceRepository pojoReferenceRepository;
 
-    @Autowired
     public ClassHandlingService(final PojoClassRepository pojoClassRepository, final PojoInterfaceRepository  pojoInterfaceRepository,
                                 final PojoElementRepository  pojoElementRepository, final PojoReferenceRepository pojoReferenceRepository){
         this.pojoClassRepository = pojoClassRepository;
