@@ -20,6 +20,7 @@ public class IndexService {
     public String listUploadedFiles() {
         String answerHtml = """           
             <div>
+                <p><a href="swagger-ui.html">Swagger API description</a></p>
                 <form method="POST" enctype="multipart/form-data" action="/upload">
                     <table>
                         <tr>
@@ -63,8 +64,8 @@ public class IndexService {
                         </tr>
                     </table>
                 </form>             
-                <a href="/jsonExport">Export data</a>
-                <a href="/deleteAll">Delete all</a>
+                <p><a href="/jsonExport">Export data</a></p>
+                <p><a href="/deleteAll">Delete all</a></p>
                 <table>
                     [POJOTABLE]
                 </table>
@@ -112,6 +113,7 @@ public class IndexService {
                             .append("&name=").append(attributeRs.getName())
                             .append("\">Delete</a>")
                             .append("</td>")
+                            .append("<td></td>".repeat(7))
                             .append("</tr>");
                 }
             }

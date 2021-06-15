@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Api
 @Controller
@@ -26,4 +27,11 @@ public class IndexController {
     public @ResponseBody String listUploadedFiles() {
         return indexService.listUploadedFiles();
     }
+
+
+    @GetMapping("/")
+    public RedirectView redirectIndex() {
+        return new RedirectView("index");
+    }
+
 }
