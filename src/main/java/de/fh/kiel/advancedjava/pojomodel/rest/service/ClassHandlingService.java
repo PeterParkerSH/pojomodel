@@ -165,20 +165,20 @@ public class ClassHandlingService {
     }
 
     private String attributeTypeFromFieldNode(FieldNode a){
-        String attributeType = "";
-        switch (a.desc.charAt(0)) {
-            case 'L' -> attributeType = a.desc.substring(1, a.desc.length() - 1);
-            case 'Z' -> attributeType = Boolean.class.getName();
-            case 'B' -> attributeType = Byte.class.getName();
-            case 'S' -> attributeType = Short.class.getName();
-            case 'I' -> attributeType = Integer.class.getName();
-            case 'J' -> attributeType = Long.class.getName();
-            case 'F' -> attributeType = Float.class.getName();
-            case 'D' -> attributeType = Double.class.getName();
-            case 'C' -> attributeType = Character.class.getName();
-            default -> LOGGER.info("Unsupported attribute prefix: {}", a.desc.charAt(0));
-        }
-        return attributeType;
+        return switch (a.desc.charAt(0)) {
+            case 'L': yield a.desc.substring(1, a.desc.length() - 1);
+            case 'Z': yield Boolean.class.getName();
+            case 'B': yield Byte.class.getName();
+            case 'S': yield Short.class.getName();
+            case 'I': yield Integer.class.getName();
+            case 'J': yield Long.class.getName();
+            case 'F': yield Float.class.getName();
+            case 'D': yield Double.class.getName();
+            case 'C': yield Character.class.getName();
+            default:
+                LOGGER.info("Unsupported attribute prefix: {}", a.desc.charAt(0));
+                yield "";
+        };
     }
 
     private List<AttributeRs> buildAttributeRs(ClassNode classNode) {
