@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -31,14 +32,16 @@ class PackageOverviewControllerTest {
 
     @Test
     void getOverview() {
-        List<ApiPackageOverviewElement> list = packageOverviewController.packageOverview("testpackage");
+        ResponseEntity<List<ApiPackageOverviewElement>> responseEntity = packageOverviewController.packageOverview("testpackage");
+        assertEquals(200, responseEntity.getStatusCode().value());
+        List<ApiPackageOverviewElement> list = responseEntity.getBody();
         LOGGER.info(list.toString());
         assertEquals(6, list.size());
-        list = packageOverviewController.packageOverview("");
+        list = packageOverviewController.packageOverview("").getBody();
         assertEquals(12, list.size());
-        list = packageOverviewController.packageOverview("testpackage.subpackage");
+        list = packageOverviewController.packageOverview("testpackage.subpackage").getBody();
         assertEquals(1, list.size());
-        list = packageOverviewController.packageOverview("java/util");
+        list = packageOverviewController.packageOverview("java/util").getBody();
         assertEquals(1, list.size());
     }
 }

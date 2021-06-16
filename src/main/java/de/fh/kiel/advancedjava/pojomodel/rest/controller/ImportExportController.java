@@ -17,10 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,12 +40,12 @@ public class ImportExportController {
 
 
     @ApiOperation(value = "Export POJOs as JSON",
-            notes = "Export all POJOs in the database as JSON",
-            response = ExportFormat.class
+            notes = "Export all POJOs in the database as JSON"
+//            , response = ExportFormat.class
     )
     @GetMapping(value = "/jsonExport", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody String jsonExport() {
-        return importExportService.jsonExport();
+    public ResponseEntity<String> jsonExport() {
+        return ResponseEntity.ok(importExportService.jsonExport());
     }
 
     @ApiOperation(value = "Import POJOs from JSON",

@@ -6,10 +6,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Api(tags = {"Pojo Interface"})
 @Controller
@@ -26,9 +26,9 @@ public class StatisticController {
             response = PojoStatistic.class
     )
     @GetMapping(value = "/pojoStatistic", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody String pojoStatistic(@ApiParam(value = "package name of POJO", required = true) @RequestParam("package") String packageName,
-                                @ApiParam(value = "class name of POJO", required = true) @RequestParam("name") String className) {
-        return statisticService.pojoStatistic(packageName, className);
+    public ResponseEntity<String> pojoStatistic(@ApiParam(value = "package name of POJO", required = true) @RequestParam("package") String packageName,
+                                               @ApiParam(value = "class name of POJO", required = true) @RequestParam("name") String className) {
+        return ResponseEntity.ok(statisticService.pojoStatistic(packageName, className));
     }
 
 }

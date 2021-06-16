@@ -62,6 +62,7 @@ class PojoAttributeControllerTest {
         assertNull(pojoElementRepository.findByPackageNameAndName("hello/world", "HelloClass"));
         try {
             pojoAttributeController.addAttribute("hello.world", "HelloClass", "PojoClass2", "attrPojoClass2", "private", "testpackage");
+            fail();
         } catch (ResponseStatusException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
         }
@@ -86,6 +87,7 @@ class PojoAttributeControllerTest {
         assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoClass4", "testpackage/subpackage"));
         try {
             pojoAttributeController.addAttribute("testpackage.subpackage", "PojoClass4", "Integer", "int", "private", "");
+            fail();
         } catch (ResponseStatusException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
         }
@@ -105,6 +107,7 @@ class PojoAttributeControllerTest {
         assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("PojoInterface2", "testpackage"));
         try {
             pojoAttributeController.addAttribute("testpackage", "PojoInterface2", "Integer", "int", "private", "java.lang");
+            fail();
         } catch (ResponseStatusException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
         }
@@ -125,6 +128,7 @@ class PojoAttributeControllerTest {
                 .getHasAttributes().stream().anyMatch(ars -> ars.getName().equals("someAttr")));
         try {
             pojoAttributeController.removeAttribute("testpackage.subpackage", "PojoClass4", "someAttr");
+            fail();
         } catch (ResponseStatusException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
         }
@@ -135,6 +139,7 @@ class PojoAttributeControllerTest {
         assertNotNull(pojoElementRepository.getPojoElementByNameAndPackageName("Integer", "java/lang"));
         try {
             pojoAttributeController.removeAttribute("java.lang", "Integer", "someAttr");
+            fail();
         } catch (ResponseStatusException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
         }

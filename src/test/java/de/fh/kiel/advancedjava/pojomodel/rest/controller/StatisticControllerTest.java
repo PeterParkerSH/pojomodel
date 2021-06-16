@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Comparator;
@@ -72,13 +73,10 @@ class StatisticControllerTest {
     @Test
     void pojoStatistic() throws Exception {
 
-        AtomicReference<String> statisticJsonAtomic = new AtomicReference<>("");
-        try {
-            statisticJsonAtomic.set(statisticController.pojoStatistic("testpackage", "PojoClass3"));
-        }catch (Exception e){
-            fail(e.getMessage());
-        }
-        String res = statisticJsonAtomic.get();
+        ResponseEntity<String> responseEntity = null;
+        responseEntity = statisticController.pojoStatistic("testpackage", "PojoClass3");
+        assertEquals(200, responseEntity.getStatusCode().value());
+        String res = responseEntity.getBody();
 
         PojoStatistic pojoStatistic = JsonUtils.jsonStringToObject(res, PojoStatistic.class);
         PojoStatistic original = JsonUtils.jsonStringToObject(testRes, PojoStatistic.class);

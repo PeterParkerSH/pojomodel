@@ -31,7 +31,6 @@ public class AddPojoController {
                          //   @ApiResponse(code = 300, response = void.class, message = "Redirect to index"),
                             @ApiResponse(code = 400, response = ErrorMessage.class, message = "Parameter error")})
     @GetMapping(value = "/addPojo")
-
     public ResponseEntity<String> addPojo(@ApiParam(value = "package of the class", required = true) @RequestParam("package") String packageName,
                                 @ApiParam(value = "name of the class", required = true) @RequestParam("name") String pojoName){
         if (pojoName.isEmpty() || packageName.isEmpty()){

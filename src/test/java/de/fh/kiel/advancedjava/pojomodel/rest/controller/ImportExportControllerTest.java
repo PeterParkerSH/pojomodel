@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -90,15 +91,15 @@ class ImportExportControllerTest {
     @Test
     void jsonExportImport() throws Exception{
         testDataBaseController.buildTestDataBase();
-        AtomicReference<String> exportJsonAtomic = new AtomicReference<>("");
+        ResponseEntity<String> responseEntity = null;
         int elementCount = pojoElementRepository.findAll().size();
         assertNotEquals(0, elementCount);
-        exportJsonAtomic.set(importExportController.jsonExport());
+        responseEntity = importExportController.jsonExport();
         //this.mockMvc.perform(get("/jsonExport")).andDo(result -> {
         //    exportJsonAtomic.set(result.getResponse().getContentAsString());
         //}).andExpect(status().isOk());
 
-        String exportString = exportJsonAtomic.get();
+        String exportString = responseEntity.getBody();
         assertFalse(exportString.isEmpty());
 
         MockMultipartFile json = new MockMultipartFile("json", FilenameUtils.getName("sampleJson.json"), MediaType.APPLICATION_JSON_VALUE, exportString.getBytes());
@@ -127,14 +128,14 @@ class ImportExportControllerTest {
         assertNotEquals(0, classCount);
         assertNotEquals(0, interfaceCount);
 
-        AtomicReference<String> exportJsonAtomic = new AtomicReference<>("");
+        ResponseEntity<String> responseEntity = null;
         int elementCount = pojoElementRepository.findAll().size();
-        exportJsonAtomic.set(importExportController.jsonExport());
+        responseEntity = importExportController.jsonExport();
         //this.mockMvc.perform(get("/jsonExport")).andDo(result -> {
         //    exportJsonAtomic.set(result.getResponse().getContentAsString());
         //}).andExpect(status().isOk());
 
-        String exportString = exportJsonAtomic.get();
+        String exportString = responseEntity.getBody();
         assertFalse(exportString.isEmpty());
 
         PojoClass pojoClass = pojoClassRepository.getPojoClassByNameAndPackageName("TestClass123", "de/fhkiel/pojo");
