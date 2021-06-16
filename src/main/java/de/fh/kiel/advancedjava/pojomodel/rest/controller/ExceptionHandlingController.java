@@ -22,7 +22,7 @@ public class ExceptionHandlingController {
         emsg.setTimestamp(new Date().toString());
         emsg.setStatus(String.valueOf(e.getStatus().value()));
         emsg.setMessage(e.getMessage());
-        LOGGER.error("Exception Occured : {}", req);
+        LOGGER.error("Exception Occurred : {}", req);
 
         return new ResponseEntity<>(emsg, e.getStatus());
     }

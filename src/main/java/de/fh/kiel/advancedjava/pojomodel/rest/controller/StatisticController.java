@@ -26,8 +26,7 @@ public class StatisticController {
             response = PojoStatistic.class
     )
     @GetMapping(value = "/pojoStatistic", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    String pojoStatistic(@ApiParam(value = "package name of POJO", required = true) @RequestParam("package") String packageName,
+    public @ResponseBody String pojoStatistic(@ApiParam(value = "package name of POJO", required = true) @RequestParam("package") String packageName,
                                 @ApiParam(value = "class name of POJO", required = true) @RequestParam("name") String className) {
         return statisticService.pojoStatistic(packageName, className);
     }

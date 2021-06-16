@@ -13,8 +13,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Controller
 public class IndexController {
 
-    final
-    IndexService indexService;
+    final IndexService indexService;
 
     public IndexController(IndexService indexService) {
         this.indexService = indexService;
@@ -32,7 +31,7 @@ public class IndexController {
     @ApiIgnore
     @GetMapping("/")
     public RedirectView redirectIndex() {
-        return new RedirectView("index");
+        return new RedirectView("/index");
     }
 
 }

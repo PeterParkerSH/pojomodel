@@ -22,7 +22,8 @@ public class Swagger2Config {
                         .basePackage( "de.fh.kiel.advancedjava.pojomodel" ))
                 .paths(PathSelectors.any())
                 .build().apiInfo(apiEndPointsInfo())
-                .tags(new Tag("Pojo Interface", "All available commands"));
+                .tags(new Tag("Pojo Interface", "All available commands"))
+                .useDefaultResponseMessages(false);
     }
 
     private ApiInfo apiEndPointsInfo() {

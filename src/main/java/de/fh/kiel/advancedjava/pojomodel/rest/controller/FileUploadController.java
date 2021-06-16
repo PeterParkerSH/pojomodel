@@ -4,17 +4,18 @@ import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryReading;
 import de.fh.kiel.advancedjava.pojomodel.binaryreading.BinaryReadingException;
 import de.fh.kiel.advancedjava.pojomodel.rest.exceptions.ClassHandlingException;
 import de.fh.kiel.advancedjava.pojomodel.rest.service.ClassHandlingService;
+import de.fh.kiel.advancedjava.pojomodel.rest.service.RedirectPageContentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.objectweb.asm.tree.ClassNode;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,21 +32,22 @@ import java.util.List;
 @Controller
 public class FileUploadController {
 	private final BinaryReading binaryReading;
-
 	private final ClassHandlingService classHandlingService;
+	private final RedirectPageContentService redirectPageContentService;
 
-	FileUploadController(final BinaryReading binaryReading, /*final PojoClassRepository pojoClassRepository,*/
-						 final ClassHandlingService classHandlingService){
+	FileUploadController(BinaryReading binaryReading, /*final PojoClassRepository pojoClassRepository,*/
+						 ClassHandlingService classHandlingService,
+						 RedirectPageContentService redirectPageContentService){
 		this.binaryReading = binaryReading;
 		this.classHandlingService = classHandlingService;
+		this.redirectPageContentService = redirectPageContentService;
 	}
 
 	@ApiOperation(value = "Upload a JAR or Class file",
-			notes = "Does not add duplicates to the database",
-			response = RedirectView.class
+			notes = "Does not add duplicates to the database"
 			)
 	@PostMapping("/upload")
-	public RedirectView uploadFile(@ApiParam(value = "File to be uploaded", required = true) @RequestParam("file") MultipartFile file) {
+	public ResponseEntity<String> uploadFile(@ApiParam(value = "File to be uploaded", required = true) @RequestParam("file") MultipartFile file) {
 		try {
 			List<ClassNode> classNodeList= binaryReading.readFile(file);
 
@@ -59,7 +61,7 @@ public class FileUploadController {
 					HttpStatus.BAD_REQUEST, e.getMessage()
 			);
 		}
-		return new RedirectView("/index");
+		return ResponseEntity.ok(redirectPageContentService.getRedirectPage());
 	}
 
 }

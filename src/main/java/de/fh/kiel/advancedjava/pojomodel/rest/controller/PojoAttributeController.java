@@ -1,38 +1,41 @@
 package de.fh.kiel.advancedjava.pojomodel.rest.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.rest.service.PojoAttributeService;
+import de.fh.kiel.advancedjava.pojomodel.rest.service.RedirectPageContentService;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.view.RedirectView;
+
 
 import javax.lang.model.SourceVersion;
 
 @Api(tags = {"Pojo Interface"})
 @Controller
 public class PojoAttributeController {
-    final
-    PojoAttributeService pojoAttributeService;
+    final PojoAttributeService pojoAttributeService;
+    final RedirectPageContentService redirectPageContentService;
 
-    public PojoAttributeController(PojoAttributeService pojoAttributeService) {
+    public PojoAttributeController(PojoAttributeService pojoAttributeService,
+                                   RedirectPageContentService redirectPageContentService) {
         this.pojoAttributeService = pojoAttributeService;
+        this.redirectPageContentService = redirectPageContentService;
     }
 
     @ApiOperation(value = "Add an attribute to an existing POJO",
-            notes = "Only adds the attribute if it doesn't exist in the POJO yet",
-            response = RedirectView.class
+            notes = "Only adds the attribute if it doesn't exist in the POJO yet"
     )
     @ApiResponses(value = { @ApiResponse(code = 400, message = "Parameter error")})
     @GetMapping("/addAttribute")
-    public RedirectView addAttribute(@ApiParam(value = "package of POJO", required = true) @RequestParam("pojoPackage") String pojoPackage,
-                                     @ApiParam(value = "name of POJO", required = true) @RequestParam("pojoName") String pojoName,
-                                     @ApiParam(value = "type of attribute", required = true) @RequestParam("type") String type,
-                                     @ApiParam(value = "name of attribute", required = true) @RequestParam("name") String name,
-                                     @ApiParam(value = "visibility of attribute", required = true) @RequestParam("visibility") String visibility,
-                                     @ApiParam(value = "package of attribute", required = true) @RequestParam("attributePackage") String attributePackage) {
+    public ResponseEntity<String> addAttribute(@ApiParam(value = "package of POJO", required = true) @RequestParam("pojoPackage") String pojoPackage,
+                                               @ApiParam(value = "name of POJO", required = true) @RequestParam("pojoName") String pojoName,
+                                               @ApiParam(value = "type of attribute", required = true) @RequestParam("type") String type,
+                                               @ApiParam(value = "name of attribute", required = true) @RequestParam("name") String name,
+                                               @ApiParam(value = "visibility of attribute", required = true) @RequestParam("visibility") String visibility,
+                                               @ApiParam(value = "package of attribute", required = true) @RequestParam("attributePackage") String attributePackage) {
         if (type.isEmpty() || name.isEmpty() || visibility.isEmpty()){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Attribute type, name and visibility are required"
@@ -52,16 +55,17 @@ public class PojoAttributeController {
         attributePackage = attributePackage.replace(".", "/");
 
         pojoAttributeService.addAttribute(pojoPackage, pojoName, type, name, visibility, attributePackage);
-        return new RedirectView("index");
+        return ResponseEntity.ok(redirectPageContentService.getRedirectPage());
     }
 
     @ApiOperation(value = "Remove an attribute from an existing POJO",
-            notes = "Removes an attribute if it exists in the given POJO",
-            response = RedirectView.class
+            notes = "Removes an attribute if it exists in the given POJO"
     )
-    @ApiResponses(value = { @ApiResponse(code = 400, message = "Parameter error")})
+
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
+                            @ApiResponse(code = 400, message = "Parameter error")})
     @GetMapping("/removeAttribute")
-    public RedirectView removeAttribute(@ApiParam(value = "package of POJO", required = true) @RequestParam("pojoPackage") String pojoPackage,
+    public ResponseEntity<String> removeAttribute(@ApiParam(value = "package of POJO", required = true) @RequestParam("pojoPackage") String pojoPackage,
                                      @ApiParam(value = "name of POJO", required = true) @RequestParam("pojoName") String pojoName,
                                      @ApiParam(value = "name of attribute", required = true) @RequestParam("name") String name) {
         if (name.isEmpty() || pojoName.isEmpty() ){
@@ -72,6 +76,6 @@ public class PojoAttributeController {
         pojoPackage = pojoPackage.replace(".", "/");
         pojoAttributeService.removeAttribute(pojoPackage, pojoName, name);
 
-        return new RedirectView("index");
+        return ResponseEntity.ok(redirectPageContentService.getRedirectPage());
     }
 }
