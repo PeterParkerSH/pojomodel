@@ -7,6 +7,9 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Data format for JSON export of all Pojos in the database
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

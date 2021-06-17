@@ -19,6 +19,10 @@ repositories {
     mavenCentral()
 }
 
+task myJavadocs(type: Javadoc) {
+    source = sourceSets.main.allJava
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
     implementation 'org.springframework.boot:spring-boot-starter-web'

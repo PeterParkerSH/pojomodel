@@ -12,6 +12,9 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
+/**
+ * ExtendsRs describes an inheritance relationship between a PojoClass and another PojoClass or PojoReference
+ */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id", scope = ExtendsRs.class)
 @Data

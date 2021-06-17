@@ -12,6 +12,9 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
+/**
+ * AttributeRs describes a attribute relationship between a PojoClass and PojoClass, PojoReference or PojoInterface
+ */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id", scope = AttributeRs.class)
 

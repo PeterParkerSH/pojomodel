@@ -7,6 +7,9 @@ import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoReference;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import org.springframework.stereotype.Service;
 
+/**
+ * IndexService provides the index page, which has an overview of all Pojos in the database
+ */
 @Service
 public class IndexService {
 

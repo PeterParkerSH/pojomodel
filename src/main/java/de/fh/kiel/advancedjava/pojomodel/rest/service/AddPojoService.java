@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * AddPojoService handles adding a PojoReference to the database with only the name and package name of the pojo
+ */
 @Service
 public class AddPojoService {
     final PojoElementRepository pojoElementRepository;

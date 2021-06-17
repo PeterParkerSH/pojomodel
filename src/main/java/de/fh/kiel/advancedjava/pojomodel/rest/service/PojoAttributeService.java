@@ -12,6 +12,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * PojoAttributeService manages adding and removing attributes to and from Pojos
+ */
 @Service
 public class PojoAttributeService {
     final PojoElementRepository pojoElementRepository;

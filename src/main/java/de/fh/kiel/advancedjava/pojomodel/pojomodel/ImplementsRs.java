@@ -12,6 +12,9 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
+/**
+ * ImplementsRs describes a relationship between a PojoClass and a PojoInterface, which the PojoClass implements
+ */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id", scope = ImplementsRs.class)
 @Data

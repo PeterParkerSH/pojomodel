@@ -10,6 +10,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * PackageOverviewService provides a list of all Pojos in a given package, including subpackages of the same package
+ */
 @Service
 public class PackageOverviewService {
 

@@ -8,6 +8,10 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+
+/**
+ * PojoElement is the base class for all POJO classes
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,

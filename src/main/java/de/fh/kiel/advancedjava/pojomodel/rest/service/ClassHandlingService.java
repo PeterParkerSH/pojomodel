@@ -19,6 +19,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ClassHandlingService reads the relevant information from ASM ClassNodes and adds newly read Pojos to the database
+ */
 @Service
 public class ClassHandlingService {
 

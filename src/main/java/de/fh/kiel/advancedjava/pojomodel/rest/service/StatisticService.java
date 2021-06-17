@@ -11,6 +11,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Collectors;
 
+/**
+ * StatisticService retrieves statistical information about a given Pojo from the database
+ */
 @Service
 public class StatisticService {
 

@@ -8,6 +8,10 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *PojoClass represents a standard java class
+ *
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder

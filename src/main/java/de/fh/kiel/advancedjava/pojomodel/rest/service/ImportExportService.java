@@ -8,6 +8,9 @@ import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ExportFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * ImportExportService adds Pojos from JSON file to the database and exports Pojos from the database
+ */
 @Service
 public class ImportExportService {
     final PojoElementRepository pojoElementRepository;
