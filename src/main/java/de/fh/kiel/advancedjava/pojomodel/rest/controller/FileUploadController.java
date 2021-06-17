@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.objectweb.asm.tree.ClassNode;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,7 +47,7 @@ public class FileUploadController {
 	@ApiOperation(value = "Upload a JAR or Class file",
 			notes = "Does not add duplicates to the database"
 			)
-	@PostMapping("/upload")
+	@PostMapping(value = "/upload", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	public ResponseEntity<String> uploadFile(@ApiParam(value = "File to be uploaded", required = true) @RequestParam("file") MultipartFile file) {
 		try {
 			List<ClassNode> classNodeList= binaryReading.readFile(file);

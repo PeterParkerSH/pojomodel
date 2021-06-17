@@ -73,10 +73,17 @@ class StatisticControllerTest {
     @Test
     void pojoStatistic() throws Exception {
 
-        ResponseEntity<String> responseEntity = null;
+        ResponseEntity<PojoStatistic> responseEntity = null;
         responseEntity = statisticController.pojoStatistic("testpackage", "PojoClass3");
         assertEquals(200, responseEntity.getStatusCode().value());
-        String res = responseEntity.getBody();
+
+        var resultObject = new Object() {
+            String resultStr = "";
+        };
+        this.mockMvc.perform(get(buildStatisticRequest("PojoClass3", "testpackage"))).andDo(result -> {
+            resultObject.resultStr = result.getResponse().getContentAsString();
+        }).andExpect(status().isOk());
+        String res = resultObject.resultStr;
 
         PojoStatistic pojoStatistic = JsonUtils.jsonStringToObject(res, PojoStatistic.class);
         PojoStatistic original = JsonUtils.jsonStringToObject(testRes, PojoStatistic.class);

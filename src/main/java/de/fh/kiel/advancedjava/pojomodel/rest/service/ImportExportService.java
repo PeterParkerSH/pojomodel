@@ -5,7 +5,6 @@ import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoReferenceRepository;
 import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ExportFormat;
-import de.fh.kiel.advancedjava.pojomodel.utils.JsonUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +25,8 @@ public class ImportExportService {
     }
 
     @Transactional
-    public String jsonExport() {
-        ExportFormat export = new ExportFormat(pojoClassRepository.findAll(), pojoInterfaceRepository.findAll(), pojoReferenceRepository.findAll());
-        return JsonUtils.objectToJsonString(export);
+    public ExportFormat jsonExport() {
+        return new ExportFormat(pojoClassRepository.findAll(), pojoInterfaceRepository.findAll(), pojoReferenceRepository.findAll());
     }
 
     @Transactional

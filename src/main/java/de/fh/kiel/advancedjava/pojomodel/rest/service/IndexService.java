@@ -18,62 +18,72 @@ public class IndexService {
 
 
     public String listUploadedFiles() {
-        String answerHtml = """           
-            <div>
-                <p><a href="swagger-ui.html">Swagger API description</a></p>
-                <form method="POST" enctype="multipart/form-data" action="/upload">
-                    <table>
-                        <tr>
-                            <td>JAR/Class to upload:</td>
-                            <td><input type="file" name="file" accept=".class,.jar"/></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><input type="submit" value="Upload"/></td>
-                        </tr>
-                    </table>
-                </form>
-            
-                <form method="POST" enctype="multipart/form-data" action="/jsonImport">
-                    <table>
-                        <tr>
-                            <td>Json File to upload:</td>
-                            <td><input type="file" name="json" accept=".json"/></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><input type="submit" value="Upload"/></td>
-                        </tr>
-                    </table>
-                </form>
-                
-                Add class with class name and package name:
-                <form method="GET" action="/addPojo">
-                    <table>
-                        <tr>
-                            <td>Class Name:</td>
-                            <td><input type="text" name="name"/></td>
-                        </tr>
-                        <tr>
-                            <td>Package Name:</td>
-                            <td><input type="text" name="package"/></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><input type="submit" value="Add POJO"/></td>
-                        </tr>
-                    </table>
-                </form>
-                <p><a href="/jsonExport">Export data</a></p>
-                <p><a href="/deleteAll">Delete all</a></p>
-                <table>
-                    [POJOTABLE]
-                </table>
-            </div>
-                """;
+        String answerHtml = """    
+            <!DOCTYPE html>
+            <html lang="en">
+                <head>
+                  <meta charset="UTF-8">
+                  <title>Pojo Test Page </title>
+                </head>
+                <body>
+                    <div>
+                        <p><a href="swagger-ui.html">Swagger API description</a></p>
+                        <form method="POST" enctype="multipart/form-data" action="/upload">
+                            <table>
+                                <tr>
+                                    <td>JAR/Class to upload:</td>
+                                    <td><input type="file" name="file" accept=".class,.jar"/></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><input type="submit" value="Upload"/></td>
+                                </tr>
+                            </table>
+                        </form>
+                                
+                        <form method="POST" enctype="multipart/form-data" action="/jsonImport">
+                            <table>
+                                <tr>
+                                    <td>Json File to upload:</td>
+                                    <td><input type="file" name="json" accept=".json"/></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><input type="submit" value="Upload"/></td>
+                                </tr>
+                            </table>
+                        </form>
+                        
+                        Add class with class name and package name:
+                        <form method="GET" action="/addPojo">
+                            <table>
+                                <tr>
+                                    <td>Class Name:</td>
+                                    <td><input type="text" name="name"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Package Name:</td>
+                                    <td><input type="text" name="package"/></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><input type="submit" value="Add POJO"/></td>
+                                </tr>
+                            </table>
+                        </form>
+                        <p><a href="/jsonExport">Export data</a></p>
+                        <p><a href="/deleteAll">Delete all</a></p>
+                        <table>
+                            [POJOTABLE]
+                        </table>
+                    </div>
+                </body>
+            </html>
+                    """;
         StringBuilder pojoTable = new StringBuilder();
         for (PojoElement element: pojoElementRepository.findAll()){
-            pojoTable.append("<tr>")
+            pojoTable
+                    .append("<tr>")
                     .append("<td style='background-color:#d3d3d3;'>").append(element.getName()).append("</td>")
                     .append("<td style='background-color:#d3d3d3;'><a href=\"/packageOverview?package=").append(element.getPackageName().replace("/", ".")).append("\">").append(element.getPackageName().replace("/", ".")).append("</a></td>")
                     .append("<td>").append("<a href=\"pojoDelete?name=")

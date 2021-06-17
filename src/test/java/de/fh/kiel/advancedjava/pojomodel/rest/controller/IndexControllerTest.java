@@ -13,7 +13,7 @@ class IndexControllerTest {
     @Test
     void listUploadedFiles() {
         String res = indexController.listUploadedFiles().getBody();
-        assertTrue(res.trim().startsWith("<div>"));
+        assertTrue(res.trim().startsWith("<!DOCTYPE html>"));
         assertFalse(res.contains("[POJOTABLE]"));
     }
 }

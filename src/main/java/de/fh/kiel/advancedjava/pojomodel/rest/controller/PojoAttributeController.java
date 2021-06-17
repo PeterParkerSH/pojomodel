@@ -4,6 +4,7 @@ import de.fh.kiel.advancedjava.pojomodel.rest.service.PojoAttributeService;
 import de.fh.kiel.advancedjava.pojomodel.rest.service.RedirectPageContentService;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +28,10 @@ public class PojoAttributeController {
 
     @ApiOperation(value = "Add an attribute to an existing POJO",
             notes = "Only adds the attribute if it doesn't exist in the POJO yet"
+
     )
     @ApiResponses(value = { @ApiResponse(code = 400, message = "Parameter error")})
-    @GetMapping("/addAttribute")
+    @GetMapping(value = "/addAttribute", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<String> addAttribute(@ApiParam(value = "package of POJO", required = true) @RequestParam("pojoPackage") String pojoPackage,
                                                @ApiParam(value = "name of POJO", required = true) @RequestParam("pojoName") String pojoName,
                                                @ApiParam(value = "type of attribute", required = true) @RequestParam("type") String type,
@@ -64,7 +66,7 @@ public class PojoAttributeController {
 
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
                             @ApiResponse(code = 400, message = "Parameter error")})
-    @GetMapping("/removeAttribute")
+    @GetMapping(value = "/removeAttribute", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<String> removeAttribute(@ApiParam(value = "package of POJO", required = true) @RequestParam("pojoPackage") String pojoPackage,
                                      @ApiParam(value = "name of POJO", required = true) @RequestParam("pojoName") String pojoName,
                                      @ApiParam(value = "name of attribute", required = true) @RequestParam("name") String name) {

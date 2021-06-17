@@ -4,7 +4,6 @@ import de.fh.kiel.advancedjava.pojomodel.pojomodel.PojoElement;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ApiPojoElement;
 import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.PojoStatistic;
-import de.fh.kiel.advancedjava.pojomodel.utils.JsonUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,7 @@ public class StatisticService {
     }
 
     @Transactional
-    public String pojoStatistic( String packageName, String className) {
+    public PojoStatistic pojoStatistic( String packageName, String className) {
         packageName = packageName.replace(".", "/");
         PojoElement pojoElement = pojoElementRepository.getPojoElementByNameAndPackageName(className, packageName);
 
@@ -30,7 +29,7 @@ public class StatisticService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Elemet not fund in database");
         }
 
-        String result = JsonUtils.objectToJsonString(PojoStatistic.builder()
+        return PojoStatistic.builder()
                 .className(className)
                 .packageName(packageName)
                 .attributeCount(pojoElementRepository.getPojoElementsByAttributeRS(pojoElement.getId()).size())
@@ -43,12 +42,6 @@ public class StatisticService {
                 .usedAsAttributeCount(pojoElementRepository.contAttributesOfElementById(pojoElement.getId()))
                 .numberOfClassesWithName(pojoElementRepository.countPojoElementsWithClassName(className))
                 .numberOfClassesInPackage(pojoElementRepository.countPojoElementsWithPackageName(packageName))
-                .build()
-        );
-
-        if (result.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error generating response");
-        }
-        return result;
+                .build();
     }
 }

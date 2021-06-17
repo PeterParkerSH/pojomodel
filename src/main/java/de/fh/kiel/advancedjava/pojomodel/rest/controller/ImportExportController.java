@@ -41,17 +41,17 @@ public class ImportExportController {
 
     @ApiOperation(value = "Export POJOs as JSON",
             notes = "Export all POJOs in the database as JSON"
-//            , response = ExportFormat.class
     )
     @GetMapping(value = "/jsonExport", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> jsonExport() {
+    public ResponseEntity<ExportFormat> jsonExport() {
         return ResponseEntity.ok(importExportService.jsonExport());
     }
 
     @ApiOperation(value = "Import POJOs from JSON",
             notes = "Clear database and import all POJOs from JSON, if JSON format is valid"
     )
-    @PostMapping("/jsonImport")
+    @PostMapping(value = "/jsonImport", produces = MediaType.TEXT_HTML_VALUE,
+            consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<String> jsonImport(@ApiParam(value = "JSON file to be imported", required = true) @RequestParam("json") MultipartFile json){
         if (!Objects.requireNonNull(json.getOriginalFilename()).endsWith(".json")){
             throw new ResponseStatusException(
@@ -70,20 +70,20 @@ public class ImportExportController {
         } catch (IOException|NullPointerException e) {
             LOGGER.error(e.getMessage());
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Could not read json file");
+                    HttpStatus.BAD_REQUEST, "Could not read json file");
         }
 
         try {
             JsonUtils.validateJSON(jsonString);
         } catch (ValidationException e) {
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Invalid JSON file: " + e.getMessage());
+                    HttpStatus.BAD_REQUEST, "Invalid JSON file: " + e.getMessage());
         }
 
         ExportFormat imported = JsonUtils.jsonStringToObject(jsonString, ExportFormat.class);
         if (imported == null){
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Could not convert json file to pojo import format");
+                    HttpStatus.BAD_REQUEST, "Could not convert json file to pojo import format");
         }
 
         importExportService.jsonImport(imported);

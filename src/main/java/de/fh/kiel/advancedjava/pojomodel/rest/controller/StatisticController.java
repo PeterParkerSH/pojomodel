@@ -22,11 +22,10 @@ public class StatisticController {
     }
 
     @ApiOperation(value = "Get POJO statistics",
-            notes = "Gets statics of POJO given by package and class name",
-            response = PojoStatistic.class
+            notes = "Gets statics of POJO given by package and class name"
     )
     @GetMapping(value = "/pojoStatistic", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> pojoStatistic(@ApiParam(value = "package name of POJO", required = true) @RequestParam("package") String packageName,
+    public ResponseEntity<PojoStatistic> pojoStatistic(@ApiParam(value = "package name of POJO", required = true) @RequestParam("package") String packageName,
                                                @ApiParam(value = "class name of POJO", required = true) @RequestParam("name") String className) {
         return ResponseEntity.ok(statisticService.pojoStatistic(packageName, className));
     }

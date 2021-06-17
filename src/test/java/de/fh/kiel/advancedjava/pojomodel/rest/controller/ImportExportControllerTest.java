@@ -6,6 +6,7 @@ import de.fh.kiel.advancedjava.pojomodel.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoInterfaceRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoReferenceRepository;
+import de.fh.kiel.advancedjava.pojomodel.rest.restmodel.ExportFormat;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
@@ -26,7 +26,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -91,15 +90,20 @@ class ImportExportControllerTest {
     @Test
     void jsonExportImport() throws Exception{
         testDataBaseController.buildTestDataBase();
-        ResponseEntity<String> responseEntity = null;
+        ResponseEntity<ExportFormat> responseEntity = null;
         int elementCount = pojoElementRepository.findAll().size();
         assertNotEquals(0, elementCount);
         responseEntity = importExportController.jsonExport();
-        //this.mockMvc.perform(get("/jsonExport")).andDo(result -> {
-        //    exportJsonAtomic.set(result.getResponse().getContentAsString());
-        //}).andExpect(status().isOk());
+        assertEquals(200, responseEntity.getStatusCode().value());
 
-        String exportString = responseEntity.getBody();
+        var resultObject = new Object() {
+            String resultStr = "";
+        };
+        this.mockMvc.perform(get("/jsonExport")).andDo(result -> {
+            resultObject.resultStr = result.getResponse().getContentAsString();
+        }).andExpect(status().isOk());
+
+        String exportString = resultObject.resultStr;
         assertFalse(exportString.isEmpty());
 
         MockMultipartFile json = new MockMultipartFile("json", FilenameUtils.getName("sampleJson.json"), MediaType.APPLICATION_JSON_VALUE, exportString.getBytes());
@@ -128,14 +132,19 @@ class ImportExportControllerTest {
         assertNotEquals(0, classCount);
         assertNotEquals(0, interfaceCount);
 
-        ResponseEntity<String> responseEntity = null;
+        ResponseEntity<ExportFormat> responseEntity = null;
         int elementCount = pojoElementRepository.findAll().size();
         responseEntity = importExportController.jsonExport();
-        //this.mockMvc.perform(get("/jsonExport")).andDo(result -> {
-        //    exportJsonAtomic.set(result.getResponse().getContentAsString());
-        //}).andExpect(status().isOk());
+        assertEquals(200, responseEntity.getStatusCode().value());
 
-        String exportString = responseEntity.getBody();
+        var resultObj = new Object() {
+            String resultStr = "";
+        };
+        this.mockMvc.perform(get("/jsonExport")).andDo(result -> {
+            resultObj.resultStr = result.getResponse().getContentAsString();
+        }).andExpect(status().isOk());
+
+        String exportString = resultObj.resultStr;
         assertFalse(exportString.isEmpty());
 
         PojoClass pojoClass = pojoClassRepository.getPojoClassByNameAndPackageName("TestClass123", "de/fhkiel/pojo");

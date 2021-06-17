@@ -7,13 +7,18 @@ public class RedirectPageContentService {
     public String getRedirectPage(){
     return """
         <!DOCTYPE html>
-        <html>
-        <body>
-            <h2>Success - Redirect to index</h2>
-            <script>
-                location.replace("/index")
-            </script>
-        </body>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>Pojo Result Page </title>
+            </head>
+
+            <body>
+                <h2>Success - Redirect to index</h2>
+                <script>
+                    location.replace("/index")
+                </script>
+            </body>
         </html>
     """;
     }
