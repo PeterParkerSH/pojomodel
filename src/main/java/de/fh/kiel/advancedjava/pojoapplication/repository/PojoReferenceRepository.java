@@ -11,9 +11,9 @@ import org.springframework.data.repository.query.Param;
 public interface PojoReferenceRepository extends Neo4jRepository<PojoReference, Long> {
 
     /**
-     * Change type of given PojoElement to PojoReference
+     * Change type of existing PojoElement to PojoReference
      * @param id id of PojoElement
-     * @return
+     * @return the changed Element of null
      */
     @Query("MATCH (n:Element) WHERE ID(n) = $id SET n:Reference RETURN n")
     PojoReference changeElementToReferenceById(@Param("id") Long id);
