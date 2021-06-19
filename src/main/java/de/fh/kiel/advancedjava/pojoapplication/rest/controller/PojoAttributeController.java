@@ -42,7 +42,7 @@ public class PojoAttributeController {
      * @param name name of attribute
      * @param visibility visibility of attribute
      * @param attributePackage package of attribute
-     * @return ResponseEntity<String>
+     * @return {@code  ResponseEntity<String>} HTML response
      */
     @ApiOperation(value = "Add an attribute to an existing POJO",
             notes = "Only adds the attribute if it doesn't exist in the POJO yet"
@@ -78,10 +78,16 @@ public class PojoAttributeController {
         return ResponseEntity.ok(redirectPageContentService.getRedirectPage());
     }
 
+    /**
+     * Removes an existing attribute from a class
+     * @param pojoPackage package of Pojo
+     * @param pojoName name of POJO
+     * @param name name of attribute
+     * @return {@code ResponseEntity<String>} HTML response
+     */
     @ApiOperation(value = "Remove an attribute from an existing POJO",
             notes = "Removes an attribute if it exists in the given POJO"
     )
-
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
                             @ApiResponse(code = 400, message = "Parameter error")})
     @GetMapping(value = "/removeAttribute", produces = MediaType.TEXT_HTML_VALUE)

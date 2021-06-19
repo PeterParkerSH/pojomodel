@@ -38,7 +38,7 @@ public class AddPojoController {
      * Add a Pojo with package name and class name
      * @param packageName package of the class
      * @param pojoName name of the class
-     * @return ResponseEntity<String>
+     * @return {@code ResponseEntity<String>} HTML response
      */
     @ApiOperation(value = "Add a Pojo with package name and class name",
             notes = "Only adds Pojo if it doesn't exist in the database yet"

@@ -8,6 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class PojoApplication {
+	/**
+	 * Application entry routine
+	 * @param args command line parameters
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(PojoApplication.class, args);
 	}

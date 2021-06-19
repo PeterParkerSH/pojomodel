@@ -31,7 +31,7 @@ public class PackageOverviewController {
     /**
      * Returns a list of elements in a specific packages and its subpackages
      * @param packageName name of package
-     * @return ResponseEntity<List<ApiPackageOverviewElement>>
+     * @return {@code ResponseEntity<List<ApiPackageOverviewElement>>} json result
      */
     @ApiOperation(value = "Returns a list of elements in a specific packages and its subpackages"
     )

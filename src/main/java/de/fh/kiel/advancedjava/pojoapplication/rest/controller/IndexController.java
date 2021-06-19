@@ -29,7 +29,7 @@ public class IndexController {
 
     /**
      * Get index page
-     * @return ResponseEntity<String>
+     * @return {@code ResponseEntity<String>} HTML response
      */
     @ApiOperation(value = "Get index page",
             notes = "Index page lists all existing POJOs"

@@ -48,7 +48,7 @@ public class FileUploadController {
 	/**
 	 * Upload a JAR or Class file
 	 * @param file File to be uploaded, must be .jar or .class file
-	 * @return ResponseEntity<String>
+	 * @return {@code ResponseEntity<String>} HTML response
 	 */
 	@ApiOperation(value = "Upload a JAR or Class file",
 			notes = "Does not add duplicates to the database"

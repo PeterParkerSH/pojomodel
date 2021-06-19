@@ -21,6 +21,9 @@ public class ExceptionHandlingController {
 
     /**
      * This is the exception handler for MediaType.APPLICATION_JSON
+     * @param req request representation
+     * @param e occurred ResponseStatusException object
+     * @return {@code ResponseEntity<ErrorMessage>} with the error object ErrorMessage as body
      */
     @ExceptionHandler(value = ResponseStatusException.class)
     public ResponseEntity<ErrorMessage>

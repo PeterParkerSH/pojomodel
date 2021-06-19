@@ -34,7 +34,7 @@ public class PojoDeleteController {
 
     /**
      * Delete all POJOs
-     * @return ResponseEntity<String>
+     * @return {@code ResponseEntity<String>} HTML response
      */
     @ApiOperation(value = "Delete all POJOs",
             notes = "Clears database of all POJOs"
@@ -49,7 +49,7 @@ public class PojoDeleteController {
      * Delete POJO by package and class name
      * @param packageName package name of Pojo
      * @param className class name of Pojo
-     * @return ResponseEntity<String>
+     * @return {@code ResponseEntity<String>} HTML response
      */
     @ApiOperation(value = "Delete POJO by package and class name",
             notes = "Deletes POJO given by package and class name, if existing"

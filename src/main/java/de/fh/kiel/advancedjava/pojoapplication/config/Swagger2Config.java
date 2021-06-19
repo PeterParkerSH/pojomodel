@@ -13,10 +13,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Swagger Configuration
+ * This class represents the configuration for the swagger plugin.
  */
 @Configuration
 @EnableSwagger2
 public class Swagger2Config {
+    /**
+     * this function returns a Docket instance that represents the global swagger configuration
+     * @return swagger configuration
+     */
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)

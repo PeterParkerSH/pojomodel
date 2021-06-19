@@ -32,7 +32,7 @@ public class StatisticController {
      * Get Pojo statistics
      * @param packageName package name of POJO
      * @param className class name of POJO
-     * @return ResponseEntity<PojoStatistic>
+     * @return {@code ResponseEntity<PojoStatistic>} json response
      */
     @ApiOperation(value = "Get POJO statistics",
             notes = "Gets statics of POJO given by package and class name"

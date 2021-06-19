@@ -49,7 +49,7 @@ public class ImportExportController {
 
     /**
      * Export POJOs as JSON
-     * @return ResponseEntity<ExportFormat>
+     * @return {@code ResponseEntity<ExportFormat>} json response
      */
     @ApiOperation(value = "Export POJOs as JSON",
             notes = "Export all POJOs in the database as JSON"
@@ -62,7 +62,7 @@ public class ImportExportController {
     /**
      * Import POJOs from JSON
      * @param json JSON file to be imported
-     * @return ResponseEntity<String>
+     * @return {@code ResponseEntity<String>} HTML response
      */
     @ApiOperation(value = "Import POJOs from JSON",
             notes = "Clear database and import all POJOs from JSON, if JSON format is valid"
