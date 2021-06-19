@@ -19,7 +19,7 @@ public class PojoStatistic {
     String packageName;
     int attributeCount;
     ApiPojoElement extendsClass;
-    List<ApiPojoElement> implementsList = new ArrayList<>();
+    List<ApiPojoElement> implementsList;
     int subClassCount;
     int usedAsAttributeCount;
     int numberOfClassesInPackage;

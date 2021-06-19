@@ -82,7 +82,7 @@ class ImportExportControllerTest {
             importExportController.jsonImport(json);
             fail();
         }catch (ResponseStatusException e){
-            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
+            assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, e.getStatus());
         }
         //mockMvc.perform(MockMvcRequestBuilders.multipart("/jsonImport").file(json)).andExpect(status().is4xxClientError());
     }
