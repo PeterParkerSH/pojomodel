@@ -52,7 +52,7 @@ public class StatisticService {
                         .map(ApiPojoElement::new)
                         .collect(Collectors.toList()))
                 .subClassCount(pojoElementRepository.getPojoElementsExtendedById(pojoElement.getId()).size())
-                .usedAsAttributeCount(pojoElementRepository.contAttributesOfElementById(pojoElement.getId()))
+                .usedAsAttributeCount(pojoElementRepository.countAttributesOfElementById(pojoElement.getId()))
                 .numberOfClassesWithName(pojoElementRepository.countPojoElementsWithClassName(className))
                 .numberOfClassesInPackage(pojoElementRepository.countPojoElementsWithPackageName(packageName))
                 .build();

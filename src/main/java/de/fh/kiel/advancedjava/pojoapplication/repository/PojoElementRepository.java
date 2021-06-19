@@ -12,29 +12,76 @@ import java.util.List;
  */
 public interface PojoElementRepository extends Neo4jRepository<PojoElement, Long> {
 
+    /**
+     * Get PojoElement by package name and class name
+     * @param packageName package name
+     * @param name class name
+     * @return PojoElement
+     */
     PojoElement findByPackageNameAndName(String packageName, String name);
 
+    /**
+     * Get PojoElement by name and package name
+     * @param name class name
+     * @param packageName package name
+     * @return PojoElement
+     */
     @Query("MATCH (e:Element) WHERE e.name = $name AND e.packageName = $packageName RETURN e")
     PojoElement getPojoElementByNameAndPackageName(@Param("name") String name, @Param("packageName") String packageName);
 
+    /**
+     * Get List of PojoElements that are pointing to another PojoElement with given id
+     * @param id id of target PojoElemnt
+     * @return {@code List<PojoElement>}
+     */
     @Query("match (e:Element)<--(x:Element) where ID(e) = $id  return x")
     List<PojoElement> getPojoElementsByPointingToId(@Param("id") Long id);
 
+    /**
+     * Get List of PojoElements that own a given PojoElement as as attribute
+     * @param id id of PojoElement
+     * @return {@code List<PojoElement>}
+     */
     @Query("match (e:Element)-[rel:HAS_ATTRIBUTE]->(x:Element) where ID(e) = $id return x")
     List<PojoElement> getPojoElementsByAttributeRS(@Param("id") Long id);
 
+    /**
+     * Get PojoElement that is extended by a given PojoElement
+     * @param id id of PojoElement
+     * @return PojoElement
+     */
     @Query("match (e:Element)-[rel:EXTENDS]->(x:Element) where ID(e) = $id return x")
     PojoElement getPojoElementByExtendsRS(@Param("id") Long id);
 
+    /**
+     * Get PojoElements that are implemented by a given PojoElement
+     * @param id id of PojoElement
+     * @return {@code List<PojoElement>}
+     */
     @Query("match (e:Element)-[rel:IMPLEMENTS]->(x:Element) where ID(e) = $id return x")
     List<PojoElement> getPojoElementsByImplementsRS(@Param("id") Long id);
 
+    /**
+     * Get List of PojoElements that extend a given PojoElement
+     * @param id id of PojoElement
+     * @return {@code List<PojoElement>}
+     */
     @Query("match (e:Element)<-[rel:EXTENDS]-(x:Element) where ID(e) = $id return x")
     List<PojoElement> getPojoElementsExtendedById(@Param("id") Long id);
 
+    /**
+     * Get number of attributes of a given PojoElement
+     * @param id id of PojoElement
+     * @return count of attributes
+     */
     @Query("match (e:Element)<-[rel:HAS_ATTRIBUTE]-(x) where ID(e) = $id return count(rel)")
-    int contAttributesOfElementById(@Param("id") Long id);
+    int countAttributesOfElementById(@Param("id") Long id);
 
+    /**
+     * Get number of PojoElements in a given package
+     * @param packageName name of package
+     * @return count of PojoElements in package
+     */
     @Query("match (e:Element {packageName: $packageName }) return count(e)")
     int countPojoElementsWithPackageName(@Param("packageName") String packageName);
 
