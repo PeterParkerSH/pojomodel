@@ -5,9 +5,7 @@ import de.fh.kiel.advancedjava.pojoapplication.binaryreading.BinaryReadingExcept
 import de.fh.kiel.advancedjava.pojoapplication.rest.exceptions.ClassHandlingException;
 import de.fh.kiel.advancedjava.pojoapplication.rest.service.ClassHandlingService;
 import de.fh.kiel.advancedjava.pojoapplication.rest.service.RedirectPageContentService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.objectweb.asm.tree.ClassNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,6 +51,7 @@ public class FileUploadController {
 	@ApiOperation(value = "Upload a JAR or Class file",
 			notes = "Does not add duplicates to the database"
 			)
+	@ApiResponses(value = { @ApiResponse(code = 415, message = "Invalid data format")})
 	@PostMapping(value = "/upload", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	public ResponseEntity<String> uploadFile(@ApiParam(value = "File to be uploaded", required = true) @RequestParam("file") MultipartFile file) {
 		try {
@@ -61,11 +60,11 @@ public class FileUploadController {
 			classHandlingService.handleClassNodes(classNodeList);
 		} catch (IOException e) {
 			throw new ResponseStatusException(
-					HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()
+					HttpStatus.INTERNAL_SERVER_ERROR, "Error reading file"
 			);
 		} catch (BinaryReadingException | ClassHandlingException e) {
 			throw new ResponseStatusException(
-					HttpStatus.BAD_REQUEST, e.getMessage()
+					HttpStatus.UNSUPPORTED_MEDIA_TYPE, e.getMessage()
 			);
 		}
 		return ResponseEntity.ok(redirectPageContentService.getRedirectPage());

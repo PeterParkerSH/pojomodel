@@ -2,9 +2,7 @@ package de.fh.kiel.advancedjava.pojoapplication.rest.controller;
 
 import de.fh.kiel.advancedjava.pojoapplication.rest.restmodel.PojoStatistic;
 import de.fh.kiel.advancedjava.pojoapplication.rest.service.StatisticService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,6 +35,7 @@ public class StatisticController {
     @ApiOperation(value = "Get POJO statistics",
             notes = "Gets statics of POJO given by package and class name"
     )
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "Element not found")})
     @GetMapping(value = "/pojoStatistic", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PojoStatistic> pojoStatistic(@ApiParam(value = "package name of POJO", required = true) @RequestParam("package") String packageName,
                                                @ApiParam(value = "class name of POJO", required = true) @RequestParam("name") String className) {

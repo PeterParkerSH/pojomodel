@@ -4,9 +4,7 @@ import de.fh.kiel.advancedjava.pojoapplication.rest.restmodel.ExportFormat;
 import de.fh.kiel.advancedjava.pojoapplication.rest.service.ImportExportService;
 import de.fh.kiel.advancedjava.pojoapplication.rest.service.RedirectPageContentService;
 import de.fh.kiel.advancedjava.pojoapplication.utils.JsonUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.everit.json.schema.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,12 +65,13 @@ public class ImportExportController {
     @ApiOperation(value = "Import POJOs from JSON",
             notes = "Clear database and import all POJOs from JSON, if JSON format is valid"
     )
+    @ApiResponses(value = { @ApiResponse(code = 415, message = "Invalid data format")})
     @PostMapping(value = "/jsonImport", produces = MediaType.TEXT_HTML_VALUE,
             consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<String> jsonImport(@ApiParam(value = "JSON file to be imported", required = true) @RequestParam("json") MultipartFile json){
         if (!Objects.requireNonNull(json.getOriginalFilename()).endsWith(".json")){
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "File extension has to be \".json\"");
+                    HttpStatus.UNSUPPORTED_MEDIA_TYPE, "File extension has to be \".json\"");
         }
 
         // convert JSON file to string
@@ -87,20 +86,20 @@ public class ImportExportController {
         } catch (IOException|NullPointerException e) {
             LOGGER.error(e.getMessage());
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Could not read json file");
+                    HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Could not read json file");
         }
 
         try {
             JsonUtils.validateJSON(jsonString);
         } catch (ValidationException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Invalid JSON file: " + e.getMessage());
+                    HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Invalid JSON file: " + e.getMessage());
         }
 
         ExportFormat imported = JsonUtils.jsonStringToObject(jsonString, ExportFormat.class);
         if (imported == null){
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Could not convert json file to pojo import format");
+                    HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Could not convert json file to pojo import format");
         }
 
         importExportService.jsonImport(imported);
