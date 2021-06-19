@@ -20,10 +20,20 @@ public class StatisticController {
 
     final StatisticService statisticService;
 
+    /**
+     * Constructor for StatisticController
+     * @param statisticService see {@link StatisticService}
+     */
     public StatisticController(StatisticService statisticService) {
         this.statisticService = statisticService;
     }
 
+    /**
+     * Get Pojo statistics
+     * @param packageName package name of POJO
+     * @param className class name of POJO
+     * @return ResponseEntity<PojoStatistic>
+     */
     @ApiOperation(value = "Get POJO statistics",
             notes = "Gets statics of POJO given by package and class name"
     )

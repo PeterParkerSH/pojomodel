@@ -17,6 +17,11 @@ public class ApiPackageOverviewElement {
     String className;
     String packageName;
     ApiPackageOverviewTypeEnum type;
+
+    /**
+     * Constructor for ApiPackageOverviewElement
+     * @param pojoElement PojoElement to get package overview for
+     */
     public ApiPackageOverviewElement(PojoElement pojoElement) {
         if (pojoElement == null) {
             className = "Object";

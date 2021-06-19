@@ -23,12 +23,27 @@ public class PojoAttributeController {
     final PojoAttributeService pojoAttributeService;
     final RedirectPageContentService redirectPageContentService;
 
+    /**
+     * Constructor for PojoAttributeController
+     * @param pojoAttributeService see {@link PojoAttributeService}
+     * @param redirectPageContentService see {@link RedirectPageContentService}
+     */
     public PojoAttributeController(PojoAttributeService pojoAttributeService,
                                    RedirectPageContentService redirectPageContentService) {
         this.pojoAttributeService = pojoAttributeService;
         this.redirectPageContentService = redirectPageContentService;
     }
 
+    /**
+     * Add an attribute to an existing Pojo
+     * @param pojoPackage package of Pojo
+     * @param pojoName name of POJO
+     * @param type type of attribute
+     * @param name name of attribute
+     * @param visibility visibility of attribute
+     * @param attributePackage package of attribute
+     * @return ResponseEntity<String>
+     */
     @ApiOperation(value = "Add an attribute to an existing POJO",
             notes = "Only adds the attribute if it doesn't exist in the POJO yet"
 

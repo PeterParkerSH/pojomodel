@@ -20,6 +20,13 @@ public class ImportExportService {
 
     final PojoReferenceRepository pojoReferenceRepository;
 
+    /**
+     * Constructor for ImportExportService
+     * @param pojoClassRepository see {@link PojoClassRepository}
+     * @param pojoInterfaceRepository see {@link PojoInterfaceRepository}
+     * @param pojoReferenceRepository see {@link PojoReferenceRepository}
+     * @param pojoElementRepository see {@link PojoElementRepository}
+     */
     public ImportExportService(PojoClassRepository pojoClassRepository, PojoInterfaceRepository pojoInterfaceRepository, PojoReferenceRepository pojoReferenceRepository, PojoElementRepository pojoElementRepository) {
         this.pojoClassRepository = pojoClassRepository;
         this.pojoInterfaceRepository = pojoInterfaceRepository;

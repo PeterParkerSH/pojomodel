@@ -19,10 +19,18 @@ public class IndexController {
 
     final IndexService indexService;
 
+    /**
+     * Constructor for IndexController
+     * @param indexService see {@link IndexService}
+     */
     public IndexController(IndexService indexService) {
         this.indexService = indexService;
     }
 
+    /**
+     * Get index page
+     * @return ResponseEntity<String>
+     */
     @ApiOperation(value = "Get index page",
             notes = "Index page lists all existing POJOs"
     )
@@ -31,6 +39,10 @@ public class IndexController {
         return ResponseEntity.ok(indexService.listUploadedFiles());
     }
 
+    /**
+     * Redirect to index page
+     * @return RedirectView("/index")
+     */
     @ApiIgnore
     @GetMapping("/")
     public RedirectView redirectIndex() {

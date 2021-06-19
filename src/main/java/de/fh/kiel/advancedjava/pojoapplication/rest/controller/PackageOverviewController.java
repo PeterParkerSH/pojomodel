@@ -20,10 +20,19 @@ public class PackageOverviewController {
 
     final PackageOverviewService packageOverviewService;
 
+    /**
+     * Constructor for PackageOverviewController
+     * @param packageOverviewService see {@link PackageOverviewService}
+     */
     public PackageOverviewController(PackageOverviewService packageOverviewService){
         this.packageOverviewService = packageOverviewService;
     }
 
+    /**
+     * Returns a list of elements in a specific packages and its subpackages
+     * @param packageName name of package
+     * @return ResponseEntity<List<ApiPackageOverviewElement>>
+     */
     @ApiOperation(value = "Returns a list of elements in a specific packages and its subpackages"
     )
     @GetMapping(value = "/packageOverview", produces = MediaType.APPLICATION_JSON_VALUE)

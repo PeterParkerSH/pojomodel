@@ -15,11 +15,18 @@ public class IndexService {
 
     final PojoElementRepository pojoElementRepository;
 
+    /**
+     * Constructor for IndexService
+     * @param pojoElementRepository see PojoElementRepository
+     */
     public IndexService(PojoElementRepository pojoElementRepository) {
         this.pojoElementRepository = pojoElementRepository;
     }
 
-
+    /**
+     * Lists all uploaded Pojos as an Html String
+     * @return Html String
+     */
     public String listUploadedFiles() {
         String answerHtml = """    
             <!DOCTYPE html>

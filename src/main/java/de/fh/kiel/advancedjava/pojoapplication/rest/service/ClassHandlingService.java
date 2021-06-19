@@ -217,6 +217,12 @@ public class ClassHandlingService {
     }
 
 
+    /**
+     * Gets Pojo by class name and package name if it already exists, if not, creates new {@link PojoReference}
+     * @param className name of the class
+     * @param packageName package name of the class
+     * @return PojoElement
+     */
     public PojoElement getOrCreatePojoElement(String className, String packageName){
         PojoElement pojoElement = pojoElementRepository.findByPackageNameAndName(packageName, className);
         if (pojoElement == null) {

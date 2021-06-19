@@ -21,12 +21,21 @@ public class PojoDeleteController {
     final PojoDeleteService pojoDeleteService;
     final RedirectPageContentService redirectPageContentService;
 
+    /**
+     * Constructor for PojoDeleteController
+     * @param pojoDeleteService see {@link PojoDeleteService}
+     * @param redirectPageContentService see {@link RedirectPageContentService}
+     */
     public PojoDeleteController(PojoDeleteService pojoDeleteService,
                                 RedirectPageContentService redirectPageContentService) {
         this.pojoDeleteService = pojoDeleteService;
         this.redirectPageContentService = redirectPageContentService;
     }
 
+    /**
+     * Delete all POJOs
+     * @return ResponseEntity<String>
+     */
     @ApiOperation(value = "Delete all POJOs",
             notes = "Clears database of all POJOs"
     )
@@ -36,6 +45,12 @@ public class PojoDeleteController {
         return ResponseEntity.ok(redirectPageContentService.getRedirectPage());
     }
 
+    /**
+     * Delete POJO by package and class name
+     * @param packageName package name of Pojo
+     * @param className class name of Pojo
+     * @return ResponseEntity<String>
+     */
     @ApiOperation(value = "Delete POJO by package and class name",
             notes = "Deletes POJO given by package and class name, if existing"
     )

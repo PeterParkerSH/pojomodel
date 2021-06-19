@@ -16,11 +16,22 @@ public class AddPojoService {
     final PojoElementRepository pojoElementRepository;
     final PojoReferenceRepository pojoReferenceRepository;
 
+    /**
+     * Constructor for AddPojoService
+     * @param pojoElementRepository see {@link PojoElementRepository}
+     * @param pojoReferenceRepository see {@link PojoReferenceRepository}
+     */
     public AddPojoService(PojoElementRepository pojoElementRepository, PojoReferenceRepository pojoReferenceRepository) {
         this.pojoElementRepository = pojoElementRepository;
         this.pojoReferenceRepository = pojoReferenceRepository;
     }
 
+    /**
+     * Add a pojo with class name and package name
+     * @param pojoName name of the class
+     * @param packageName package of the class
+     * @throws ResponseStatusException
+     */
     @Transactional
     public void addPojo(String pojoName, String packageName) throws ResponseStatusException{
         if(pojoElementRepository.getPojoElementByNameAndPackageName(pojoName, packageName) != null){

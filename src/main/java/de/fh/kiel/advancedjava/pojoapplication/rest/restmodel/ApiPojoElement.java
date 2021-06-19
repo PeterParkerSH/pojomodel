@@ -14,6 +14,11 @@ import lombok.NoArgsConstructor;
 public class ApiPojoElement {
     String className;
     String packageName;
+
+    /**
+     * Constructor for ApiPojoElement
+     * @param pojoElement PojoElement to convert to ApiPojoElement
+     */
     public ApiPojoElement(PojoElement pojoElement){
         if (pojoElement == null){
             className = "Object";

@@ -35,6 +35,11 @@ public class ImportExportController {
     final ImportExportService importExportService;
     final RedirectPageContentService redirectPageContentService;
 
+    /**
+     * Constructor for ImportExportController
+     * @param importExportService see {@link ImportExportService}
+     * @param redirectPageContentService see {@link RedirectPageContentService}
+     */
     public ImportExportController(ImportExportService importExportService,
                                   RedirectPageContentService redirectPageContentService) {
         this.importExportService = importExportService;
@@ -42,6 +47,10 @@ public class ImportExportController {
     }
 
 
+    /**
+     * Export POJOs as JSON
+     * @return ResponseEntity<ExportFormat>
+     */
     @ApiOperation(value = "Export POJOs as JSON",
             notes = "Export all POJOs in the database as JSON"
     )
@@ -50,6 +59,11 @@ public class ImportExportController {
         return ResponseEntity.ok(importExportService.jsonExport());
     }
 
+    /**
+     * Import POJOs from JSON
+     * @param json JSON file to be imported
+     * @return ResponseEntity<String>
+     */
     @ApiOperation(value = "Import POJOs from JSON",
             notes = "Clear database and import all POJOs from JSON, if JSON format is valid"
     )
