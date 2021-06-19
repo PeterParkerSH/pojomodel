@@ -25,7 +25,7 @@ public class BinaryReading {
      * @param file file that is supposed to be read
      * @return list of all ASM ClassNodes that could be read from the file
      * @throws BinaryReadingException
-     * @throws IOException
+     * gla@throws IOException
      */
     public List<ClassNode> readFile(MultipartFile file) throws BinaryReadingException, IOException {
         if (file == null){
