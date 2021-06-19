@@ -1,6 +1,5 @@
 package de.fh.kiel.advancedjava.pojoapplication.repository;
 
-import de.fh.kiel.advancedjava.pojoapplication.pojomodel.PojoInterface;
 import de.fh.kiel.advancedjava.pojoapplication.pojomodel.PojoReference;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -17,6 +16,6 @@ public interface PojoReferenceRepository extends Neo4jRepository<PojoReference, 
      * @return
      */
     @Query("MATCH (n:Element) WHERE ID(n) = $id SET n:Reference RETURN n")
-    PojoInterface changeElementToReferenceById(@Param("id") Long id);
+    PojoReference changeElementToReferenceById(@Param("id") Long id);
 
 }

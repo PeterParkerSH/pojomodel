@@ -37,7 +37,7 @@ class EvilClassTest {
         assertTrue(file.exists());
         file.delete();
 
-        File file2 = new File("build/classes/java/test/de/fh/kiel/advancedjava/pojomodel/attackszenario/EvilClass.class");
+        File file2 = new File("build/classes/java/test/de/fh/kiel/advancedjava/pojoapplication/attackszenario/EvilClass.class");
         FileInputStream fis = new FileInputStream(file2);
         MockMultipartFile mpf = new MockMultipartFile("file", FilenameUtils.getName("EvilClass.class"), "application/octet-stream", IOUtils.toByteArray(fis));
         fileUploadController.uploadFile(mpf);
