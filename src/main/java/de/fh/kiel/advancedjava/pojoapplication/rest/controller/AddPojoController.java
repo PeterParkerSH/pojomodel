@@ -13,6 +13,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.lang.model.SourceVersion;
 
+/**
+ * Controller for adding Pojos to the neo4j database
+ */
 @Api(tags = {"Pojo Interface"})
 @Controller
 public class AddPojoController {

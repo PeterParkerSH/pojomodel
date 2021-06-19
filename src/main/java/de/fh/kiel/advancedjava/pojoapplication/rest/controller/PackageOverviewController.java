@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+/**
+ * Controller for receiving an overview over the contents of a package
+ */
 @Api(tags = {"Pojo Interface"})
 @Controller
 public class PackageOverviewController {

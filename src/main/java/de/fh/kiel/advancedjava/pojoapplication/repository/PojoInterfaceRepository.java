@@ -5,6 +5,9 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * Neo4j repository for Objects of type {@link PojoInterface}
+ */
 public interface PojoInterfaceRepository extends Neo4jRepository<PojoInterface, Long> {
     @Query("MATCH (i:Interface) WHERE i.name = $name AND i.packageName = $packageName RETURN i")
     PojoInterface getPojoInterfaceByNameAndPackageName(@Param("name") String name, @Param("packageName") String packageName);

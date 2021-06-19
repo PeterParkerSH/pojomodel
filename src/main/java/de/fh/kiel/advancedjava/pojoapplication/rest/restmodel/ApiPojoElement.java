@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Model for displaying a Pojo on the index page
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode

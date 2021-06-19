@@ -12,6 +12,9 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
+/**
+ * Controller for exception handling
+ */
 @ControllerAdvice
 public class ExceptionHandlingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlingController.class);

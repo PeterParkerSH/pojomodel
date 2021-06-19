@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ClassHandlingService reads the relevant information from ASM ClassNodes and adds newly read Pojos to the database
+ * ClassHandlingService reads the relevant information from ASM ClassNodes and adds newly read Pojos to the database.
+ * For more information about ASM visit <a href="https://asm.ow2.io/">ASM</a>
  */
 @Service
 public class ClassHandlingService {
@@ -40,6 +41,11 @@ public class ClassHandlingService {
         this.pojoReferenceRepository = pojoReferenceRepository;
     }
 
+    /**
+     * Takes a list of ASM ClassNodes, reads the relevant information into Pojos and adds the Pojos to the databse
+     * @param classNodes List of ASM ClassNodes that were read from the uploaded file. See {@link de.fh.kiel.advancedjava.pojoapplication.binaryreading.BinaryReading}
+     * @throws ClassHandlingException See {@link ClassHandlingException}
+     */
     @Transactional
     public void handleClassNodes(List<ClassNode> classNodes) throws ClassHandlingException {
         // Check if elements already exist
