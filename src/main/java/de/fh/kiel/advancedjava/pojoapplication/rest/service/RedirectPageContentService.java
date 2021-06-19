@@ -7,6 +7,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RedirectPageContentService {
+
+    /**
+     * Gets html page that automatically redirects to index page
+     * @return Html page as string
+     */
     public String getRedirectPage(){
     return """
         <!DOCTYPE html>

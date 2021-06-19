@@ -19,10 +19,20 @@ public class StatisticService {
 
     final PojoElementRepository pojoElementRepository;
 
+    /**
+     * Constructor for StatisticService
+     * @param pojoElementRepository see {@link PojoElementRepository}
+     */
     public StatisticService(PojoElementRepository pojoElementRepository) {
         this.pojoElementRepository = pojoElementRepository;
     }
 
+    /**
+     * Get statistical information about a Pojo
+     * @param packageName package name of Pojo
+     * @param className class name of Pojo
+     * @return statistics as type {@link PojoStatistic}
+     */
     @Transactional
     public PojoStatistic pojoStatistic( String packageName, String className) {
         packageName = packageName.replace(".", "/");

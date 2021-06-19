@@ -18,10 +18,19 @@ public class PackageOverviewService {
 
     final PojoElementRepository pojoElementRepository;
 
+    /**
+     * Constructor for PackageOverviewService
+     * @param pojoElementRepository see {@link PojoElementRepository}
+     */
     public PackageOverviewService(PojoElementRepository pojoElementRepository) {
         this.pojoElementRepository = pojoElementRepository;
     }
 
+    /**
+     * Gets overview of all Pojos in given package and subpackages
+     * @param packageName package name
+     * @return {@code List<ApiPackageOverviewElement>}
+     */
     @Transactional
     public List<ApiPackageOverviewElement> packageOverview(String packageName) {
         List<PojoElement> elements;

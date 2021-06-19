@@ -33,6 +33,13 @@ public class ClassHandlingService {
     private final PojoElementRepository pojoElementRepository;
     private final PojoReferenceRepository pojoReferenceRepository;
 
+    /**
+     * Constructor for ClassHandlingService
+     * @param pojoClassRepository see {@link PojoClassRepository}
+     * @param pojoInterfaceRepository see {@link PojoInterfaceRepository}
+     * @param pojoElementRepository see {@link PojoElementRepository}
+     * @param pojoReferenceRepository see {@link PojoReferenceRepository}
+     */
     public ClassHandlingService(final PojoClassRepository pojoClassRepository, final PojoInterfaceRepository  pojoInterfaceRepository,
                                 final PojoElementRepository  pojoElementRepository, final PojoReferenceRepository pojoReferenceRepository){
         this.pojoClassRepository = pojoClassRepository;

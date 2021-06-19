@@ -10,9 +10,12 @@ import org.springframework.data.repository.query.Param;
  * Neo4j repository for Objects of type {@link PojoReference}
  */
 public interface PojoReferenceRepository extends Neo4jRepository<PojoReference, Long> {
-    @Query("MATCH (r:Reference) WHERE r.name = $name AND r.packageName = $packageName RETURN r")
-    PojoReference getPojoReferenceByNameAndPackageName(@Param("name") String name, @Param("packageName") String packageName);
 
+    /**
+     * Change type of given PojoElement to PojoReference
+     * @param id id of PojoElement
+     * @return
+     */
     @Query("MATCH (n:Element) WHERE ID(n) = $id SET n:Reference RETURN n")
     PojoInterface changeElementToReferenceById(@Param("id") Long id);
 

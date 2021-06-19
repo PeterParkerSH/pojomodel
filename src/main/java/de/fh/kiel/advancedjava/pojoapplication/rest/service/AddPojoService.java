@@ -30,7 +30,7 @@ public class AddPojoService {
      * Add a pojo with class name and package name
      * @param pojoName name of the class
      * @param packageName package of the class
-     * @throws ResponseStatusException
+     * @throws ResponseStatusException org.springframework.web.server.ResponseStatusException
      */
     @Transactional
     public void addPojo(String pojoName, String packageName) throws ResponseStatusException{
