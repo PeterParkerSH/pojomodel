@@ -31,7 +31,13 @@ public class FileUploadController {
 	private final ClassHandlingService classHandlingService;
 	private final RedirectPageContentService redirectPageContentService;
 
-	FileUploadController(BinaryReading binaryReading, /*final PojoClassRepository pojoClassRepository,*/
+	/**
+	 * Constructor for FileUploadController
+	 * @param binaryReading see {@link BinaryReading}
+	 * @param classHandlingService see {@link ClassHandlingService}
+	 * @param redirectPageContentService see {@link RedirectPageContentService}
+	 */
+	FileUploadController(BinaryReading binaryReading,
 						 ClassHandlingService classHandlingService,
 						 RedirectPageContentService redirectPageContentService){
 		this.binaryReading = binaryReading;
@@ -39,6 +45,11 @@ public class FileUploadController {
 		this.redirectPageContentService = redirectPageContentService;
 	}
 
+	/**
+	 * Upload a JAR or Class file
+	 * @param file File to be uploaded, must be .jar or .class file
+	 * @return ResponseEntity<String>
+	 */
 	@ApiOperation(value = "Upload a JAR or Class file",
 			notes = "Does not add duplicates to the database"
 			)

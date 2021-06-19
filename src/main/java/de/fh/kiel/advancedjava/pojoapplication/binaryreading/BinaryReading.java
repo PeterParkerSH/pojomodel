@@ -24,8 +24,8 @@ public class BinaryReading {
      * Function for reading AMS ClassNodes from a multipart file containing java class files
      * @param file file that is supposed to be read
      * @return list of all ASM ClassNodes that could be read from the file
-     * @throws BinaryReadingException
-     * gla@throws IOException
+     * @throws BinaryReadingException See {@link BinaryReadingException}
+     * @throws IOException Java IOException
      */
     public List<ClassNode> readFile(MultipartFile file) throws BinaryReadingException, IOException {
         if (file == null){
