@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * Controller for receiving statistical information about a Pojo
+ */
 @Api(tags = {"Pojo Interface"})
 @Controller
 public class StatisticController {

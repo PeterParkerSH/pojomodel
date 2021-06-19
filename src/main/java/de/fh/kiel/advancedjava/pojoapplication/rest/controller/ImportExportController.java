@@ -25,6 +25,9 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+/**
+ * Controller for importing or exporting Pojos in JSON format
+ */
 @Api(tags = {"Pojo Interface"})
 @Controller
 public class ImportExportController {

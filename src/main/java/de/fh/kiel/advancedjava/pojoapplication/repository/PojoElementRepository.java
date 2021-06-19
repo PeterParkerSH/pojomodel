@@ -7,7 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-
+/**
+ *  Neo4j repository for Objects of type {@link PojoElement}
+ */
 public interface PojoElementRepository extends Neo4jRepository<PojoElement, Long> {
 
     PojoElement findByPackageNameAndName(String packageName, String name);

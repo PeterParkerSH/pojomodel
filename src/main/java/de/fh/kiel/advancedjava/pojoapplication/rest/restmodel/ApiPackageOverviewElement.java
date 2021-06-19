@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Model for displaying information about a package and its content
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode

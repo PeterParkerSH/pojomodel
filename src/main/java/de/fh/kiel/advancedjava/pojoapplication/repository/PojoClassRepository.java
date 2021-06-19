@@ -5,6 +5,9 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * Neo4j repository for Objects of type {@link PojoClass}
+ */
 public interface PojoClassRepository extends Neo4jRepository<PojoClass, Long> {
     PojoClass findByPackageNameAndName(String packageName, String name);
     

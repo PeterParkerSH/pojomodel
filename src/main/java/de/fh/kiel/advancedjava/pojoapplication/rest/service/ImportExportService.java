@@ -27,11 +27,19 @@ public class ImportExportService {
         this.pojoElementRepository = pojoElementRepository;
     }
 
+    /**
+     * Prepares all Pojos from database for JSON export
+     * @return All Pojos in database as {@link ExportFormat}
+     */
     @Transactional
     public ExportFormat jsonExport() {
         return new ExportFormat(pojoClassRepository.findAll(), pojoInterfaceRepository.findAll(), pojoReferenceRepository.findAll());
     }
 
+    /**
+     * Saves Pojos imported from JSON in the database
+     * @param imported Imported Pojos in {@link ExportFormat}
+     */
     @Transactional
     public void jsonImport(ExportFormat imported){
         pojoElementRepository.deleteAll();

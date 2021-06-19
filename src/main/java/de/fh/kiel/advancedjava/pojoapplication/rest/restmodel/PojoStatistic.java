@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Data format for statistical information about a Pojo
+ * Model for statistical information about a Pojo
  */
 @Data
 @Builder

@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import springfox.documentation.annotations.ApiIgnore;
 
+/**
+ * Controller for the index page of the application
+ */
 @Api(tags = {"Pojo Interface"})
 @Controller
 public class IndexController {

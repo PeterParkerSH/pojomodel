@@ -14,6 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.lang.model.SourceVersion;
 
+/**
+ * Controller for manually add and deleting attributes of a Pojo
+ */
 @Api(tags = {"Pojo Interface"})
 @Controller
 public class PojoAttributeController {

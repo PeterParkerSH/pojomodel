@@ -22,13 +22,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * In order to upload class and jar files you may choose to either encode binary data in base64
- * or instead upload this jar's / classes using a form. This class shows you the server side - the "client"
- * part is located in the upload.html file. In order to upload a file you have to start the application
- * and hit http://localhost:8080/upload and choose a file for upload and upload it. This class is only an example
- * and not feature complete.
+ * Controller for uploading Pojos as a JAR or class file. In order to upload a file you have to start the application and hit http://localhost:8080/index
  */
-
 @Api(tags = {"Pojo Interface"})
 @Controller
 public class FileUploadController {
