@@ -55,6 +55,11 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Validates JSON against the JSON schema for imported JSON data
+     * @param json JSON data as string
+     * @throws ValidationException org.everit.json.schema ValidationException
+     */
     public static void validateJSON(String json) throws ValidationException{
         try (InputStream inputStream = JsonUtils.class.getClassLoader().getResourceAsStream("pojo-schema.json")) {
             assert inputStream != null;

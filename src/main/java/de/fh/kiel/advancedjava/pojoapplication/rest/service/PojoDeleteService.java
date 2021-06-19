@@ -24,6 +24,13 @@ public class PojoDeleteService {
     final PojoInterfaceRepository pojoInterfaceRepository;
     final PojoReferenceRepository pojoReferenceRepository;
 
+    /**
+     * Constructor for PojoDeleteService
+     * @param pojoElementRepository see {@link PojoElementRepository}
+     * @param pojoClassRepository see {@link PojoClassRepository}
+     * @param pojoInterfaceRepository see {@link PojoInterfaceRepository}
+     * @param pojoReferenceRepository see {@link PojoReferenceRepository}
+     */
     public PojoDeleteService(PojoElementRepository pojoElementRepository, PojoClassRepository pojoClassRepository, PojoInterfaceRepository pojoInterfaceRepository, PojoReferenceRepository pojoReferenceRepository) {
         this.pojoElementRepository = pojoElementRepository;
         this.pojoClassRepository = pojoClassRepository;
@@ -31,11 +38,19 @@ public class PojoDeleteService {
         this.pojoReferenceRepository = pojoReferenceRepository;
     }
 
+    /**
+     * Delete all Pojos from database
+     */
     @Transactional
     public void deleteAll() {
         pojoElementRepository.deleteAll();
     }
 
+    /**
+     * Delete Pojo by class and package name
+     * @param packageName package name of Pojo
+     * @param className class name of pojo
+     */
     @Transactional
     public void pojoDelete(String packageName, String className){
         packageName = packageName.replace(".", "/");

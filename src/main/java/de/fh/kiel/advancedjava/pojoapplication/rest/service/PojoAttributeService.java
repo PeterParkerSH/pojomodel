@@ -22,6 +22,13 @@ public class PojoAttributeService {
     final PojoClassRepository pojoClassRepository;
     final ClassHandlingService classHandlingService;
 
+    /**
+     * Constructor for PojoAttributeService
+     * @param pojoElementRepository see {@link PojoElementRepository}
+     * @param pojoReferenceRepository see {@link PojoReferenceRepository}
+     * @param pojoClassRepository see {@link PojoClassRepository}
+     * @param classHandlingService see {@link ClassHandlingService}
+     */
     public PojoAttributeService(PojoElementRepository pojoElementRepository, PojoReferenceRepository pojoReferenceRepository, PojoClassRepository pojoClassRepository, ClassHandlingService classHandlingService) {
         this.pojoElementRepository = pojoElementRepository;
         this.pojoReferenceRepository = pojoReferenceRepository;
@@ -29,6 +36,15 @@ public class PojoAttributeService {
         this.classHandlingService = classHandlingService;
     }
 
+    /**
+     * Add attribute to an existing Pojo
+     * @param pojoPackage package name of pojo
+     * @param pojoName class name of pojo
+     * @param type type of attribute
+     * @param name name of attribute
+     * @param visibility visibility of attribute
+     * @param packageName package name of attribute
+     */
     @Transactional
     public void addAttribute(String pojoPackage,String pojoName, String type, String name, String visibility, String packageName) {
         PojoElement pojoElement = pojoElementRepository.findByPackageNameAndName(pojoPackage, pojoName);
@@ -65,6 +81,12 @@ public class PojoAttributeService {
         pojoClassRepository.save(pojoClass);
     }
 
+    /**
+     * remove existing attribute from Pojo
+     * @param pojoPackage package name of Pojo
+     * @param pojoName class name of Pojo
+     * @param name name of attribute
+     */
     @Transactional
     public void removeAttribute(String pojoPackage,String pojoName, String name){
         PojoClass pojoClass = pojoClassRepository.findByPackageNameAndName(pojoPackage, pojoName);
