@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojoapplication.rest.service;
 
-import de.fh.kiel.advancedjava.pojoapplication.pojomodel.PojoElement;
+import de.fh.kiel.advancedjava.pojoapplication.pojomodel.*;
 import de.fh.kiel.advancedjava.pojoapplication.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojoapplication.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojoapplication.repository.PojoInterfaceRepository;
@@ -54,19 +54,47 @@ public class ImportExportService {
     @Transactional
     public void jsonImport(ExportFormat imported){
         pojoElementRepository.deleteAll();
-
         List<PojoElement> allElements = new ArrayList<>();
-
-        allElements.addAll(imported.getPojoInterfaces());
         allElements.addAll(imported.getPojoReferences());
+        allElements.addAll(imported.getPojoInterfaces());
         allElements.addAll(imported.getPojoClasses());
 
-        pojoElementRepository.saveAll(allElements);
-        /*
-        pojoInterfaceRepository.saveAll(imported.getPojoInterfaces());
-        pojoReferenceRepository.saveAll(imported.getPojoReferences());
-        pojoClassRepository.saveAll(imported.getPojoClasses());
+        for (PojoElement data: allElements){
+            PojoElement element = null;
+            if (data instanceof PojoReference) {
+                element = PojoReference.builder().name(data.getName()).packageName(data.getPackageName()).build();
+            }
+            if (data instanceof PojoInterface) {
+                element = PojoInterface.builder().name(data.getName()).packageName(data.getPackageName()).build();
+            }
+            if (data instanceof PojoClass) {
+                element = PojoClass.builder().name(data.getName()).packageName(data.getPackageName()).build();
+            }
+            if (element != null)
+                pojoElementRepository.save(element);
+        }
 
-         */
+        for (PojoClass pojoclass: imported.getPojoClasses()){
+            PojoClass realClass = (PojoClass)pojoElementRepository.findByPackageNameAndName(pojoclass.getPackageName(), pojoclass.getName());
+            List <AttributeRs> attributeRsList = new ArrayList<>();
+            for (AttributeRs attributeRs: pojoclass.getHasAttributes()){
+                PojoElement targetNode = pojoElementRepository.findByPackageNameAndName(attributeRs.getPojoElement().getPackageName(), attributeRs.getPojoElement().getName());
+                attributeRsList.add(AttributeRs.builder().pojoElement(targetNode).name(attributeRs.getName()).visibility(attributeRs.getVisibility()).build());
+            }
+            realClass.setHasAttributes(attributeRsList);
+
+            List <ImplementsRs> implementsRsList = new ArrayList<>();
+            for (ImplementsRs implementsRs: pojoclass.getImplementsInterfaces()){
+                PojoElement targetNode = pojoElementRepository.findByPackageNameAndName(implementsRs.getPojoInterface().getPackageName(), implementsRs.getPojoInterface().getName());
+                implementsRsList.add(ImplementsRs.builder().pojoInterface(targetNode).build());
+            }
+            realClass.setImplementsInterfaces(implementsRsList);
+
+            if (pojoclass.getExtendsClass() != null){
+                PojoElement targetNode = pojoElementRepository.findByPackageNameAndName(pojoclass.getExtendsClass().getPojoClass().getPackageName(), pojoclass.getExtendsClass().getPojoClass().getName());
+                realClass.setExtendsClass(ExtendsRs.builder().pojoClass(targetNode).build());
+            }
+            pojoClassRepository.save(realClass);
+        }
     }
 }

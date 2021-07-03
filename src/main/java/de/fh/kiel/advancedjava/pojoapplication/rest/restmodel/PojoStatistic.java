@@ -3,7 +3,6 @@ package de.fh.kiel.advancedjava.pojoapplication.rest.restmodel;
 
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
