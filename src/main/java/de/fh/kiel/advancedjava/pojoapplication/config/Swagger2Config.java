@@ -27,7 +27,7 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors
-                        .basePackage( "de.fh.kiel.advancedjava.pojomodel" ))
+                        .basePackage( "de.fh.kiel.advancedjava.pojoapplication" ))
                 .paths(PathSelectors.any())
                 .build().apiInfo(apiEndPointsInfo())
                 .tags(new Tag("Pojo Interface", "All available commands"))

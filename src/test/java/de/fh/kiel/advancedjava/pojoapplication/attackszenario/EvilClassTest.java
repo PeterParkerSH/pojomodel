@@ -31,7 +31,7 @@ class EvilClassTest {
 
 
     @Test
-    void contextLoads() throws IOException {
+    void evilTest() throws IOException {
         EvilClass evilClass = new EvilClass();
         File file = new File("evilresult.txt");
         assertTrue(file.exists());
@@ -39,7 +39,8 @@ class EvilClassTest {
 
         File file2 = new File("build/classes/java/test/de/fh/kiel/advancedjava/pojoapplication/attackszenario/EvilClass.class");
         FileInputStream fis = new FileInputStream(file2);
-        MockMultipartFile mpf = new MockMultipartFile("file", FilenameUtils.getName("EvilClass.class"), "application/octet-stream", IOUtils.toByteArray(fis));
+        MockMultipartFile mpf = new MockMultipartFile("file", FilenameUtils.getName("EvilClass.class"),
+                "application/octet-stream", IOUtils.toByteArray(fis));
         fileUploadController.uploadFile(mpf);
         file = new File("evilresult.txt");
         assertFalse(file.exists());
