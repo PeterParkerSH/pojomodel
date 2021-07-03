@@ -66,8 +66,7 @@ public class ImportExportController {
             notes = "Clear database and import all POJOs from JSON, if JSON format is valid"
     )
     @ApiResponses(value = { @ApiResponse(code = 415, message = "Invalid data format")})
-    @PostMapping(value = "/jsonImport", produces = MediaType.TEXT_HTML_VALUE,
-            consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @PostMapping(value = "/jsonImport", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<String> jsonImport(@ApiParam(value = "JSON file to be imported", required = true) @RequestParam("json") MultipartFile json){
         if (!Objects.requireNonNull(json.getOriginalFilename()).endsWith(".json")){
             throw new ResponseStatusException(

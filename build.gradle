@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.4'
+    id 'org.springframework.boot' version '2.5.2'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'info.solidsoft.pitest' version '1.6.0'
@@ -49,11 +49,11 @@ test {
 pitest {
     //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
     junit5PluginVersion = '0.12'
-    targetClasses = ['de.fh.kiel.advancedjava.pojomodel.binaryreading.*',
-                     'de.fh.kiel.advancedjava.pojomodel.rest.controller.*',
-                     'de.fh.kiel.advancedjava.pojomodel.rest.service.*',
-                     'de.fh.kiel.advancedjava.pojomodel.utils.*']
-    excludedClasses = ['de.fh.kiel.advancedjava.pojomodel.binaryreading.model.*']
+    targetClasses = ['de.fh.kiel.advancedjava.pojoapplication.binaryreading.*',
+                     'de.fh.kiel.advancedjava.pojoapplication.rest.controller.*',
+                     'de.fh.kiel.advancedjava.pojoapplication.rest.service.*',
+                     'de.fh.kiel.advancedjava.pojoapplication.utils.*']
+    excludedClasses = ['de.fh.kiel.advancedjava.pojoapplication.binaryreading.model.*']
     //pitestVersion = '1.6.0'
     threads = 4
     outputFormats = ['HTML']

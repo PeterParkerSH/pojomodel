@@ -31,7 +31,7 @@ class PojoElementRepositoryTest {
         PojoElement pojoElement = pojoElementRepository.findByPackageNameAndName("", "PojoClass1");
         assertNotNull(pojoElement);
         List<PojoElement> attributeRS = pojoElementRepository.getPojoElementsByAttributeRS(pojoElement.getId());
-        assertEquals(6, attributeRS.size());
+        assertEquals(8, attributeRS.size());
     }
 
     @Test

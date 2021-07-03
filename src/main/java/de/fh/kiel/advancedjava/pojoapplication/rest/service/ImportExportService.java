@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojoapplication.rest.service;
 
+import de.fh.kiel.advancedjava.pojoapplication.pojomodel.PojoElement;
 import de.fh.kiel.advancedjava.pojoapplication.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojoapplication.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojoapplication.repository.PojoInterfaceRepository;
@@ -7,6 +8,9 @@ import de.fh.kiel.advancedjava.pojoapplication.repository.PojoReferenceRepositor
 import de.fh.kiel.advancedjava.pojoapplication.rest.restmodel.ExportFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ImportExportService adds Pojos from JSON file to the database and exports Pojos from the database
@@ -51,8 +55,18 @@ public class ImportExportService {
     public void jsonImport(ExportFormat imported){
         pojoElementRepository.deleteAll();
 
+        List<PojoElement> allElements = new ArrayList<>();
+
+        allElements.addAll(imported.getPojoInterfaces());
+        allElements.addAll(imported.getPojoReferences());
+        allElements.addAll(imported.getPojoClasses());
+
+        pojoElementRepository.saveAll(allElements);
+        /*
         pojoInterfaceRepository.saveAll(imported.getPojoInterfaces());
         pojoReferenceRepository.saveAll(imported.getPojoReferences());
         pojoClassRepository.saveAll(imported.getPojoClasses());
+
+         */
     }
 }

@@ -1,7 +1,7 @@
 package de.fh.kiel.advancedjava.pojoapplication.rest.controller;
 
 import de.fh.kiel.advancedjava.pojoapplication.TestDataBaseController;
-import de.fh.kiel.advancedjava.pojoapplication.pojomodel.PojoClass;
+import de.fh.kiel.advancedjava.pojoapplication.pojomodel.*;
 import de.fh.kiel.advancedjava.pojoapplication.repository.PojoClassRepository;
 import de.fh.kiel.advancedjava.pojoapplication.repository.PojoElementRepository;
 import de.fh.kiel.advancedjava.pojoapplication.repository.PojoInterfaceRepository;
@@ -26,6 +26,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -162,5 +164,139 @@ class ImportExportControllerTest {
         assertEquals(interfaceCount, pojoInterfaceRepository.findAll().size());
         assertEquals(pojoElementRepository.findAll().size(), elementCount);
     }
+
+    void importExportFormant(ExportFormat exportFormat){
+        List<PojoElement> allElements = new ArrayList<>();
+        allElements.addAll(exportFormat.getPojoReferences());
+        allElements.addAll(exportFormat.getPojoInterfaces());
+        allElements.addAll(exportFormat.getPojoClasses());
+
+        for (PojoElement data: allElements){
+            PojoElement element = null;
+            if (data instanceof PojoReference) {
+                element = PojoReference.builder().name(data.getName()).packageName(data.getPackageName()).build();
+            }
+            if (data instanceof PojoInterface) {
+                element = PojoInterface.builder().name(data.getName()).packageName(data.getPackageName()).build();
+            }
+            if (data instanceof PojoClass) {
+                element = PojoClass.builder().name(data.getName()).packageName(data.getPackageName()).build();
+            }
+            pojoElementRepository.save(element);
+        }
+
+        for (PojoClass pojoclass: exportFormat.getPojoClasses()){
+            PojoClass realClass = (PojoClass)pojoElementRepository.findByPackageNameAndName(pojoclass.getPackageName(), pojoclass.getName());
+            List <AttributeRs> attributeRsList = new ArrayList<>();
+            for (AttributeRs attributeRs: pojoclass.getHasAttributes()){
+                PojoElement targetNode = pojoElementRepository.findByPackageNameAndName(attributeRs.getPojoElement().getPackageName(), attributeRs.getPojoElement().getName());
+                attributeRsList.add(AttributeRs.builder().pojoElement(targetNode).name(attributeRs.getName()).visibility(attributeRs.getVisibility()).build());
+            }
+            realClass.setHasAttributes(attributeRsList);
+
+            List <ImplementsRs> implementsRsList = new ArrayList<>();
+            for (ImplementsRs implementsRs: pojoclass.getImplementsInterfaces()){
+                PojoElement targetNode = pojoElementRepository.findByPackageNameAndName(implementsRs.getPojoInterface().getPackageName(), implementsRs.getPojoInterface().getName());
+                implementsRsList.add(ImplementsRs.builder().pojoInterface(targetNode).build());
+            }
+            realClass.setImplementsInterfaces(implementsRsList);
+
+            if (pojoclass.getExtendsClass() != null){
+                PojoElement targetNode = pojoElementRepository.findByPackageNameAndName(pojoclass.getExtendsClass().getPojoClass().getPackageName(), pojoclass.getExtendsClass().getPojoClass().getName());
+                realClass.setExtendsClass(ExtendsRs.builder().pojoClass(targetNode).build());
+            }
+            pojoClassRepository.save(realClass);
+        }
+    }
+
+    @Test
+    void imexman2(){
+        testDataBaseController.buildTestDataBase();
+
+        ExportFormat exportFormat = new ExportFormat(pojoClassRepository.findAll(),pojoInterfaceRepository.findAll(),pojoReferenceRepository.findAll());
+        importExportFormant(exportFormat);
+        /*
+        List<PojoElement> allElements = pojoElementRepository.findAll();
+        List<PojoReference> datar1 = pojoReferenceRepository.findAll();
+        List<PojoInterface> datai1 = pojoInterfaceRepository.findAll();
+        List<PojoClass>     datac1 = pojoClassRepository.findAll();
+
+        pojoElementRepository.deleteAll();
+
+
+        for (PojoElement data: allElements){
+            PojoElement element = null;
+            if (data instanceof PojoReference) {
+                element = PojoReference.builder().name(data.getName()).packageName(data.getPackageName()).build();
+            }
+            if (data instanceof PojoInterface) {
+                element = PojoInterface.builder().name(data.getName()).packageName(data.getPackageName()).build();
+            }
+            if (data instanceof PojoClass) {
+                element = PojoClass.builder().name(data.getName()).packageName(data.getPackageName()).build();
+            }
+            pojoElementRepository.save(element);
+        }
+
+        for (PojoClass pojoclass: datac1){
+            PojoClass realClass = (PojoClass)pojoElementRepository.findByPackageNameAndName(pojoclass.getPackageName(), pojoclass.getName());
+            List <AttributeRs> attributeRsList = new ArrayList<>();
+            for (AttributeRs attributeRs: pojoclass.getHasAttributes()){
+                PojoElement targetNode = pojoElementRepository.findByPackageNameAndName(attributeRs.getPojoElement().getPackageName(), attributeRs.getPojoElement().getName());
+                attributeRsList.add(AttributeRs.builder().pojoElement(targetNode).name(attributeRs.getName()).visibility(attributeRs.getVisibility()).build());
+            }
+            realClass.setHasAttributes(attributeRsList);
+
+            List <ImplementsRs> implementsRsList = new ArrayList<>();
+            for (ImplementsRs implementsRs: pojoclass.getImplementsInterfaces()){
+                PojoElement targetNode = pojoElementRepository.findByPackageNameAndName(implementsRs.getPojoInterface().getPackageName(), implementsRs.getPojoInterface().getName());
+                implementsRsList.add(ImplementsRs.builder().pojoInterface(targetNode).build());
+            }
+            realClass.setImplementsInterfaces(implementsRsList);
+
+            if (pojoclass.getExtendsClass() != null){
+                PojoElement targetNode = pojoElementRepository.findByPackageNameAndName(pojoclass.getExtendsClass().getPojoClass().getPackageName(), pojoclass.getExtendsClass().getPojoClass().getName());
+                realClass.setExtendsClass(ExtendsRs.builder().pojoClass(targetNode).build());
+            }
+            pojoClassRepository.save(realClass);
+
+        }
+
+*/
+
+        List<PojoElement> data2 = pojoElementRepository.findAll();
+
+        assertEquals(12, data2.size());
+    }
+
+    /**
+     * Gets Pojo by class name and package name if it already exists, if not, creates new {@link PojoReference}
+     * @param className name of the class
+     * @param packageName package name of the class
+     * @return PojoElement
+     */
+    public PojoElement getOrCreatePojoElement(String className, String packageName){
+        PojoElement pojoElement = pojoElementRepository.findByPackageNameAndName(packageName, className);
+        if (pojoElement == null) {
+            PojoReference pojoReference = PojoReference.builder().name(className).packageName(packageName).build();
+            pojoReferenceRepository.save(pojoReference);
+            pojoElement = pojoReference;
+        }
+        return pojoElement;
+    }
+    @Test
+    void imexman(){
+        testDataBaseController.buildTestDataBase();
+        List<PojoElement> data = pojoElementRepository.findAll();
+        pojoElementRepository.deleteAll();
+        for (PojoElement element: data){
+            pojoElementRepository.save(element);
+        }
+      //  pojoElementRepository.saveAll(data);
+        List<PojoElement> data2 = pojoElementRepository.findAll();
+
+        assertEquals(data, data2);
+    }
+
 
 }

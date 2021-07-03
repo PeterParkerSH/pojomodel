@@ -52,7 +52,7 @@ public class FileUploadController {
 			notes = "Does not add duplicates to the database"
 			)
 	@ApiResponses(value = { @ApiResponse(code = 415, message = "Invalid data format")})
-	@PostMapping(value = "/upload", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@PostMapping(value = "/upload", produces = MediaType.TEXT_HTML_VALUE)
 	public ResponseEntity<String> uploadFile(@ApiParam(value = "File to be uploaded", required = true) @RequestParam("file") MultipartFile file) {
 		try {
 			List<ClassNode> classNodeList= binaryReading.readFile(file);
